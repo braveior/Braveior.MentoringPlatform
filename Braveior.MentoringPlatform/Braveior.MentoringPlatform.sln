@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Braveior.MentoringPlatform.Server", "Braveior.MentoringPlatform\Server\Braveior.MentoringPlatform.Server.csproj", "{25DF2D89-2A05-46BD-86CF-A8FD0D35D17A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Braveior.MentoringPlatform.Client", "Braveior.MentoringPlatform\Client\Braveior.MentoringPlatform.Client.csproj", "{5998AB3C-02E3-4FF6-A104-40AC13205933}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Braveior.MentoringPlatform.DTO", "Braveior.MentoringPlatform\Braveior.MentoringPlatform.DTO\Braveior.MentoringPlatform.DTO.csproj", "{0AC7906A-CF0C-4AA0-92E2-700EA6B9E680}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Braveior.MentoringPlatform.Repository", "Braveior.MentoringPlatform\Braveior.MentoringPlatform.Repository\Braveior.MentoringPlatform.Repository.csproj", "{704FFB05-FCA7-4BC8-A4CA-03E1A9145AC5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Braveior.MentoringPlatform.Services", "Braveior.MentoringPlatform\Braveior.MentoringPlatform.Services\Braveior.MentoringPlatform.Services.csproj", "{B3AFEAFD-A632-43DF-BA42-9752D67B03A6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{25DF2D89-2A05-46BD-86CF-A8FD0D35D17A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25DF2D89-2A05-46BD-86CF-A8FD0D35D17A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25DF2D89-2A05-46BD-86CF-A8FD0D35D17A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25DF2D89-2A05-46BD-86CF-A8FD0D35D17A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5998AB3C-02E3-4FF6-A104-40AC13205933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5998AB3C-02E3-4FF6-A104-40AC13205933}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5998AB3C-02E3-4FF6-A104-40AC13205933}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5998AB3C-02E3-4FF6-A104-40AC13205933}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AC7906A-CF0C-4AA0-92E2-700EA6B9E680}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AC7906A-CF0C-4AA0-92E2-700EA6B9E680}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AC7906A-CF0C-4AA0-92E2-700EA6B9E680}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AC7906A-CF0C-4AA0-92E2-700EA6B9E680}.Release|Any CPU.Build.0 = Release|Any CPU
+		{704FFB05-FCA7-4BC8-A4CA-03E1A9145AC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{704FFB05-FCA7-4BC8-A4CA-03E1A9145AC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{704FFB05-FCA7-4BC8-A4CA-03E1A9145AC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{704FFB05-FCA7-4BC8-A4CA-03E1A9145AC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3AFEAFD-A632-43DF-BA42-9752D67B03A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3AFEAFD-A632-43DF-BA42-9752D67B03A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3AFEAFD-A632-43DF-BA42-9752D67B03A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3AFEAFD-A632-43DF-BA42-9752D67B03A6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A1CF5CE2-372F-47B4-A784-4FBEFCA222C7}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,85 @@
+﻿@page "/kanboard"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IKanboardService KanboardService
+@inject ISnackbar Snackbar
+@using Plk.Blazor.DragDrop
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudGrid>
+        <MudItem xs="3">
+            <MudPaper Elevation="1">
+                Drop Here
+            </MudPaper>
+            <Dropzone Items="Backlog" TItem="TaskDTO">
+                <div style="border: 2px solid blue">
+                    <MudText Typo="Typo.subtitle2">@context.Name</MudText>
+                    <MudText Typo="Typo.body2">@context.Description</MudText>
+                  </div>
+</Dropzone>
+        </MudItem>
+        <MudItem xs="3">
+            <MudPaper Elevation="1">
+                Drop Here
+            </MudPaper>
+            <Dropzone Items="ToDo" TItem="TaskDTO">
+                <div style="border: 2px solid blue">
+                    <MudText Typo="Typo.subtitle2">@context.Name</MudText>
+                    <MudText Typo="Typo.body2">@context.Description</MudText>
+                </div>
+            </Dropzone>
+        </MudItem>
+        <MudItem xs="3">
+            <Dropzone Items="InProgress">
+                <div style="border: 2px solid blue">
+                    <MudText Typo="Typo.subtitle2">@context.Name</MudText>
+                    <MudText Typo="Typo.body2">@context.Description</MudText>
+                    </div>
+</Dropzone>
+        </MudItem>
+        <MudItem xs="3">
+            <Dropzone Items="Completed">
+                <div style="border: 2px solid blue">
+                    <MudText Typo="Typo.subtitle2">@context.Name</MudText>
+                    <MudText Typo="Typo.body2">@context.Description</MudText>
+                    </div>
+</Dropzone>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+
+
+
+@code {
+    public string TextValue { get; set; }
+    private LoginDTO member = new LoginDTO();
+    bool isShow;
+    bool success;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    ClaimsPrincipal claimsPrincipal;
+    MudForm frmLogin;
+    List<TaskDTO> Backlog = new List<TaskDTO>();
+    List<TaskDTO> ToDo = new List<TaskDTO>();
+    List<TaskDTO> InProgress = new List<TaskDTO>();
+    List<TaskDTO> Completed = new List<TaskDTO>();
+
+    //Global Authentication State to get the Login Status and data
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected async override System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        var tasks = await KanboardService.GetTasks(1);
+        Backlog = tasks.Where(t => t.Status == "CREATED").ToList();
+        ToDo = tasks.Where(t => t.Status == "NOT-STARTED").ToList();
+        InProgress = tasks.Where(t => t.Status == "IN-PROGRESS").ToList();
+        Completed = tasks.Where(t => t.Status == "COMPLETED").ToList();
+        await base.OnInitializedAsync();
+    }
+
+
+
+}
