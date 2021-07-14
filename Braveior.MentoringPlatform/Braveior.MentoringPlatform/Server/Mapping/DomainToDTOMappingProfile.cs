@@ -13,10 +13,9 @@ namespace Braveior.MentoringPlatform.Server.MApping
         public DomainToDTOMappingProfile()
         {
             //Mapping the Member MongoDB entity to the MemberDTO. 
-            CreateMap<Task, TaskDTO>();
+            CreateMap<Story, StoryDTO>();
             CreateMap<User, UserDTO>();
-
-
+            CreateMap<Message, MessageDTO>().ForMember(dto=>dto.UserName,opt=>opt.MapFrom(x=>x.User.Name));
         }
     }
 }

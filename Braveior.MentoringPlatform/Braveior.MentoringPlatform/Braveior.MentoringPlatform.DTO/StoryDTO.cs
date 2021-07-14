@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Braveior.MentoringPlatform.Repository.Models
+namespace Braveior.MentoringPlatform.DTO
 {
-    public class Task
+    public class StoryDTO
     {
-        public long TaskId { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int StoryPoint { get; set; }
@@ -18,12 +14,8 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public DateTime StartDate { get; set; }
         public DateTime CompletionDate { get; set; }
         public string Status { get; set; }
-        public long ProductId { get; set; }
-        
-        public Product Product { get; set; }
+        public int ProductId { get; set; }
+        public int ProductName { get; set; }
         public long KanboardId { get; set; }
-
-        public Kanboard Kanboard { get; set; }
-
     }
 }

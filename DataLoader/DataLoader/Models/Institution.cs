@@ -3,14 +3,13 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Braveior.MentoringPlatform.Repository.Models
+namespace DataLoader.Models
 {
     public partial class Institution
     {
         public Institution()
         {
             Groups = new HashSet<Group>();
-            Kanboards = new HashSet<Kanboard>();
             Users = new HashSet<User>();
         }
 
@@ -24,7 +23,6 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public string PinCode { get; set; }
 
         public virtual ICollection<Group> Groups { get; set; }
-        public virtual ICollection<Kanboard> Kanboards { get; set; }
         public virtual ICollection<User> Users { get; set; }
     }
 }

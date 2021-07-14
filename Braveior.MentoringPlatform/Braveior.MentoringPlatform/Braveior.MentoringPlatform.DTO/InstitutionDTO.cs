@@ -11,6 +11,6 @@ namespace Braveior.MentoringPlatform.DTO
         public string State { get; set; }
         public string District { get; set; }
         public string City { get; set; }
-        public string Pincode { get; set; }
+        public string PinCode { get; set; }
     }
 }

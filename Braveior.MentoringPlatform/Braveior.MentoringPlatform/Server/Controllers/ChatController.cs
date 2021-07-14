@@ -12,11 +12,11 @@ namespace Braveior.MentoringPlatform.Server.Controllers
     [ApiController]
     [Route("api/[controller]")]
     //[Authorize]
-    public class KanboardController : ControllerBase
+    public class ChatController : ControllerBase
     {
 
-        private IKanboardService _service;
-        public KanboardController(IKanboardService service)
+        private IChatService _service;
+        public ChatController(IChatService service)
         {
             _service = service;
         }
@@ -25,11 +25,11 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// </summary>
         /// <param name="ratedfor"></param>
         /// <returns></returns>
-        [HttpGet("gettasks/{kanboardid}")]
-        public IActionResult GetTasks(long kanboardid)
+        [HttpGet("getmessages/{channelid}")]
+        public IActionResult GetMessages(long channelid)
         {
-            var tasks = _service.GetTasks(kanboardid);
-            return Ok(tasks);
+            var messages = _service.GetMessages(channelid);
+            return Ok(messages);
         }
 
     }

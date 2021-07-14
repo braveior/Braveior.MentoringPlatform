@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Braveior.MentoringPlatform.Services.Interfaces
 {
-    public interface IKanboardService
+    public interface IChatService
     {
-        List<StoryDTO> GetTasks(long kanboardId);
+        List<MessageDTO> GetMessages(long InstitutionId);
+        void PostMessage(MessageDTO messageDTO);
     }
 }

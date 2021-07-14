@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Braveior.MentoringPlatform.Repository.Models
+namespace DataLoader.Models
 {
     public partial class Product
     {
         public Product()
         {
-            Stories = new HashSet<Story>();
+            Tasks = new HashSet<Task>();
         }
 
         public long ProductId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public virtual ICollection<Story> Stories { get; set; }
+        public virtual ICollection<Task> Tasks { get; set; }
     }
 }

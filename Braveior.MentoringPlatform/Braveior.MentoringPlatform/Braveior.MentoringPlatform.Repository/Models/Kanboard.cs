@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+#nullable disable
 
 namespace Braveior.MentoringPlatform.Repository.Models
 {
-    public class Kanboard
+    public partial class Kanboard
     {
+        public Kanboard()
+        {
+            Stories = new HashSet<Story>();
+        }
+
         public long KanboardId { get; set; }
         public string Name { get; set; }
-        public long InstitutionId { get; set; }
-        public Institution Institution { get; set; }
-        public List<Task> Tasks { get; set; } = new List<Task>();
+        public long? InstitutionId { get; set; }
 
+        public virtual Institution Institution { get; set; }
+        public virtual ICollection<Story> Stories { get; set; }
     }
 }

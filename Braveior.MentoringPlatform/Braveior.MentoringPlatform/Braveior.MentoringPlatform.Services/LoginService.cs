@@ -11,7 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 using Microsoft.AspNetCore.DataProtection;
-using Braveior.MentoringPlatform.Repository.Contexts;
+using Braveior.MentoringPlatform.Repository;
 
 namespace Braveior.MentoringPlatform.Services
 {
@@ -23,7 +23,7 @@ namespace Braveior.MentoringPlatform.Services
 
 
         private readonly IMapper _mapper;
-        public LoginService( IMapper mapper)
+        public LoginService(IMapper mapper)
         {
             _mapper = mapper;
         }
@@ -34,7 +34,7 @@ namespace Braveior.MentoringPlatform.Services
         /// <returns></returns>
         public UserDTO Login(LoginDTO userDTO)
         {
-            using (var db = new BraveiorDBContext())
+            using (var db = new braveiordbContext())
             {
                 var user = db.Users.Where(a => a.Email == userDTO.Email && a.Password == userDTO.Password).FirstOrDefault();
 
@@ -60,19 +60,19 @@ namespace Braveior.MentoringPlatform.Services
         public async Task<UserDTO> GetUserFromAccessToken(string accessToken)
         {
             var email = ValidateAccessToken(accessToken);
-                if (!String.IsNullOrEmpty(email))
+            if (!String.IsNullOrEmpty(email))
+            {
+                using (var db = new braveiordbContext())
                 {
-                    using (var db = new BraveiorDBContext())
-                    {
-                        var user = db.Users.Where(a => a.Email == email).FirstOrDefault();
-                        return _mapper.Map<UserDTO>(user);
-                    }
+                    var user = db.Users.Where(a => a.Email == email).FirstOrDefault();
+                    return _mapper.Map<UserDTO>(user);
                 }
+            }
 
             throw new Exception("Invalid access Token");
         }
 
-    
+
 
         /// <summary>
         /// Generate the Access Token for the member ID
@@ -131,6 +131,6 @@ namespace Braveior.MentoringPlatform.Services
             }
             throw new Exception("Invalid access Token");
         }
-               
+
     }
 }

@@ -9,6 +9,6 @@ namespace Braveior.MentoringPlatform.DTO
         public string Name { get; set; }
         public int ProductId { get; set; }
         public long InstitutionId { get; set; }
-        public List<TaskDTO> Tasks { get; set; } = new List<TaskDTO>();
+        public List<StoryDTO> Tasks { get; set; } = new List<StoryDTO>();
     }
 }

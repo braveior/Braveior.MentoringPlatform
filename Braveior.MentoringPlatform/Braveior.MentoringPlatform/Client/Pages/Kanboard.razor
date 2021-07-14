@@ -13,10 +13,12 @@
                 Drop Here
             </MudPaper>
             <Dropzone Items="Backlog" TItem="TaskDTO">
-                <div style="border: 2px solid blue">
-                    <MudText Typo="Typo.subtitle2">@context.Name</MudText>
-                    <MudText Typo="Typo.body2">@context.Description</MudText>
-                  </div>
+                
+                    <MudPaper Elevation="2">
+                        <MudText Typo="Typo.subtitle2">@context.Name</MudText>
+                        <MudText Typo="Typo.body2">@context.Description</MudText>
+                    </MudPaper>
+                
 </Dropzone>
         </MudItem>
         <MudItem xs="3">

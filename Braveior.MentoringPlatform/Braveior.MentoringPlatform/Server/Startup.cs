@@ -1,4 +1,5 @@
-using Braveior.MentoringPlatform.Repository.Contexts;
+using Braveior.MentoringPlatform.Repository;
+using Braveior.MentoringPlatform.Repository.Models;
 using Braveior.MentoringPlatform.Services;
 using Braveior.MentoringPlatform.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -49,6 +50,7 @@ namespace Braveior.MentoringPlatform.Server
 
             services.AddScoped<IKanboardService, KanboardService>();
             services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<IChatService, ChatService>();
 
             services.AddAuthentication(cfg =>
             {
@@ -66,7 +68,7 @@ namespace Braveior.MentoringPlatform.Server
                 };
             });
 
-            services.AddDbContext<BraveiorDBContext>(options =>
+            services.AddDbContext<braveiordbContext>(options =>
                   options.UseSqlServer("Data Source=.\\sqlexpress;User ID=sa;Password=password$$;Initial Catalog=braveiordb").EnableSensitiveDataLogging());
 
             services.AddSwaggerGen(setup =>

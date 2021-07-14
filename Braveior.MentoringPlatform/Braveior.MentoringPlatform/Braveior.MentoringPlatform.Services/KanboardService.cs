@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Braveior.MentoringPlatform.DTO;
-using Braveior.MentoringPlatform.Repository.Contexts;
+using Braveior.MentoringPlatform.Repository;
 using Braveior.MentoringPlatform.Repository.Models;
 using Braveior.MentoringPlatform.Services.Interfaces;
 using System;
@@ -20,12 +20,12 @@ namespace Braveior.MentoringPlatform.Services
 
         public void CreateUser(UserDTO userDTO)
         {
-            User newUser = new User() 
-            { 
-                Name = userDTO.Name, 
-                InstitutionId = userDTO.InstitutionId 
+            User newUser = new User()
+            {
+                Name = userDTO.Name,
+                InstitutionId = userDTO.InstitutionId
             };
-            using (var db = new BraveiorDBContext())
+            using (var db = new braveiordbContext())
             {
                 db.Users.Add(newUser);
                 db.SaveChanges();
@@ -39,7 +39,7 @@ namespace Braveior.MentoringPlatform.Services
                 Name = userDTO.Name,
                 InstitutionId = userDTO.InstitutionId
             };
-            using (var db = new BraveiorDBContext())
+            using (var db = new braveiordbContext())
             {
                 var user = db.Users.Where(a => a.UserId == userDTO.Id).FirstOrDefault();
                 if (user != null)
@@ -53,53 +53,51 @@ namespace Braveior.MentoringPlatform.Services
         }
 
 
-        public void CreateTask(TaskDTO taskDTO)
+        public void CreateTask(StoryDTO taskDTO)
         {
-            Task newTask = new Task() 
-            { 
-                Name = taskDTO.Name,
-                Description = taskDTO.Description, 
-                Status = "NOT-STARTED", 
-                KanboardId = taskDTO.KanboardId, 
-                ProductId = taskDTO.ProductId, 
-                StoryPoint = taskDTO.StoryPoint, 
-                EstimatedDays = taskDTO.EstimatedDays, 
-                ActualDays = taskDTO.ActualDays, 
-                StartDate = DateTime.Now, 
-                Attachment = taskDTO.Attachment 
-            };
-            using (var db = new BraveiorDBContext())
+            Story newStory = new Story()
             {
-                db.Tasks.Add(newTask);
+                Name = taskDTO.Name,
+                Description = taskDTO.Description,
+                Status = "NOT-STARTED",
+                KanboardId = taskDTO.KanboardId,
+                ProductId = taskDTO.ProductId,
+                StoryPoint = taskDTO.StoryPoint,
+                StartDate = DateTime.Now
+                
+            };
+            using (var db = new braveiordbContext())
+            {
+                db.Stories.Add(newStory);
                 db.SaveChanges();
             }
         }
 
-        public void UpdateTaskStatus(TaskDTO taskDTO)
+        public void UpdateStoryStatus(StoryDTO storyDTO)
         {
-            using (var db = new BraveiorDBContext())
+            using (var db = new braveiordbContext())
             {
-                var task = db.Tasks.Where(t => t.TaskId == taskDTO.Id).FirstOrDefault();
-                if (task != null)
+                var story = db.Stories.Where(t => t.StoryId == storyDTO.Id).FirstOrDefault();
+                if (story != null)
                 {
-                    task.Status = taskDTO.Status;
-                    if (taskDTO.Status == "COMPLETED")
-                        task.CompletionDate = DateTime.Now;
-                    db.Tasks.Update(task);
+                    story.Status = storyDTO.Status;
+                    if (storyDTO.Status == "COMPLETED")
+                        story.CompletionDate = DateTime.Now;
+                    db.Stories.Update(story);
                     db.SaveChanges();
                 }
-                
+
             }
 
         }
-        public List<TaskDTO> GetTasks(long kanboardId)
+        public List<StoryDTO> GetTasks(long kanboardId)
         {
-            using (var db = new BraveiorDBContext())
+            using (var db = new braveiordbContext())
             {
-                var tasks = db.Tasks.Where(t => t.KanboardId == kanboardId);
-                return _mapper.Map<List<TaskDTO>>(tasks);
+                var tasks = db.Stories.Where(t => t.KanboardId == kanboardId);
+                return _mapper.Map<List<StoryDTO>>(tasks);
             }
-                                
+
         }
         public void CreateProduct(ProductDTO productDTO)
         {
@@ -108,7 +106,7 @@ namespace Braveior.MentoringPlatform.Services
                 Name = productDTO.Name,
                 Description = productDTO.Description,
             };
-            using (var db = new BraveiorDBContext())
+            using (var db = new braveiordbContext())
             {
                 db.Products.Add(newProduct);
                 db.SaveChanges();
@@ -124,9 +122,9 @@ namespace Braveior.MentoringPlatform.Services
                 State = institutionDTO.State,
                 District = institutionDTO.District,
                 City = institutionDTO.City,
-                Pincode = institutionDTO.Pincode,
+                PinCode = institutionDTO.PinCode,
             };
-            using (var db = new BraveiorDBContext())
+            using (var db = new braveiordbContext())
             {
                 db.Institutions.Add(newInstitution);
                 db.SaveChanges();
@@ -139,7 +137,7 @@ namespace Braveior.MentoringPlatform.Services
                 Name = kanboardDTO.Name,
                 InstitutionId = kanboardDTO.InstitutionId,
             };
-            using (var db = new BraveiorDBContext())
+            using (var db = new braveiordbContext())
             {
                 db.Kanboards.Add(newKanboard);
                 db.SaveChanges();
