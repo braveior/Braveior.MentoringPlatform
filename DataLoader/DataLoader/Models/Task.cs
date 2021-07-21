@@ -9,7 +9,7 @@ namespace DataLoader.Models
     {
         public Task()
         {
-            Vlogs = new HashSet<Vlog>();
+            UserTasks = new HashSet<UserTask>();
         }
 
         public long TaskId { get; set; }
@@ -18,18 +18,13 @@ namespace DataLoader.Models
         public DateTime? StartDate { get; set; }
         public DateTime? CompletionDate { get; set; }
         public string Status { get; set; }
-        public long? ProductId { get; set; }
-        public long? KanboardId { get; set; }
-        public long? UserId { get; set; }
-        public int Complexity { get; set; }
-        public int Presentation { get; set; }
-        public int Technical { get; set; }
-        public int Innovation { get; set; }
-        public int Score { get; set; }
+        public long StoryId { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public bool IsActive { get; set; }
+        public int? Complexity { get; set; }
 
-        public virtual Kanboard Kanboard { get; set; }
-        public virtual Product Product { get; set; }
-        public virtual User User { get; set; }
-        public virtual ICollection<Vlog> Vlogs { get; set; }
+        public virtual Story Story { get; set; }
+        public virtual ICollection<UserTask> UserTasks { get; set; }
     }
 }

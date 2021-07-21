@@ -1,4 +1,4 @@
-﻿using Braveior.MentoringPlatform.Client.DTO;
+﻿using Braveior.MentoringPlatform.DTO;
 using System.Threading.Tasks;
 
 namespace Braveior.MentoringPlatform.Client.Services

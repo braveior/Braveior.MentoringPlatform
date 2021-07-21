@@ -9,14 +9,18 @@ namespace Braveior.MentoringPlatform.Repository.Models
     {
         public Kanboard()
         {
-            Stories = new HashSet<Story>();
+            KanboardStories = new HashSet<KanboardStory>();
         }
 
         public long KanboardId { get; set; }
         public string Name { get; set; }
-        public long? InstitutionId { get; set; }
+        public string Description { get; set; }
+        public long GroupId { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
-        public virtual Institution Institution { get; set; }
-        public virtual ICollection<Story> Stories { get; set; }
+        public virtual Group Group { get; set; }
+        public virtual ICollection<KanboardStory> KanboardStories { get; set; }
     }
 }

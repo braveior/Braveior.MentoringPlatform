@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Braveior.MentoringPlatform.Client.Services;
-using Braveior.MentoringPlatform.Client.DTO;
+using Braveior.MentoringPlatform.DTO;
 using Braveior.MentoringPlatform.Client.State.Common;
 using Fluxor;
 

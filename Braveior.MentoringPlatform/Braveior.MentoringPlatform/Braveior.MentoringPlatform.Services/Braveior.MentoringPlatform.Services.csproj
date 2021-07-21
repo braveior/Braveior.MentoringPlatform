@@ -1,8 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ChatService.cs" />
+    <Compile Remove="Interfaces\IChatService.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Braveior.MentoringPlatform.DTO\Braveior.MentoringPlatform.DTO.csproj" />

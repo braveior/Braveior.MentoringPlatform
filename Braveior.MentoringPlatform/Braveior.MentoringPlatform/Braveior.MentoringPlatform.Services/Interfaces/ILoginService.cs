@@ -11,5 +11,7 @@ namespace Braveior.MentoringPlatform.Services.Interfaces
     {
         UserDTO Login(LoginDTO user);
         Task<UserDTO> GetUserFromAccessToken(string accessToken);
+
+        void Register(UserDTO userDTO);
     }
 }

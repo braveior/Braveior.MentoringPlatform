@@ -1,21 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Braveior.MentoringPlatform.DTO
 {
     public class StoryDTO
     {
-        public long Id { get; set; }
+        public long StoryId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public int StoryPoint { get; set; }
-        public string Attachment { get; set; }
-        public int EstimatedDays { get; set; }
-        public int ActualDays { get; set; }
+        public int Point { get; set; }
+        public int Status { get; set; }
+        public DateTime CreationDate { get; set; }
+
         public DateTime StartDate { get; set; }
-        public DateTime CompletionDate { get; set; }
-        public string Status { get; set; }
-        public int ProductId { get; set; }
-        public int ProductName { get; set; }
-        public long KanboardId { get; set; }
+        public DateTime CompletedDate { get; set; }
+        public string AcceptanceCriteria { get; set; }
+        public long ProductId { get; set; }
+
+        public string ProductName { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public bool IsActive { get; set; }
+
+        public List<TaskDTO> Tasks { get; set; }
+
     }
 }

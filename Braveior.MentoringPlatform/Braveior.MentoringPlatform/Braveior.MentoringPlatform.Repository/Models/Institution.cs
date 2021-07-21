@@ -10,7 +10,6 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public Institution()
         {
             Groups = new HashSet<Group>();
-            Kanboards = new HashSet<Kanboard>();
             Users = new HashSet<User>();
         }
 
@@ -22,9 +21,11 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public string District { get; set; }
         public string City { get; set; }
         public string PinCode { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public bool IsActive { get; set; }
 
         public virtual ICollection<Group> Groups { get; set; }
-        public virtual ICollection<Kanboard> Kanboards { get; set; }
         public virtual ICollection<User> Users { get; set; }
     }
 }

@@ -50,10 +50,17 @@
 
 
         //Redirect the user to Home page if already authenticated
-        claimsPrincipal = (await authenticationStateTask).User;
-        if (claimsPrincipal.Identity.IsAuthenticated)
+        try
         {
-            NavigationManager.NavigateTo("/index");
+            claimsPrincipal = (await authenticationStateTask).User;
+            if (claimsPrincipal.Identity.IsAuthenticated)
+            {
+                NavigationManager.NavigateTo("/index");
+            }
+        }
+        catch(Exception ex)
+        {
+
         }
         await base.OnInitializedAsync();
     }

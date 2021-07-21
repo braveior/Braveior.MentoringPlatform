@@ -1,0 +1,94 @@
+﻿@page "/edittask/{TaskId:long}/{StoryId:long}"
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IStoryService StoryService
+
+@inject ISnackbar Snackbar
+@using TinyMCE.Blazor
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudGrid>
+        <MudItem lg="8">
+            <MudText Typo="Typo.subtitle2">Task</MudText>
+            <MudTextField T="string" Variant="Variant.Text" @bind-Text="@Task.Name" Lines="5" /><br />
+            <MudSelect T="int" Label="Status" @bind-Value="@Task.Status">
+                <MudSelectItem Value="@(0)">NOT-STARTED</MudSelectItem>
+                <MudSelectItem Value="@(1)">IN-PROGRESS</MudSelectItem>
+                <MudSelectItem Value="@(2)">COMPLETED</MudSelectItem>
+            </MudSelect><br />
+            <MudText Typo="Typo.subtitle2">Description</MudText>
+            <Editor Conf="@editorConf" @bind-Value="@Task.Description" ApiKey="l2er93kpxdnkksdayrfy7mrocgpxan4mjxhfz8etl31lxzul" /><br />
+            <MudButton Variant="Variant.Outlined" OnClick="SubmitTask">Submit</MudButton>
+        </MudItem>
+        <MudItem lg="4">
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+
+
+
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "index"),
+        new BreadcrumbItem("Kanboard", href: "kanboard")
+
+    };
+    [Parameter]
+    public long TaskId { get; set; }
+
+    [Parameter]
+    public long StoryId { get; set; }
+
+    private TaskDTO Task { get; set; } = new TaskDTO();
+
+
+    private Dictionary<string, object> editorConf = new Dictionary<string, object>
+{
+            { "plugins", "lists emoticons " },
+            {"menubar", "" },
+
+            { "toolbar", "bold italic underline strikethrough | numlist bullist checklist | alignleft aligncenter alignright alignjustify | outdent indent emoticons"},
+     };
+    protected async override System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        try
+        {
+            if (TaskId != 0)
+            {
+                Task = await StoryService.GetTask(TaskId);
+            }
+            Task = await StoryService.GetTask(TaskId);
+            _items.Add(new BreadcrumbItem("Task", href: $"viewtask/{TaskId}/{StoryId}"));
+        }
+        catch(Exception ex)
+        {
+            Snackbar.Clear();
+            Snackbar.Add("Error loading task", Severity.Error);
+        }
+        await base.OnInitializedAsync();
+    }
+    private void SubmitTask()
+    {
+        try
+        {
+            if (Task.TaskId == 0)
+            {
+                StoryService.CreateTask(Task);
+            }
+            else
+            {
+                StoryService.UpdateTask(Task);
+            }
+            NavigationManager.NavigateTo($"/viewtask/{Task.TaskId}/{StoryId}");
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Clear();
+            Snackbar.Add("Error saving task", Severity.Error);
+        }
+    }
+
+
+
+}

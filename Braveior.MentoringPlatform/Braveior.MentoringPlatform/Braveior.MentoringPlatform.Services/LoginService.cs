@@ -27,6 +27,27 @@ namespace Braveior.MentoringPlatform.Services
         {
             _mapper = mapper;
         }
+
+
+        public void Register(UserDTO userDTO)
+        {
+            using (var db = new braveiordbContext())
+            {
+                User newUser = new User()
+                {
+                     Name = userDTO.Name,
+                     Email = userDTO.Email,
+                     InstitutionId = userDTO.InstitutionId,
+                     Role = userDTO.Role,
+                     Password = userDTO.Password
+                          
+                };
+                db.Users.Add(newUser);
+                db.SaveChanges();
+            }
+        }
+
+
         /// <summary>
         /// Method to Authenticate the user credentials - Email and password
         /// </summary>

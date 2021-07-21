@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RazorLangVersion>3.0</RazorLangVersion>
+    <OutputType>Library</OutputType>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>Nattapong Nunpan</Authors>
+    <Description>Rich text editor for Blazor applications - Uses TinyMCE</Description>
+    <RepositoryUrl>https://github.com/aixasz/Blazeditor</RepositoryUrl>
+    <PackageTags>Blazor TinyMCE Editor Text Component</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+    <PackageProjectUrl>https://github.com/aixasz/Blazeditor</PackageProjectUrl>
+    <Copyright>Copyright 2020 (c) Nattapong Nunpan. All rights reserved.</Copyright>
+    <Company>Blazeditor</Company>
+    <IsPackable>true</IsPackable>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <AssemblyVersion>1.0.2.0</AssemblyVersion>
+    <FileVersion>1.0.2.0</FileVersion>
+    <PackageReleaseNotes>Fix editor not run after reload page</PackageReleaseNotes>
+    <Version>1.0.2</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.10" />
+    <PackageReference Include="Microsoft.JSInterop" Version="3.1.10" />
+  </ItemGroup>
+
+</Project>

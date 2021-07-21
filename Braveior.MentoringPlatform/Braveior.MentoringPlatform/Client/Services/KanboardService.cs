@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Braveior.MentoringPlatform.Client.DTO;
+using Braveior.MentoringPlatform.DTO;
 using Blazored.LocalStorage;
 using System.Net.Http.Json;
 using System.Net;
@@ -29,7 +29,7 @@ namespace Braveior.MentoringPlatform.Client.Services
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public async Task<List<TaskDTO>> GetTasks(long kanboardId)
+        public async Task<List<StoryDTO>> GetStories(long kanboardId)
         {
             string authToken = "";
             //Get AccessToken from local storage
@@ -42,10 +42,10 @@ namespace Braveior.MentoringPlatform.Client.Services
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
 
             //REST API call for Search
-            var response = await _httpClient.GetAsync($"api/Kanboard/gettasks/{kanboardId}");
+            var response = await _httpClient.GetAsync($"api/Kanboard/getstories/{kanboardId}");
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<List<TaskDTO>>();
+                return await response.Content.ReadFromJsonAsync<List<StoryDTO>>();
             }
             else if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
@@ -58,8 +58,36 @@ namespace Braveior.MentoringPlatform.Client.Services
            
         }
 
-        
+        public async Task<StoryDTO> GetStory(long storyid)
+        {
+            string authToken = "";
+            //Get AccessToken from local storage
+            authToken = await _localStorageService.GetItemAsync<string>("accessToken");
+            if (authToken == null)
+            {
+                throw new Exception("Access Token not found");
+            }
+            //Add AccessToken to the Bearer header
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
 
-        
+            //REST API call for Search
+            var response = await _httpClient.GetAsync($"api/Kanboard/getstory/{storyid}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<StoryDTO>();
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Invalid Access Token");
+            }
+            else
+            {
+                throw new Exception("Internal Server Error");
+            }
+
+        }
+
+
+
     }
 }

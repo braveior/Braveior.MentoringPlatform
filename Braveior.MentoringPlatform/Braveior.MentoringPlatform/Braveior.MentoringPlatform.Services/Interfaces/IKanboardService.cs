@@ -9,6 +9,6 @@ namespace Braveior.MentoringPlatform.Services.Interfaces
 {
     public interface IKanboardService
     {
-        List<StoryDTO> GetTasks(long kanboardId);
+        void CreateKanboard(KanboardDTO kanboardDTO);
     }
 }

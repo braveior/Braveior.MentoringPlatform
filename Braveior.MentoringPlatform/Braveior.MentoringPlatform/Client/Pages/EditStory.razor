@@ -1,0 +1,91 @@
+﻿@page "/editstory/{StoryId:long}"
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IStoryService StoryService
+
+@inject ISnackbar Snackbar
+@using TinyMCE.Blazor
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
+    <MudGrid>
+        <MudItem lg="8">
+            <MudText Typo="Typo.h6">Story</MudText>
+            <MudTextField T="string" Variant="Variant.Outlined" @bind-Text="@Story.Name" Lines="5" /><br />
+
+            <MudText Typo="Typo.h6">Status</MudText>
+            <MudSelect T="int" @bind-Value="@Story.Status">
+                <MudSelectItem Value="@(0)">NOT-STARTED</MudSelectItem>
+                <MudSelectItem Value="@(1)">IN-PROGRESS</MudSelectItem>
+                <MudSelectItem Value="@(2)">COMPLETED</MudSelectItem>
+            </MudSelect><br />
+
+            <MudText Typo="Typo.h6">Description</MudText>
+            <Editor Conf="@editorConf" @bind-Value="@Story.Description" ApiKey="l2er93kpxdnkksdayrfy7mrocgpxan4mjxhfz8etl31lxzul" /><br />
+
+            <MudText Typo="Typo.h6">Acceptance Criteria</MudText>
+            <Editor Conf="@editorConf" @bind-Value="@Story.AcceptanceCriteria" ApiKey="l2er93kpxdnkksdayrfy7mrocgpxan4mjxhfz8etl31lxzul" /><br />
+
+            <MudButton Variant="Variant.Outlined" OnClick="SubmitStory">Submit</MudButton>
+        </MudItem>
+        <MudItem lg="4">
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+
+
+
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "index"),
+        new BreadcrumbItem("Kanboard", href: "kanboard"),
+
+
+    };
+    [Parameter]
+    public long StoryId { get; set; }
+
+    private StoryDTO Story { get; set; } = new StoryDTO();
+
+
+    private Dictionary<string, object> editorConf = new Dictionary<string, object>
+{
+            { "plugins", "lists emoticons " },
+            {"menubar", "" },
+
+            { "toolbar", "bold italic underline strikethrough | numlist bullist checklist | alignleft aligncenter alignright alignjustify | outdent indent emoticons"},
+     };
+    protected async override System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        if (StoryId != 0)
+        {
+            Story = await StoryService.GetStory(StoryId);
+        }
+
+        await base.OnInitializedAsync();
+    }
+    private void SubmitStory()
+    {
+        try
+        {
+            if (Story.StoryId == 0)
+            {
+                StoryService.CreateStory(Story);
+            }
+            else
+            {
+                StoryService.UpdateStory(Story);
+            }
+            NavigationManager.NavigateTo($"/kanboard");
+        }
+        catch(Exception ex)
+        {
+            Snackbar.Clear();
+            Snackbar.Add("Error saving story", Severity.Error);
+        }
+    }
+
+
+
+}

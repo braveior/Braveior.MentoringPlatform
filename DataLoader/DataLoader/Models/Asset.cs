@@ -13,6 +13,9 @@ namespace DataLoader.Models
         public string Url { get; set; }
         public long UserId { get; set; }
         public int Points { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public bool IsActive { get; set; }
 
         public virtual User User { get; set; }
     }

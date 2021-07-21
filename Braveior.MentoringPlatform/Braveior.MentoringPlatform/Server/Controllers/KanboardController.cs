@@ -20,17 +20,6 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         {
             _service = service;
         }
-        /// <summary>
-        /// Endpoint to get monthly average ratings for member
-        /// </summary>
-        /// <param name="ratedfor"></param>
-        /// <returns></returns>
-        [HttpGet("gettasks/{kanboardid}")]
-        public IActionResult GetTasks(long kanboardid)
-        {
-            var tasks = _service.GetTasks(kanboardid);
-            return Ok(tasks);
-        }
 
     }
 }

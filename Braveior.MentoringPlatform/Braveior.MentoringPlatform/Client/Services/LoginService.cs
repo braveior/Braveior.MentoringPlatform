@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Braveior.MentoringPlatform.Client.DTO;
+using Braveior.MentoringPlatform.DTO;
 using System.Net.Http.Json;
 using System.Net;
 using Braveior.MentoringPlatform.Client.Services;

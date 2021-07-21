@@ -50,7 +50,7 @@ namespace Braveior.MentoringPlatform.Server
 
             services.AddScoped<IKanboardService, KanboardService>();
             services.AddScoped<ILoginService, LoginService>();
-            services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IStoryService, StoryService>();
 
             services.AddAuthentication(cfg =>
             {

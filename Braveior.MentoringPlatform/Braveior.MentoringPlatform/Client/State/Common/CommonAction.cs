@@ -1,4 +1,4 @@
-﻿using Braveior.MentoringPlatform.Client.DTO;
+﻿using Braveior.MentoringPlatform.DTO;
 
 namespace Braveior.MentoringPlatform.Client.State.Common
 {

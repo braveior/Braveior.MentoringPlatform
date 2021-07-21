@@ -28,6 +28,7 @@ namespace Braveior.MentoringPlatform.Client
             builder.Services.AddSingleton<HttpClient>();
             builder.Services.AddHttpClient<ILoginService, LoginService>(sp => { sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
             builder.Services.AddHttpClient<IKanboardService, KanboardService>(sp => { sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
+            builder.Services.AddHttpClient<IStoryService, StoryService>(sp => { sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
 
 
 

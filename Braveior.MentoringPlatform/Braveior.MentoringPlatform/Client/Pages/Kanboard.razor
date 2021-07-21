@@ -2,51 +2,39 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
-@inject IKanboardService KanboardService
+@inject IStoryService StoryService
 @inject ISnackbar Snackbar
 @using Plk.Blazor.DragDrop
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudGrid>
-        <MudItem xs="3">
-            <MudPaper Elevation="1">
-                Drop Here
-            </MudPaper>
-            <Dropzone Items="Backlog" TItem="TaskDTO">
-                
-                    <MudPaper Elevation="2">
-                        <MudText Typo="Typo.subtitle2">@context.Name</MudText>
-                        <MudText Typo="Typo.body2">@context.Description</MudText>
-                    </MudPaper>
-                
-</Dropzone>
-        </MudItem>
-        <MudItem xs="3">
-            <MudPaper Elevation="1">
-                Drop Here
-            </MudPaper>
-            <Dropzone Items="ToDo" TItem="TaskDTO">
-                <div style="border: 2px solid blue">
+        <MudItem xs="4">
+            
+            <MudChip Label="true" Color="Color.Primary">To-Do</MudChip>
+            <Dropzone Items="ToDo" TItem="StoryDTO">
+                <MudPaper Elevation="2">
+                    <div Class="d-flex flex-row-reverse"><MudIcon Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" @onclick="@(() => NavigateStory(context.StoryId))"  /></div>
                     <MudText Typo="Typo.subtitle2">@context.Name</MudText>
-                    <MudText Typo="Typo.body2">@context.Description</MudText>
-                </div>
+                </MudPaper>
             </Dropzone>
         </MudItem>
-        <MudItem xs="3">
-            <Dropzone Items="InProgress">
-                <div style="border: 2px solid blue">
+        <MudItem xs="4">
+            <MudChip Label="true" Color="Color.Primary">In-Progress</MudChip>
+            <Dropzone Items="InProgress" TItem="StoryDTO">
+                <MudPaper Elevation="2">
+                    <div Class="d-flex flex-row-reverse"><MudIcon Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" @onclick="@(() => NavigateStory(context.StoryId))" /></div>
                     <MudText Typo="Typo.subtitle2">@context.Name</MudText>
-                    <MudText Typo="Typo.body2">@context.Description</MudText>
-                    </div>
-</Dropzone>
+                </MudPaper>
+            </Dropzone>
         </MudItem>
-        <MudItem xs="3">
-            <Dropzone Items="Completed">
-                <div style="border: 2px solid blue">
+        <MudItem xs="4">
+            <MudChip Label="true" Color="Color.Primary">Completed</MudChip>
+            <Dropzone Items="Completed"  TItem="StoryDTO">
+                <MudPaper Elevation="2">
+                    <div Class="d-flex flex-row-reverse"><MudIcon Icon="@Icons.Material.Filled.Visibility" Color="Color.Info" @onclick="@(() => NavigateStory(context.StoryId))" /></div>
                     <MudText Typo="Typo.subtitle2">@context.Name</MudText>
-                    <MudText Typo="Typo.body2">@context.Description</MudText>
-                    </div>
-</Dropzone>
+                </MudPaper>
+            </Dropzone>
         </MudItem>
     </MudGrid>
 </MudContainer>
@@ -63,10 +51,10 @@
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
     ClaimsPrincipal claimsPrincipal;
     MudForm frmLogin;
-    List<TaskDTO> Backlog = new List<TaskDTO>();
-    List<TaskDTO> ToDo = new List<TaskDTO>();
-    List<TaskDTO> InProgress = new List<TaskDTO>();
-    List<TaskDTO> Completed = new List<TaskDTO>();
+    List<StoryDTO> Backlog = new List<StoryDTO>();
+    List<StoryDTO> ToDo = new List<StoryDTO>();
+    List<StoryDTO> InProgress = new List<StoryDTO>();
+    List<StoryDTO> Completed = new List<StoryDTO>();
 
     //Global Authentication State to get the Login Status and data
     [CascadingParameter]
@@ -74,14 +62,24 @@
 
     protected async override System.Threading.Tasks.Task OnInitializedAsync()
     {
-        var tasks = await KanboardService.GetTasks(1);
-        Backlog = tasks.Where(t => t.Status == "CREATED").ToList();
-        ToDo = tasks.Where(t => t.Status == "NOT-STARTED").ToList();
-        InProgress = tasks.Where(t => t.Status == "IN-PROGRESS").ToList();
-        Completed = tasks.Where(t => t.Status == "COMPLETED").ToList();
+        try
+        {
+            var tasks = await StoryService.GetStories(1);
+            ToDo = tasks.Where(t => t.Status == 0).ToList();
+            InProgress = tasks.Where(t => t.Status == 1).ToList();
+            Completed = tasks.Where(t => t.Status == 2).ToList();
+        }
+        catch(Exception ex)
+        {
+            Snackbar.Clear();
+            Snackbar.Add("Error loading data", Severity.Error);
+        }
         await base.OnInitializedAsync();
     }
-
+    private void NavigateStory(long storyid)
+    {
+        NavigationManager.NavigateTo($"/viewstory/{storyid}");
+    }
 
 
 }
