@@ -9,18 +9,18 @@ namespace DataLoader.Models
     {
         public Kanboard()
         {
-            KanboardStories = new HashSet<KanboardStory>();
+            Groups = new HashSet<Group>();
+            Stories = new HashSet<Story>();
         }
 
         public long KanboardId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public long GroupId { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ModifiedDate { get; set; }
 
-        public virtual Group Group { get; set; }
-        public virtual ICollection<KanboardStory> KanboardStories { get; set; }
+        public virtual ICollection<Group> Groups { get; set; }
+        public virtual ICollection<Story> Stories { get; set; }
     }
 }

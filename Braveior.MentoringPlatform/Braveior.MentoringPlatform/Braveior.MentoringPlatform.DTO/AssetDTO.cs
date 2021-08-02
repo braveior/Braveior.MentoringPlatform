@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 
-#nullable disable
-
-namespace Braveior.MentoringPlatform.Repository.Models
+namespace Braveior.MentoringPlatform.DTO
 {
-    public partial class Asset
+    public class AssetDTO
     {
         public long AssetId { get; set; }
         public string Name { get; set; }
@@ -16,10 +13,9 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public DateTime CreationDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         public bool IsActive { get; set; }
-        public int Type { get; set; }
 
         public int Status { get; set; }
+        public int Type { get; set; }
 
-        public virtual User User { get; set; }
     }
 }

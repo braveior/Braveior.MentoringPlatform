@@ -23,6 +23,9 @@ namespace Braveior.MentoringPlatform.Services.Interfaces
         
         void UpdateStoryStatus(StoryDTO storyDTO);
 
+        //List<StoryDTO> GetKanboardStories(long userId);
+
+        KanboardDTO GetKanboard(long kanboardId);
 
     }
 }

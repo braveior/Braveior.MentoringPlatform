@@ -9,7 +9,6 @@ namespace DataLoader.Models
     {
         public Group()
         {
-            Kanboards = new HashSet<Kanboard>();
             Users = new HashSet<User>();
         }
 
@@ -19,9 +18,10 @@ namespace DataLoader.Models
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         public bool IsActive { get; set; }
+        public long? KanboardId { get; set; }
 
         public virtual Institution Institution { get; set; }
-        public virtual ICollection<Kanboard> Kanboards { get; set; }
+        public virtual Kanboard Kanboard { get; set; }
         public virtual ICollection<User> Users { get; set; }
     }
 }

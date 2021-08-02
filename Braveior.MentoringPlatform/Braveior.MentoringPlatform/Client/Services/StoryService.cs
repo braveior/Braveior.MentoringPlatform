@@ -7,6 +7,7 @@ using Braveior.MentoringPlatform.DTO;
 using Blazored.LocalStorage;
 using System.Net.Http.Json;
 using System.Net;
+using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 namespace Braveior.MentoringPlatform.Client.Services
 {
@@ -40,7 +41,6 @@ namespace Braveior.MentoringPlatform.Client.Services
             }
             //Add AccessToken to the Bearer header
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
-
             //REST API call to add the rating for a member
             var response = await _httpClient.PostAsJsonAsync($"api/Story/createstory", storyDTO);
             if (response.IsSuccessStatusCode)
@@ -225,7 +225,7 @@ namespace Braveior.MentoringPlatform.Client.Services
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public async Task<List<StoryDTO>> GetStories(long kanboardId)
+        public async Task<List<StoryDTO>> GetStories(long userId)
         {
             string authToken = "";
             //Get AccessToken from local storage
@@ -238,7 +238,7 @@ namespace Braveior.MentoringPlatform.Client.Services
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
 
             //REST API call for Search
-            var response = await _httpClient.GetAsync($"api/Story/getstories/{kanboardId}");
+            var response = await _httpClient.GetAsync($"api/Story/getkanboardstories/{userId}?{DateTime.Now.ToLongTimeString()}");
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<List<StoryDTO>>();
@@ -267,7 +267,7 @@ namespace Braveior.MentoringPlatform.Client.Services
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
 
             //REST API call for Search
-            var response = await _httpClient.GetAsync($"api/Story/getstory/{storyid}");
+            var response = await _httpClient.GetAsync($"api/Story/getstory/{storyid}?{DateTime.Now.ToLongTimeString()}");
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<StoryDTO>();
@@ -301,7 +301,7 @@ namespace Braveior.MentoringPlatform.Client.Services
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
 
             //REST API call for Search
-            var response = await _httpClient.GetAsync($"api/Story/gettasks/{storyId}");
+            var response = await _httpClient.GetAsync($"api/Story/gettasks/{storyId}?{DateTime.Now.ToLongTimeString()}");
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<List<TaskDTO>>();
@@ -344,6 +344,34 @@ namespace Braveior.MentoringPlatform.Client.Services
                 throw new Exception("Internal Server Error");
             }
 
+        }
+
+        public async Task<KanboardDTO> GetKanboard(long kanboardId)
+        {
+            string authToken = "";
+            //Get AccessToken from local storage
+            authToken = await _localStorageService.GetItemAsync<string>("accessToken");
+            if (authToken == null)
+            {
+                throw new Exception("Access Token not found");
+            }
+            //Add AccessToken to the Bearer header
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+
+            //REST API call for Search
+            var response = await _httpClient.GetAsync($"api/Story/getkanboard/{kanboardId}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<KanboardDTO>();
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Invalid Access Token");
+            }
+            else
+            {
+                throw new Exception("Internal Server Error");
+            }
         }
 
     }

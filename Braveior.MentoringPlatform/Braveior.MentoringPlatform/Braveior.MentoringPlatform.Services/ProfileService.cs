@@ -10,15 +10,39 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Braveior.MentoringPlatform.Services
 {
-    public class KanboardService : IKanboardService
+    public class ProfileService : IProfileService
     {
         private readonly IMapper _mapper;
 
-        public KanboardService(IMapper mapper)
+        public ProfileService(IMapper mapper)
         {
             _mapper = mapper;
         }
 
+        public List<AssetDTO> GetAssets(long userId)
+        {
+            using (var db = new braveiordbContext())
+            {
+                var assets = db.Assets.Where(u => u.UserId == userId).ToList();
+                return _mapper.Map<List<AssetDTO>>(assets);
+            }
+        }
+        public ProfileDTO GetProfile(long userId)
+        {
+            using (var db = new braveiordbContext())
+            {
+                var user = db.Users.Where(u => u.UserId == userId).Include(a=>a.Assets).Include(us => us.UserSkills).Include(i=>i.Institution).FirstOrDefault();
+                ProfileDTO profileDTO = new ProfileDTO()
+                {
+                    StudentName = user.Name,
+                    Description = user.Description,
+                    InsitutionName = user.Institution.Name,
+                    UserSkills = _mapper.Map<List<UserSkillDTO>>(user.UserSkills),
+                    Assets = _mapper.Map<List<AssetDTO>>(user.Assets)
+                };
+                return profileDTO;
+            }
+        }
         //public void CreateUser(UserDTO userDTO)
         //{
         //    User newUser = new User()
@@ -69,7 +93,7 @@ namespace Braveior.MentoringPlatform.Services
         //    }
         //}
 
-        
+
         //public void CreateProduct(ProductDTO productDTO)
         //{
         //    Product newProduct = new Product()

@@ -8,6 +8,7 @@ namespace Braveior.MentoringPlatform.Client.State.Common
         protected override CommonState GetInitialState() =>
             new CommonState(
                 loggedInUser: null
+
                );
     }
 }

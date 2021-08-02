@@ -4,12 +4,13 @@ using Braveior.MentoringPlatform.Services.Interfaces;
 using Braveior.MentoringPlatform.Repository.Models;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection;
 using Braveior.MentoringPlatform.Repository;
 
@@ -57,7 +58,8 @@ namespace Braveior.MentoringPlatform.Services
         {
             using (var db = new braveiordbContext())
             {
-                var user = db.Users.Where(a => a.Email == userDTO.Email && a.Password == userDTO.Password).FirstOrDefault();
+                //var user = db.Users.Where(a => a.Email == userDTO.Email && a.Password == userDTO.Password).Include(g => g.Group).ThenInclude(k => k.Kanboards).FirstOrDefault();
+                var user = db.Users.Where(a => a.Email == userDTO.Email && a.Password == userDTO.Password).Include(g=>g.Group).ThenInclude(i=>i.Institution).FirstOrDefault();
 
 
                 if (user == null)
@@ -67,7 +69,7 @@ namespace Braveior.MentoringPlatform.Services
                 else
                 {
                     var userWithToken = _mapper.Map<UserDTO>(user);
-                    userWithToken.AccessToken = GenerateAccessToken(user.Email);
+                    userWithToken.AccessToken = GenerateAccessToken(userWithToken);
                     return userWithToken;
                 }
             }
@@ -85,7 +87,7 @@ namespace Braveior.MentoringPlatform.Services
             {
                 using (var db = new braveiordbContext())
                 {
-                    var user = db.Users.Where(a => a.Email == email).FirstOrDefault();
+                    var user = db.Users.Where(a => a.Email == email).Include(g => g.Group).ThenInclude(i => i.Institution).FirstOrDefault();
                     return _mapper.Map<UserDTO>(user);
                 }
             }
@@ -100,7 +102,7 @@ namespace Braveior.MentoringPlatform.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        private string GenerateAccessToken(string email)
+        private string GenerateAccessToken(UserDTO userDTO)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes("thisisasecretkeyanddontsharewithanyone");
@@ -108,7 +110,8 @@ namespace Braveior.MentoringPlatform.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Email, email)
+                    new Claim(ClaimTypes.Email, userDTO.Email),
+                    new Claim(ClaimTypes.Role, userDTO.Role),
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),

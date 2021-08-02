@@ -17,7 +17,7 @@ namespace DataLoader.Models
         public string Description { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? CompletionDate { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
         public long StoryId { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ModifiedDate { get; set; }

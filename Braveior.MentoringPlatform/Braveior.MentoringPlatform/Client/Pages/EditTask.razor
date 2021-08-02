@@ -4,7 +4,7 @@
 @inject IStoryService StoryService
 
 @inject ISnackbar Snackbar
-@using TinyMCE.Blazor
+@*@using TinyMCE.Blazor*@
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudGrid>
         <MudItem lg="8">
@@ -16,7 +16,8 @@
                 <MudSelectItem Value="@(2)">COMPLETED</MudSelectItem>
             </MudSelect><br />
             <MudText Typo="Typo.subtitle2">Description</MudText>
-            <Editor Conf="@editorConf" @bind-Value="@Task.Description" ApiKey="l2er93kpxdnkksdayrfy7mrocgpxan4mjxhfz8etl31lxzul" /><br />
+            @*<Editor Conf="@editorConf" @bind-Value="@Task.Description" ApiKey="l2er93kpxdnkksdayrfy7mrocgpxan4mjxhfz8etl31lxzul" /><br />*@
+            <MudTextField T="string" Variant="Variant.Outlined" @bind-Text="@Task.Description" Lines="5" /><br />
             <MudButton Variant="Variant.Outlined" OnClick="SubmitTask">Submit</MudButton>
         </MudItem>
         <MudItem lg="4">
@@ -31,7 +32,7 @@
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "index"),
-        new BreadcrumbItem("Kanboard", href: "kanboard")
+        new BreadcrumbItem("Kanboard", href: "viewkanboard")
 
     };
     [Parameter]
@@ -58,7 +59,13 @@
             {
                 Task = await StoryService.GetTask(TaskId);
             }
-            Task = await StoryService.GetTask(TaskId);
+            else
+            {
+                Task.Name = "";
+                Task.Description = "";
+                Task.StoryId = StoryId;
+                Task.Status = 0;
+            }
             _items.Add(new BreadcrumbItem("Task", href: $"viewtask/{TaskId}/{StoryId}"));
         }
         catch(Exception ex)
@@ -80,7 +87,7 @@
             {
                 StoryService.UpdateTask(Task);
             }
-            NavigationManager.NavigateTo($"/viewtask/{Task.TaskId}/{StoryId}");
+            NavigationManager.NavigateTo($"/viewstory/{StoryId}");
         }
         catch (Exception ex)
         {

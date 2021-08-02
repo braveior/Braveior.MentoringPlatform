@@ -17,6 +17,8 @@ namespace Braveior.MentoringPlatform.DTO
         public string AcceptanceCriteria { get; set; }
         public long ProductId { get; set; }
 
+        public long KanboardId { get; set; }
+
         public string ProductName { get; set; }
         public DateTime ModifiedDate { get; set; }
         public bool IsActive { get; set; }

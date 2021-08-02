@@ -64,11 +64,23 @@ namespace Braveior.MentoringPlatform.Services
         {
             using (var db = new braveiordbContext())
             {
-                var stories = db.KanboardStories.Where(t => t.KanboardId == kanboardId).Select(s => s.Story);
+                var stories = db.Stories.Where(t => t.KanboardId == kanboardId).ToList();
                 return _mapper.Map<List<StoryDTO>>(stories);
             }
 
         }
+
+        //public List<StoryDTO> GetKanboardStories(long userId)
+        //{
+        //    using (var db = new braveiordbContext())
+        //    {
+        //        var user = db.Users.Where(u => u.UserId == userId).Include(g=>g.Group).ThenInclude(k=>k.Kanboards).FirstOrDefault();
+        //        var kanboard = user.Group.Kanboards.FirstOrDefault();
+        //        var stories = db.Stories.Where(k => k.KanboardId == kanboard.KanboardId).ToList();
+        //        return _mapper.Map<List<StoryDTO>>(stories);
+        //    }
+
+        //}
 
         public List<TaskDTO> GetTasks(long storyId)
         {
@@ -200,6 +212,14 @@ namespace Braveior.MentoringPlatform.Services
             }
         }
 
+        public KanboardDTO GetKanboard(long kanboardId)
+        {
+            using (var db = new braveiordbContext())
+            {
+                var kanboard = db.Kanboards.Where(k => k.KanboardId == kanboardId).Include(s => s.Stories).ThenInclude(t => t.Tasks).ThenInclude(ut => ut.UserTasks).ThenInclude(u => u.User).FirstOrDefault();
+                return _mapper.Map<KanboardDTO>(kanboard);
+            }
 
+        }
     }
 }

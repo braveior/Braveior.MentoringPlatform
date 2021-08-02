@@ -3,7 +3,7 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
 @inject IStoryService StoryService
 @inject ISnackbar Snackbar
-@using TinyMCE.Blazor
+@*@using TinyMCE.Blazor*@
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
     <MudGrid>
@@ -13,7 +13,8 @@
             <MudText Typo="Typo.subtitle2">Status</MudText>
             <MudChip Color="@GetStatus(Task.Status).Color" Size="Size.Medium">@GetStatus(Task.Status).Value</MudChip>
             <MudText Typo="Typo.subtitle2">Description</MudText>
-            <Editor Conf="@editorConf" @bind-Value="@Task.Description" ApiKey="l2er93kpxdnkksdayrfy7mrocgpxan4mjxhfz8etl31lxzul" /><br />
+            @*<Editor Conf="@editorConf" @bind-Value="@Task.Description" ApiKey="l2er93kpxdnkksdayrfy7mrocgpxan4mjxhfz8etl31lxzul" /><br />*@
+            <MudTextField T="string" Variant="Variant.Outlined" @bind-Text="@Task.Description" Lines="5" ReadOnly="true" /><br />
         </MudItem>
         <MudItem lg="4">
             <MudIcon Icon="@Icons.Material.Filled.Edit" Color="Color.Info" Size="Size.Large" @onclick="@(() => NavigateEditTask(Task.TaskId))" />
@@ -26,7 +27,7 @@
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
         new BreadcrumbItem("Home", href: "index"),
-        new BreadcrumbItem("Kanboard", href: "kanboard")
+        new BreadcrumbItem("Kanboard", href: "viewkanboard")
 
     };
     [Parameter]

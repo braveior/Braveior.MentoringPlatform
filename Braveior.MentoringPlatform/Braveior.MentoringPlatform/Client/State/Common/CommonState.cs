@@ -11,6 +11,7 @@ namespace Braveior.MentoringPlatform.Client.State.Common
 		public CommonState(UserDTO loggedInUser)
 		{
 			LoggedInUser = loggedInUser;
+
 		}
 	}
 }

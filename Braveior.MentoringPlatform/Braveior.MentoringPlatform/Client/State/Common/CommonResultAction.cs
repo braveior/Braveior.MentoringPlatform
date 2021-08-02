@@ -7,9 +7,12 @@ namespace Braveior.MentoringPlatform.Client.State.Common
         public UserDTO LoggedInUser { get; }
 
 
+
+
         public CommonResultAction(UserDTO user)
         {
             LoggedInUser = user;
+
         }
     }
 }

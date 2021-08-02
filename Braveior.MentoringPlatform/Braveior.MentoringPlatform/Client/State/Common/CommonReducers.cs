@@ -8,6 +8,7 @@ namespace Braveior.MentoringPlatform.Client.State.Common
 		public static CommonState ReduceAction(CommonState state, CommonAction action) =>
 	new CommonState(
 		loggedInUser: null
+
 		);
 
 		[ReducerMethod]

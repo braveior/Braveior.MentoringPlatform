@@ -10,6 +10,8 @@ namespace Braveior.MentoringPlatform.DTO
         public string Email { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
+
+        public GroupDTO Group { get; set; }
         public long? GroupId { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ModifiedDate { get; set; }

@@ -9,7 +9,6 @@ namespace DataLoader.Models
     {
         public Story()
         {
-            KanboardStories = new HashSet<KanboardStory>();
             Tasks = new HashSet<Task>();
         }
 
@@ -21,12 +20,14 @@ namespace DataLoader.Models
         public DateTime CreationDate { get; set; }
         public DateTime? CompletedDate { get; set; }
         public string AcceptanceCriteria { get; set; }
-        public long ProductId { get; set; }
+        public long? ProductId { get; set; }
         public DateTime ModifiedDate { get; set; }
         public bool IsActive { get; set; }
+        public DateTime? StartDate { get; set; }
+        public long? KanboardId { get; set; }
 
+        public virtual Kanboard Kanboard { get; set; }
         public virtual Product Product { get; set; }
-        public virtual ICollection<KanboardStory> KanboardStories { get; set; }
         public virtual ICollection<Task> Tasks { get; set; }
     }
 }

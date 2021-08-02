@@ -113,7 +113,31 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         [HttpGet("getstories/{kanboardId}")]
         public IActionResult GetStories(long kanboardId)
         {
+
             return Ok(_service.GetStories(kanboardId));
+        }
+
+        /// <summary>
+        /// Endpoint to get monthly average ratings for member
+        /// </summary>
+        /// <param name="ratedfor"></param>
+        /// <returns></returns>
+        //[HttpGet("getkanboardstories/{userId}")]
+        //public IActionResult GetKanboardStories(long userId)
+        //{
+        //    return Ok(_service.GetKanboardStories(userId));
+        //}
+
+        /// <summary>
+        /// Endpoint to get monthly average ratings for member
+        /// </summary>
+        /// <param name="ratedfor"></param>
+        /// <returns></returns>
+        [HttpGet("getkanboard/{kanboardId}")]
+        public IActionResult GetKanboard(long kanboardId)
+        {
+            var test = HttpContext.User;
+            return Ok(_service.GetKanboard(kanboardId));
         }
 
         /// <summary>

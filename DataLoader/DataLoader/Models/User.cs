@@ -10,6 +10,7 @@ namespace DataLoader.Models
         public User()
         {
             Assets = new HashSet<Asset>();
+            UserSkills = new HashSet<UserSkill>();
             UserTasks = new HashSet<UserTask>();
             Vlogs = new HashSet<Vlog>();
         }
@@ -28,6 +29,7 @@ namespace DataLoader.Models
         public virtual Group Group { get; set; }
         public virtual Institution Institution { get; set; }
         public virtual ICollection<Asset> Assets { get; set; }
+        public virtual ICollection<UserSkill> UserSkills { get; set; }
         public virtual ICollection<UserTask> UserTasks { get; set; }
         public virtual ICollection<Vlog> Vlogs { get; set; }
     }

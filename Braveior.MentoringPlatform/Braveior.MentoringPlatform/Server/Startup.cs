@@ -51,6 +51,7 @@ namespace Braveior.MentoringPlatform.Server
             services.AddScoped<IKanboardService, KanboardService>();
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IStoryService, StoryService>();
+            services.AddScoped<IProfileService, ProfileService>();
 
             services.AddAuthentication(cfg =>
             {

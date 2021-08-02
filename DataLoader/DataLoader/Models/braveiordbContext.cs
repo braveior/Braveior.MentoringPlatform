@@ -21,11 +21,11 @@ namespace DataLoader.Models
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Institution> Institutions { get; set; }
         public virtual DbSet<Kanboard> Kanboards { get; set; }
-        public virtual DbSet<KanboardStory> KanboardStories { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Story> Stories { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserSkill> UserSkills { get; set; }
         public virtual DbSet<UserTask> UserTasks { get; set; }
         public virtual DbSet<Vlog> Vlogs { get; set; }
 
@@ -34,8 +34,7 @@ namespace DataLoader.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                //optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=braveiordb;Trusted_Connection=True;");
-                optionsBuilder.UseSqlServer("Data Source=tcp:s11.everleap.com;Initial Catalog=DB_7090_braveiordb;User ID=DB_7090_braveiordb_user;Password=Sreelami1981$$;Integrated Security=False;");
+                optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=braveiordb;Trusted_Connection=True;");
             }
         }
 
@@ -81,6 +80,11 @@ namespace DataLoader.Models
                     .HasForeignKey(d => d.InstitutionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Group_Institution");
+
+                entity.HasOne(d => d.Kanboard)
+                    .WithMany(p => p.Groups)
+                    .HasForeignKey(d => d.KanboardId)
+                    .HasConstraintName("FK_Group_Kanboard");
             });
 
             modelBuilder.Entity<Institution>(entity =>
@@ -119,35 +123,6 @@ namespace DataLoader.Models
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Name).IsRequired();
-
-                entity.HasOne(d => d.Group)
-                    .WithMany(p => p.Kanboards)
-                    .HasForeignKey(d => d.GroupId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Kanboard_Group");
-            });
-
-            modelBuilder.Entity<KanboardStory>(entity =>
-            {
-                entity.HasKey(e => e.KanboardStoryd);
-
-                entity.ToTable("KanboardStory");
-
-                entity.Property(e => e.CreationDate).HasColumnType("datetime");
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.HasOne(d => d.Kanboard)
-                    .WithMany(p => p.KanboardStories)
-                    .HasForeignKey(d => d.KanboardId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_KanboardStory_Kanboard");
-
-                entity.HasOne(d => d.Story)
-                    .WithMany(p => p.KanboardStories)
-                    .HasForeignKey(d => d.StoryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_KanboardStory_Story");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -177,10 +152,16 @@ namespace DataLoader.Models
 
                 entity.Property(e => e.Name).IsRequired();
 
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Kanboard)
+                    .WithMany(p => p.Stories)
+                    .HasForeignKey(d => d.KanboardId)
+                    .HasConstraintName("FK_Story_Kanboard");
+
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Stories)
                     .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Story_Product");
             });
 
@@ -197,10 +178,6 @@ namespace DataLoader.Models
                 entity.Property(e => e.Name).IsRequired();
 
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasMaxLength(50);
 
                 entity.HasOne(d => d.Story)
                     .WithMany(p => p.Tasks)
@@ -241,6 +218,25 @@ namespace DataLoader.Models
                     .HasForeignKey(d => d.InstitutionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_User_Institution");
+            });
+
+            modelBuilder.Entity<UserSkill>(entity =>
+            {
+                entity.ToTable("UserSkill");
+
+                entity.Property(e => e.CreationDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Description).IsRequired();
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserSkills)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserSkill_User");
             });
 
             modelBuilder.Entity<UserTask>(entity =>

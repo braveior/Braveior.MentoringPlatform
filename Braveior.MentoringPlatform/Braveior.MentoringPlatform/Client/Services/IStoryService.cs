@@ -16,11 +16,14 @@ namespace Braveior.MentoringPlatform.Client.Services
 
         Task<List<TaskDTO>> GetTasks(long taskId);
 
-        Task<List<StoryDTO>> GetStories(long storyId);
+        Task<List<StoryDTO>> GetStories(long userId);
 
         Task UpdateTaskStatus(TaskDTO taskDTO);
 
         Task UpdateStoryStatus(StoryDTO storyDTO);
+
+        //Task<KanboardDTO> GetKanboard(long kanboarId); 
+        Task<KanboardDTO> GetKanboard(long kanboardId); 
 
 
 
