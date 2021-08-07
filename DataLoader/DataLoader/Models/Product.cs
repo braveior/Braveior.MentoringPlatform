@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace DataLoader.Models
+namespace Braveior.MentoringPlatform.Repository.Models
 {
     public partial class Product
     {
         public Product()
         {
+            Challenges = new HashSet<Challenge>();
             Stories = new HashSet<Story>();
-            Vlogs = new HashSet<Vlog>();
         }
 
         public long ProductId { get; set; }
@@ -21,7 +21,7 @@ namespace DataLoader.Models
         public bool IsActive { get; set; }
         public bool IsBraveior { get; set; }
 
+        public virtual ICollection<Challenge> Challenges { get; set; }
         public virtual ICollection<Story> Stories { get; set; }
-        public virtual ICollection<Vlog> Vlogs { get; set; }
     }
 }

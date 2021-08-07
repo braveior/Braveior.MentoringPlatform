@@ -31,17 +31,72 @@ namespace Braveior.MentoringPlatform.Services
         {
             using (var db = new braveiordbContext())
             {
-                var user = db.Users.Where(u => u.UserId == userId).Include(a=>a.Assets).Include(us => us.UserSkills).Include(i=>i.Institution).FirstOrDefault();
+                var user = db.Users.Where(u => u.UserId == userId).Include(i => i.Institution).Include(uk => uk.UserSkills).ThenInclude(a => a.Skill).FirstOrDefault();
+
+                var studentWorkItemstest = db.StudentWorkItems.Where(u => u.UserId == userId).FirstOrDefault();
+                var studentWorkItems = db.StudentWorkItems.Where(u => u.UserId == userId).Include(a => a.Asset).Include(a=>a.Activity).Include(a => a.Challenge).ThenInclude(a=>a.Product);
                 ProfileDTO profileDTO = new ProfileDTO()
                 {
-                    StudentName = user.Name,
+                    UserId = user.UserId,
+                    StudentName = $"{user.FirstName} {user.LastName}",
+                    LinkedInLink = user.LinkedInUrl,
                     Description = user.Description,
                     InsitutionName = user.Institution.Name,
                     UserSkills = _mapper.Map<List<UserSkillDTO>>(user.UserSkills),
-                    Assets = _mapper.Map<List<AssetDTO>>(user.Assets)
+                    StudentWorkItems = _mapper.Map<List<StudentWorkItemDTO>>(studentWorkItems)
                 };
                 return profileDTO;
             }
+        }
+
+        public List<ProfileDTO> GetProfiles()
+        {
+            using (var db = new braveiordbContext())
+            {
+                var students = db.Users.Where(u => u.Display == true && u.Role == "Student").Include(us => us.UserSkills).Include(i => i.Institution).ToList();
+                List<ProfileDTO> profiles = new List<ProfileDTO>();
+                foreach (var student in students)
+                {
+                    ProfileDTO profileDTO = new ProfileDTO()
+                    {
+                         UserId = student.UserId,
+                        StudentName = $"{student.FirstName} {student.LastName}",
+                        LinkedInLink = student.LinkedInUrl,
+                        Description = student.Description,
+                        InsitutionName = student.Institution.Name,
+                        //TODO
+                        Points = student.Points.Value,
+                        UserSkills = _mapper.Map<List<UserSkillDTO>>(student.UserSkills)
+                    };
+                    profiles.Add(profileDTO);
+                }
+                return GetRankedProfiles(profiles);
+            }
+        }
+
+        private List<ProfileDTO> GetRankedProfiles(List<ProfileDTO> profiles)
+        {
+            //List<ProfileDTO> rankedProfiles = new List<ProfileDTO>();
+            int r = 1;
+            double lastWin = -1;
+            long lastRank = 1;
+            Console.WriteLine("Entered");
+            var rankedProfiles = (from name in profiles
+                             let point = name.Points
+                             orderby point descending
+                             select new ProfileDTO { UserId = name.UserId, StudentName = name.StudentName, Description = name.Description, InsitutionName = name.InsitutionName, UserSkills = name.UserSkills,  Rank = r++, Points = point }).ToList();
+            foreach (var rank in rankedProfiles)
+            {
+                if (lastWin == rank.Points)
+                {
+                    rank.Rank = lastRank;
+                }
+                lastWin = rank.Points;
+                lastRank = rank.Rank;
+
+                //yield return rank;
+            }
+            return rankedProfiles.OrderBy(r=>r.Rank).ToList();
         }
         //public void CreateUser(UserDTO userDTO)
         //{

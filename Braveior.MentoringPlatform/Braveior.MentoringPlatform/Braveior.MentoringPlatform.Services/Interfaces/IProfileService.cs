@@ -11,6 +11,7 @@ namespace Braveior.MentoringPlatform.Services.Interfaces
     {
         ProfileDTO GetProfile(long userId);
 
+        List<ProfileDTO> GetProfiles();
         List<AssetDTO> GetAssets(long userId);
     }
 }

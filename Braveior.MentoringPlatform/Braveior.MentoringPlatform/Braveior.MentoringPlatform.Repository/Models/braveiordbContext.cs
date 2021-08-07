@@ -17,17 +17,20 @@ namespace Braveior.MentoringPlatform.Repository.Models
         {
         }
 
+        public virtual DbSet<Activity> Activities { get; set; }
         public virtual DbSet<Asset> Assets { get; set; }
+        public virtual DbSet<Challenge> Challenges { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Institution> Institutions { get; set; }
         public virtual DbSet<Kanboard> Kanboards { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Skill> Skills { get; set; }
         public virtual DbSet<Story> Stories { get; set; }
+        public virtual DbSet<StudentWorkItem> StudentWorkItems { get; set; }
         public virtual DbSet<Task> Tasks { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserSkill> UserSkills { get; set; }
         public virtual DbSet<UserTask> UserTasks { get; set; }
-        public virtual DbSet<Vlog> Vlogs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -41,6 +44,27 @@ namespace Braveior.MentoringPlatform.Repository.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Activity>(entity =>
+            {
+                entity.ToTable("Activity");
+
+                entity.Property(e => e.CreationDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description).IsRequired();
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Name).IsRequired();
+            });
 
             modelBuilder.Entity<Asset>(entity =>
             {
@@ -63,6 +87,25 @@ namespace Braveior.MentoringPlatform.Repository.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Asset_User");
+            });
+
+            modelBuilder.Entity<Challenge>(entity =>
+            {
+                entity.ToTable("Challenge");
+
+                entity.Property(e => e.CreationDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Description).IsRequired();
+
+                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+
+                entity.Property(e => e.Name).IsRequired();
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.Challenges)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Challenge_Product");
             });
 
             modelBuilder.Entity<Group>(entity =>
@@ -98,6 +141,8 @@ namespace Braveior.MentoringPlatform.Repository.Models
                 entity.Property(e => e.CreationDate).HasColumnType("datetime");
 
                 entity.Property(e => e.District).HasMaxLength(50);
+
+                entity.Property(e => e.Logo).HasMaxLength(50);
 
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
 
@@ -136,6 +181,31 @@ namespace Braveior.MentoringPlatform.Repository.Models
                 entity.Property(e => e.Name).IsRequired();
             });
 
+            modelBuilder.Entity<Skill>(entity =>
+            {
+                entity.ToTable("Skill");
+
+                entity.Property(e => e.CreationDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });
+
             modelBuilder.Entity<Story>(entity =>
             {
                 entity.ToTable("Story");
@@ -163,6 +233,32 @@ namespace Braveior.MentoringPlatform.Repository.Models
                     .WithMany(p => p.Stories)
                     .HasForeignKey(d => d.ProductId)
                     .HasConstraintName("FK_Story_Product");
+            });
+
+            modelBuilder.Entity<StudentWorkItem>(entity =>
+            {
+                entity.ToTable("StudentWorkItem");
+
+                entity.HasOne(d => d.Activity)
+                    .WithMany(p => p.StudentWorkItems)
+                    .HasForeignKey(d => d.ActivityId)
+                    .HasConstraintName("FK_StudentTask_Activity");
+
+                entity.HasOne(d => d.Asset)
+                    .WithMany(p => p.StudentWorkItems)
+                    .HasForeignKey(d => d.AssetId)
+                    .HasConstraintName("FK_StudentTask_Asset");
+
+                entity.HasOne(d => d.Challenge)
+                    .WithMany(p => p.StudentWorkItems)
+                    .HasForeignKey(d => d.ChallengeId)
+                    .HasConstraintName("FK_StudentTask_Challenge");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.StudentWorkItems)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_StudentWorkItem_User");
             });
 
             modelBuilder.Entity<Task>(entity =>
@@ -194,11 +290,17 @@ namespace Braveior.MentoringPlatform.Repository.Models
 
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(75);
+
+                entity.Property(e => e.FirstName).HasMaxLength(200);
+
+                entity.Property(e => e.Grade).HasMaxLength(250);
+
+                entity.Property(e => e.LastName).HasMaxLength(200);
+
+                entity.Property(e => e.LinkedInUrl).HasColumnName("linkedInUrl");
 
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Name).IsRequired();
 
                 entity.Property(e => e.Password)
                     .IsRequired()
@@ -226,11 +328,13 @@ namespace Braveior.MentoringPlatform.Repository.Models
 
                 entity.Property(e => e.CreationDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Description).IsRequired();
-
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Name).IsRequired();
+                entity.HasOne(d => d.Skill)
+                    .WithMany(p => p.UserSkills)
+                    .HasForeignKey(d => d.SkillId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserSkill_Skill");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserSkills)
@@ -258,30 +362,6 @@ namespace Braveior.MentoringPlatform.Repository.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserTask_User");
-            });
-
-            modelBuilder.Entity<Vlog>(entity =>
-            {
-                entity.ToTable("Vlog");
-
-                entity.Property(e => e.CreationDate).HasColumnType("datetime");
-
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-
-                entity.Property(e => e.Name).IsRequired();
-
-                entity.Property(e => e.Url).IsRequired();
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.Vlogs)
-                    .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK_Vlog_Product");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Vlogs)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Vlog_User");
             });
 
             OnModelCreatingPartial(modelBuilder);

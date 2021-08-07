@@ -36,7 +36,7 @@ namespace Braveior.MentoringPlatform.Services
             {
                 User newUser = new User()
                 {
-                     Name = userDTO.Name,
+
                      Email = userDTO.Email,
                      InstitutionId = userDTO.InstitutionId,
                      Role = userDTO.Role,

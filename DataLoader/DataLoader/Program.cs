@@ -1,7 +1,7 @@
 ﻿//using DataLoader.Models;
 using System;
 
-namespace DataLoader
+namespace Braveior.MentoringPlatform.Repository
 {
     class Program
     {

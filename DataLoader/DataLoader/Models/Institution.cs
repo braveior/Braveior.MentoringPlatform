@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace DataLoader.Models
+namespace Braveior.MentoringPlatform.Repository.Models
 {
     public partial class Institution
     {
@@ -24,6 +24,7 @@ namespace DataLoader.Models
         public DateTime CreationDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         public bool IsActive { get; set; }
+        public string Logo { get; set; }
 
         public virtual ICollection<Group> Groups { get; set; }
         public virtual ICollection<User> Users { get; set; }

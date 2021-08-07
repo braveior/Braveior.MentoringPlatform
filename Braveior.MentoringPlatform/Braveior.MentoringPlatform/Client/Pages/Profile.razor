@@ -1,0 +1,23 @@
+﻿@page "/profile"
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IProfileService ProfileService
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudAutocomplete T="InstitutionDTO" Label="Choose College" @bind-Value="college" SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : $"{e.Name}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"/>
+</MudContainer>
+
+    @code {
+
+        private InstitutionDTO college;
+
+        private List<InstitutionDTO> AssetsList { get; set; } = new List<InstitutionDTO>();
+
+        private async Task<IEnumerable<InstitutionDTO>> Search(string key)
+        {
+            return await DataService.SearchMembers(key);
+        }
+
+
+    }

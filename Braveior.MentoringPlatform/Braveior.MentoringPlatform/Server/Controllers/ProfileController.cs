@@ -26,9 +26,20 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getprofile/{userId}")]
-        public IActionResult GetStory(long userId)
+        public IActionResult GetProfile(long userId)
         {
             return Ok(_service.GetProfile(userId));
+        }
+
+        /// <summary>
+        /// Endpoint to get monthly average ratings for member
+        /// </summary>
+        /// <param name="ratedfor"></param>
+        /// <returns></returns>
+        [HttpGet("getprofiles")]
+        public IActionResult GetProfiles()
+        {
+            return Ok(_service.GetProfiles());
         }
         /// <summary>
         /// Endpoint to get monthly average ratings for member

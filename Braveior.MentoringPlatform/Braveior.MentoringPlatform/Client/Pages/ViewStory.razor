@@ -42,7 +42,7 @@
                                         <div Class="d-flex flex-row-reverse">
                                             @foreach (var user in task.Users)
                                             {
-                                                <MudText Typo="Typo.overline">@user.Name |</MudText>
+                                                <MudText Typo="Typo.overline">@user.FirstName @user.LastName |</MudText>
                                             }
                                         </div>
                                     }

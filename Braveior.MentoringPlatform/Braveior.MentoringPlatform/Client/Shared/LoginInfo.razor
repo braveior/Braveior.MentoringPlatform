@@ -4,7 +4,7 @@
 
 <AuthorizeView>
     <Authorized>
-        <MudText Class="pr-4" Typo="Typo.subtitle1">Welcome @CommonState.Value.LoggedInUser.Name</MudText>
+        <MudText Class="pr-4" Typo="Typo.subtitle1">Welcome @CommonState.Value.LoggedInUser.FirstName @CommonState.Value.LoggedInUser.LastName </MudText>
         <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Secondary" OnClick="Logout">Logout</MudButton>
     </Authorized>
 </AuthorizeView>

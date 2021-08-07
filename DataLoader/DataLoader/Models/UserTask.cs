@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace DataLoader.Models
+namespace Braveior.MentoringPlatform.Repository.Models
 {
     public partial class UserTask
     {
