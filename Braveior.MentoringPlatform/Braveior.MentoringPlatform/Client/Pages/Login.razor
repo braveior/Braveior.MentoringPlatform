@@ -55,7 +55,7 @@
             claimsPrincipal = (await authenticationStateTask).User;
             if (claimsPrincipal.Identity.IsAuthenticated)
             {
-                NavigationManager.NavigateTo("/index");
+                NavigationManager.NavigateTo("/profile");
             }
         }
         catch(Exception ex)
@@ -76,7 +76,7 @@
             {
                 //Redirect to Home page if Authentication successful
                 await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(returnedUser);
-                NavigationManager.NavigateTo("/kanboard");
+                NavigationManager.NavigateTo("/profile");
             }
             else
             {

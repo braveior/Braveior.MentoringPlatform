@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 
-#nullable disable
-
-namespace Braveior.MentoringPlatform.Repository.Models
+namespace Braveior.MentoringPlatform.DTO
 {
-    public partial class Activity
+    public class EventDTO
     {
-        public Activity()
-        {
-            StudentWorkItems = new HashSet<StudentWorkItem>();
-        }
-
-        public long ActivityId { get; set; }
+        public long EventId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int Type { get; set; }
@@ -22,6 +14,6 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public int MinPoints { get; set; }
         public int MaxPoints { get; set; }
 
-        public virtual ICollection<StudentWorkItem> StudentWorkItems { get; set; }
+        public string URL { get; set; }
     }
 }

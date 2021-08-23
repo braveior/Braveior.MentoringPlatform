@@ -69,10 +69,7 @@ namespace Braveior.MentoringPlatform.Server
                 };
             });
 
-            services.AddDbContext<braveiordbContext>(options =>
-                  options.UseSqlServer("Data Source=.\\sqlexpress;User ID=sa;Password=password$$;Initial Catalog=braveiordb").EnableSensitiveDataLogging());
-
-            services.AddSwaggerGen(setup =>
+             services.AddSwaggerGen(setup =>
             {
                 setup.SwaggerDoc("v1.0", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Braveior Mentoring API", Version = "v1.0" });
 
@@ -104,6 +101,9 @@ namespace Braveior.MentoringPlatform.Server
             services.AddAutoMapper(typeof(Startup));
 
             services.AddRazorPages();
+            services.AddDbContext<braveiordbContext>(options =>
+              //options.UseMySql("server=localhost;user=root;password=password;database=taskmanager_dotnet", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.26-mysql")));
+            options.UseSqlServer("Data Source=tcp:s10.everleap.com;Initial Catalog=DB_7090_braveior;User ID=DB_7090_braveior_user;Password=Sreelami1981$$;Integrated Security=False;"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

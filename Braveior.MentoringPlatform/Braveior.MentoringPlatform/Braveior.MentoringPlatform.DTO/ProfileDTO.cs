@@ -11,11 +11,14 @@ namespace Braveior.MentoringPlatform.DTO
         public string LinkedInLink { get; set; }
         public long Points { get; set; }
 
+        public string Grade { get; set; }
+
+        public bool IsLeader { get; set; }
         public long Rank { get; set; }
         public string Description  { get; set; }
         public List<UserSkillDTO> UserSkills { get; set; }
 
-        public List<StudentWorkItemDTO> StudentWorkItems { get; set; }
+        public List<StudentActivityDTO> StudentWorkItems { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         public bool IsActive { get; set; }

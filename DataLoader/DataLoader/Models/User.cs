@@ -9,8 +9,7 @@ namespace Braveior.MentoringPlatform.Repository.Models
     {
         public User()
         {
-            Assets = new HashSet<Asset>();
-            StudentWorkItems = new HashSet<StudentWorkItem>();
+            StudentActivities = new HashSet<StudentActivity>();
             UserSkills = new HashSet<UserSkill>();
             UserTasks = new HashSet<UserTask>();
         }
@@ -19,7 +18,6 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public long InstitutionId { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; }
         public long? GroupId { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ModifiedDate { get; set; }
@@ -30,12 +28,13 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public bool? Display { get; set; }
-        public long? Points { get; set; }
+        public long Points { get; set; }
+        public int Role { get; set; }
+        public bool IsLeader { get; set; }
 
         public virtual Group Group { get; set; }
         public virtual Institution Institution { get; set; }
-        public virtual ICollection<Asset> Assets { get; set; }
-        public virtual ICollection<StudentWorkItem> StudentWorkItems { get; set; }
+        public virtual ICollection<StudentActivity> StudentActivities { get; set; }
         public virtual ICollection<UserSkill> UserSkills { get; set; }
         public virtual ICollection<UserTask> UserTasks { get; set; }
     }

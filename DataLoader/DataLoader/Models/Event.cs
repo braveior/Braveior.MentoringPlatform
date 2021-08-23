@@ -5,14 +5,14 @@ using System.Collections.Generic;
 
 namespace Braveior.MentoringPlatform.Repository.Models
 {
-    public partial class Activity
+    public partial class Event
     {
-        public Activity()
+        public Event()
         {
-            StudentWorkItems = new HashSet<StudentWorkItem>();
+            StudentActivities = new HashSet<StudentActivity>();
         }
 
-        public long ActivityId { get; set; }
+        public long EventId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public int Type { get; set; }
@@ -21,7 +21,8 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public bool? IsActive { get; set; }
         public int MinPoints { get; set; }
         public int MaxPoints { get; set; }
+        public string Url { get; set; }
 
-        public virtual ICollection<StudentWorkItem> StudentWorkItems { get; set; }
+        public virtual ICollection<StudentActivity> StudentActivities { get; set; }
     }
 }

@@ -13,10 +13,11 @@ namespace Braveior.MentoringPlatform.Services
     public class StoryService : IStoryService
     {
         private readonly IMapper _mapper;
-
-        public StoryService(IMapper mapper)
+        braveiordbContext _dbContext;
+        public StoryService(IMapper mapper, braveiordbContext dbContext)
         {
             _mapper = mapper;
+            _dbContext = dbContext;
         }
 
 

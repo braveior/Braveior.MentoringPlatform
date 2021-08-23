@@ -20,10 +20,9 @@ namespace Braveior.MentoringPlatform.Server.MApping
             CreateMap<Story, StoryDTO>().ForMember(dto => dto.Tasks, opt => opt.MapFrom(x => x.Tasks.ToList()));
             CreateMap<Kanboard, KanboardDTO>();
             CreateMap<UserSkill, UserSkillDTO>();
-            CreateMap<Asset, AssetDTO>();
-            CreateMap<Activity, ActivityDTO>();
+            CreateMap<Event, EventDTO>();
             CreateMap<UserSkill, UserSkillDTO>().ForMember(dto => dto.Skill, opt => opt.MapFrom(x => x.Skill));
-            CreateMap<StudentWorkItem, StudentWorkItemDTO>().ForMember(dto => dto.Activity, opt => opt.MapFrom(x => x.Activity)).ForMember(dto => dto.Asset, opt => opt.MapFrom(x => x.Asset)).ForMember(dto => dto.Challenge, opt => opt.MapFrom(x => x.Challenge));
+            CreateMap<StudentActivity, StudentActivityDTO>().ForMember(dto => dto.Event, opt => opt.MapFrom(x => x.Event)).ForMember(dto => dto.Challenge, opt => opt.MapFrom(x => x.Challenge));
             CreateMap<Challenge, ChallengeDTO>().ForMember(dto => dto.Product, opt => opt.MapFrom(x => x.Product));
             CreateMap<Skill, SkillDTO>();
             CreateMap<Product, ProductDTO>();

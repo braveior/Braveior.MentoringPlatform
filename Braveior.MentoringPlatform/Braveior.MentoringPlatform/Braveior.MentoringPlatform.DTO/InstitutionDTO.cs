@@ -4,7 +4,7 @@ namespace Braveior.MentoringPlatform.DTO
 {
     public class InstitutionDTO
     {
-        public long Id { get; set; }
+        public long InstitutionId { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string Country { get; set; }

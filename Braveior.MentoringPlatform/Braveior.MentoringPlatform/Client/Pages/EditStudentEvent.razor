@@ -1,0 +1,91 @@
+﻿@namespace Braveior.MentoringPlatform.Client.Pages
+@inject ISnackbar Snackbar
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IProfileService ProfileService
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                Edit Student Event
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudTextField T="string" Variant="Variant.Outlined" Value="@GetActivityName(StudentEvent.Type)" Disabled="true" />
+            <MudTextField T="string" Variant="Variant.Outlined" Value="@StudentEvent.Event.Name" Disabled="true" />
+            <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentEvent.Points" />
+            <MudRadioGroup @bind-SelectedOption="@StudentEvent.Status">
+                <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
+                <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
+            </MudRadioGroup>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => UpdateStudentEvent())">Update Event</MudButton>
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Default" OnClick="Cancel">Close</MudButton>
+        </DialogActions>
+    </MudDialog>
+
+
+    @code {
+        private SkillDTO skill;
+
+        [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+        [Parameter] public StudentActivityDTO StudentEvent { get; set; }
+
+        private void Cancel()
+        {
+            MudDialog.Cancel();
+        }
+        protected override async Task OnInitializedAsync()
+        {
+        }
+
+        
+        private async Task UpdateStudentEvent()
+        {
+
+            await ProfileService.UpdateStudentEvent(StudentEvent);
+            MudDialog.Close();
+        }
+        private string GetActivityName(int id)
+        {
+            switch (id)
+            {
+                case 1:
+                    return "Group Discussion";
+                case 2:
+                    return "Hackathon";
+                case 3:
+                    return "R & D Solutioning";
+                case 4:
+                    return "Challenge";
+                case 5:
+                    return "Vlog";
+                case 6:
+                    return "Blog";
+                default:
+                    return "General";
+            }
+        }
+        private string GetActivityStatus(int id)
+        {
+            switch (id)
+            {
+                case 0:
+                    return "Pending";
+                case 1:
+                    return "Approved";
+                default:
+                    return "Pending";
+            }
+        }
+        private bool IsEvent(int id)
+        {
+            if (id == 1 || id == 2 || id == 3)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+    }

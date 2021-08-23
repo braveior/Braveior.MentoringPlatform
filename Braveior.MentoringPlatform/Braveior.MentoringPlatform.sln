@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Braveior.MentoringPlatform.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Braveior.MentoringPlatform.Services", "Braveior.MentoringPlatform\Braveior.MentoringPlatform.Services\Braveior.MentoringPlatform.Services.csproj", "{B3AFEAFD-A632-43DF-BA42-9752D67B03A6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Braveior.HallOfFame.PointsCalculator", "Braveior.MentoringPlatform\Braveior.HallOfFame.PointsCalculator\Braveior.HallOfFame.PointsCalculator.csproj", "{209D1C2C-59B8-47A4-9FF3-19378B685FD1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B3AFEAFD-A632-43DF-BA42-9752D67B03A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3AFEAFD-A632-43DF-BA42-9752D67B03A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3AFEAFD-A632-43DF-BA42-9752D67B03A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{209D1C2C-59B8-47A4-9FF3-19378B685FD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{209D1C2C-59B8-47A4-9FF3-19378B685FD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{209D1C2C-59B8-47A4-9FF3-19378B685FD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{209D1C2C-59B8-47A4-9FF3-19378B685FD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

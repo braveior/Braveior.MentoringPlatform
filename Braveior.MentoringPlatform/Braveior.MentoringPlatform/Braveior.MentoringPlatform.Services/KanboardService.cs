@@ -13,10 +13,11 @@ namespace Braveior.MentoringPlatform.Services
     public class KanboardService : IKanboardService
     {
         private readonly IMapper _mapper;
-
-        public KanboardService(IMapper mapper)
+        braveiordbContext _dbContext;
+        public KanboardService(IMapper mapper, braveiordbContext dbContext)
         {
             _mapper = mapper;
+            _dbContext = dbContext;
         }
 
         //public void CreateUser(UserDTO userDTO)
@@ -107,11 +108,11 @@ namespace Braveior.MentoringPlatform.Services
             {
                 Name = kanboardDTO.Name
             };
-            using (var db = new braveiordbContext())
-            {
-                db.Kanboards.Add(newKanboard);
-                db.SaveChanges();
-            }
+            //  using (var db = new braveiordbContext())
+            //  {
+            _dbContext.Kanboards.Add(newKanboard);
+            _dbContext.SaveChanges();
+            //}
         }
 
     }

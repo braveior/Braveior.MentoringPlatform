@@ -15,6 +15,7 @@ namespace Braveior.MentoringPlatform.DTO
         public int? MinPoints { get; set; }
         public int? MaxPoints { get; set; }
 
+        public string URL { get; set; }
         public ProductDTO Product { get; set; }
     }
 }

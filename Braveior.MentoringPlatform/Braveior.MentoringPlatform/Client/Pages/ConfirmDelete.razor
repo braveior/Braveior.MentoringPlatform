@@ -1,0 +1,43 @@
+﻿@namespace Braveior.MentoringPlatform.Client.Pages
+@inject ISnackbar Snackbar
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IProfileService ProfileService
+    <MudDialog>
+        <DialogContent>
+            <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Size="Size.Medium" /><MudText Typo="Typo.h6"> Are you sure you want to Delete ?</MudText>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Error" OnClick="@(() => Delete())">Delete</MudButton>
+            <MudButton OnClick="Cancel">Close</MudButton>
+        </DialogActions>
+    </MudDialog>
+
+
+    @code {
+
+        [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+        [Parameter] public DeleteDTO DeleteData { get; set; }
+
+        private void Cancel()
+        {
+            MudDialog.Cancel();
+        }
+
+        private async Task Delete()
+        {
+            switch (DeleteData.Type)
+            {
+                case 1:
+                    await ProfileService.DeleteUserSkill(DeleteData.ItemId);
+                    break;
+                case 2:
+                    await ProfileService.DeleteStudentActivity(DeleteData.ItemId);
+                    break;
+            }
+
+            MudDialog.Close();
+        }
+
+
+    }

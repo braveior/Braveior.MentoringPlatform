@@ -1,23 +1,316 @@
 ﻿@page "/profile"
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IProfileService ProfileService
 @inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@using Braveior.MentoringPlatform.Client.Pages
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
-    <MudAutocomplete T="InstitutionDTO" Label="Choose College" @bind-Value="college" SearchFunc="@Search" ToStringFunc="@(e=> e==null?null : $"{e.Name}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary"/>
+    <MudGrid>
+        @if (student.Role != 1)
+        {
+            <MudItem xs="6">
+                <MudAutocomplete T="InstitutionDTO" Label="Choose College" @bind-Value="college" SearchFunc="@SearchCollege" ToStringFunc="@(e => e == null ? null : $"{e.Name}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudAutocomplete Disabled="@(college == null ? true : false)" T="UserDTO" Label="Choose Student" @bind-Value="student" SearchFunc="@SearchStudent" ToStringFunc="@(e => e == null ? null : $"{e.FirstName} {e.LastName}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudButton Disabled="@(student.UserId == 0 ? true : false)"  Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => LoadProfile())">Load Student Profile</MudButton>
+            </MudItem>
+        }
+        <MudItem xs="6">
+            <MudTextField T="string" Variant="Variant.Outlined" Label="FirstName" @bind-Value="student.FirstName" ReadOnly="true" />
+        </MudItem>
+        <MudItem xs="6">
+            <MudTextField T="string" Variant="Variant.Outlined" Label="LastName" @bind-Value="student.LastName" ReadOnly="true" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField T="string" Variant="Variant.Outlined" Label="About myself" @bind-Value="student.Description" Lines="8" ReadOnly="true" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudTextField T="string" Variant="Variant.Outlined" Label="LinkedIn" @bind-Value="student.LinkedInUrl" ReadOnly="true" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton Disabled="@(student.UserId == 0 ? true : false)"  Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => UpdateStudentProfile(student))">Edit Profile</MudButton>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+                <MudTabPanel Disabled="@(student.UserId ==0? true:false)" Text="Skills">
+                    <MudButton Disabled="@(student.UserId==0? true:false)"  Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddSkill())">Add</MudButton>
+                    <MudTable Dense="true" Items="@UserSkills" Hover="true" Breakpoint="Breakpoint.Sm">
+                        <HeaderContent>
+
+                            <MudTh>Skill</MudTh>
+                            <MudTh>Rating</MudTh>
+                            <MudTh></MudTh>
+                            <MudTh></MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Skill">@context.Skill.Name</MudTd>
+                            <MudTd DataLabel="Rating">@context.Stars</MudTd>
+                            <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => NavigateEditSkill(@context))">Edit</MudButton></MudTd>
+                            <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Error" OnClick="@(() => DeleteSkill(@context))">Delete</MudButton></MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudTabPanel>
+                <MudTabPanel Disabled="@(student.UserId==0? true:false)" Text="Events">
+                    <MudButton Disabled="@(student.UserId==0? true:false)"  Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddEvent())">Add</MudButton>
+                    <MudTable Dense="true" Items="@Events" Hover="true" Breakpoint="Breakpoint.Sm">
+                        <HeaderContent>
+
+                            <MudTh>Type</MudTh>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Points</MudTh>
+                            <MudTh>URL</MudTh>
+                            <MudTh>Status</MudTh>
+                            <MudTh></MudTh>
+                            <MudTh></MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Type">@GetActivityName(context.Type)</MudTd>
+                            <MudTd DataLabel="Name">@(context.Event!=null ? context.Event.Name : " ")</MudTd>
+                            <MudTd DataLabel="Points">@context.Points</MudTd>
+                            <MudTd DataLabel="URL">@context.Event.URL</MudTd>
+                            <MudTd DataLabel="Status">@GetActivityStatus(context.Status)</MudTd>
+                            <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => NavigateEditEvent(@context))">Edit</MudButton></MudTd>
+                            <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Error" OnClick="@(() => DeleteStudentActivity(@context))">Delete</MudButton></MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudTabPanel>
+                <MudTabPanel Disabled="@(student.UserId==0? true:false)" Text="Challenges">
+                    <MudButton Disabled="@(student.UserId==0? true:false)"  Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddChallenge())">Add</MudButton>
+                    <MudTable Dense="true" Items="@Challenges" Hover="true" Breakpoint="Breakpoint.Sm">
+                        <HeaderContent>
+
+                            <MudTh>Type</MudTh>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Points</MudTh>
+                            <MudTh>URL</MudTh>
+                            <MudTh>Status</MudTh>
+                            <MudTh></MudTh>
+                            <MudTh></MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Type">@GetActivityName(context.Type)</MudTd>
+                            <MudTd DataLabel="Name">@(context.Challenge != null ? context.Challenge.Name : " ")</MudTd>
+                            <MudTd DataLabel="Points">@context.Points</MudTd>
+                            <MudTd DataLabel="URL">@context.Challenge.URL</MudTd>
+                            <MudTd DataLabel="Status">@GetActivityStatus(context.Status)</MudTd>
+                            <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => NavigateEditChallenge(@context))">Edit</MudButton></MudTd>
+                            <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Error" OnClick="@(() => DeleteStudentActivity(@context))">Delete</MudButton></MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudTabPanel>
+                <MudTabPanel Disabled="@(student.UserId==0? true:false)" Text="Blogs/Vlogs">
+                    <MudButton Disabled="@(student.UserId==0? true:false)"  Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddAsset())">Add</MudButton>
+                    <MudTable Dense="true" Items="@Blogs" Hover="true" Breakpoint="Breakpoint.Sm">
+                        <HeaderContent>
+
+                            <MudTh>Type</MudTh>
+                            <MudTh>Event</MudTh>
+                            <MudTh>Challenge</MudTh>
+                            <MudTh>Points</MudTh>
+                            <MudTh>Status</MudTh>
+                            <MudTh>URL</MudTh>
+                            <MudTh></MudTh>
+                            <MudTh></MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Type">@GetActivityName(context.Type)</MudTd>
+                            <MudTd DataLabel="Name">@context.AssetName</MudTd>
+                            <MudTd DataLabel="Points">@context.Points</MudTd>
+                            <MudTd DataLabel="URL">@context.AssetUrl</MudTd>
+                            <MudTd DataLabel="Status">@GetActivityStatus(context.Status)</MudTd>
+                            <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => NavigateEditAsset(@context))">Edit</MudButton></MudTd>
+                            <MudTd><MudButton  Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Error" OnClick="@(() => DeleteStudentActivity(@context))">Delete</MudButton></MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudTabPanel>
+            </MudTabs>
+        </MudItem>
+    </MudGrid>
+
 </MudContainer>
 
-    @code {
+@code {
 
-        private InstitutionDTO college;
+    private InstitutionDTO college;
 
-        private List<InstitutionDTO> AssetsList { get; set; } = new List<InstitutionDTO>();
+    private UserDTO student = new UserDTO();
 
-        private async Task<IEnumerable<InstitutionDTO>> Search(string key)
+    private List<UserSkillDTO> UserSkills = new List<UserSkillDTO>();
+
+    private List<StudentActivityDTO> Events = new List<StudentActivityDTO>();
+    private List<StudentActivityDTO> Challenges = new List<StudentActivityDTO>();
+    private List<StudentActivityDTO> Blogs = new List<StudentActivityDTO>();
+
+    private List<InstitutionDTO> AssetsList { get; set; } = new List<InstitutionDTO>();
+
+
+    [Inject]
+    private IState<CommonState> CommonState { get; set; }
+
+    private async Task<IEnumerable<InstitutionDTO>> SearchCollege(string key)
+    {
+        return await ProfileService.GetColleges();
+    }
+
+    private async Task<IEnumerable<UserDTO>> SearchStudent(string key)
+    {
+        return await ProfileService.GetStudents(college.InstitutionId, key.Trim());
+    }
+    //private async Task ViewLogs(string name, string ns)
+    //{
+    //    var logs = await KubernetesService.GetPodLogs(name, ns);
+    //    var parameters = new DialogParameters { ["LogText"] = logs };
+    //    DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+    //    var dialog = DialogService.Show<LogView>("Delete Server", parameters, dialogOptions);
+    //}
+    protected override async Task OnInitializedAsync()
+    {
+        if (CommonState.Value.LoggedInUser.Role == 1)
         {
-            return await DataService.SearchMembers(key);
+            college = CommonState.Value.LoggedInUser.Institution;
+            student = CommonState.Value.LoggedInUser;
+            await LoadProfile();
         }
+        // await LoadUserSkills();
+    }
+    private async Task LoadProfile()
+    {
 
+
+        UserSkills = await ProfileService.GetUserSkills(student.UserId);
+        var studentActivities = await ProfileService.GetStudentActivities(student.UserId);
+        Events = studentActivities.Where(a => a.Type == 1 || a.Type == 2 || a.Type == 3).ToList();
+        Challenges = studentActivities.Where(a => a.Type == 4).ToList();
+        Blogs = studentActivities.Where(a => a.Type == 5 || a.Type == 6).ToList();
+
+        StateHasChanged();
 
     }
+    private async Task UpdateStudentProfile(UserDTO student)
+    {
+        var parameters = new DialogParameters { ["Student"] = student };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<EditProfile>("Edit Profile", parameters, dialogOptions);
+    }
+    private async Task NavigateEditSkill(UserSkillDTO userSkill)
+    {
+        var parameters = new DialogParameters { ["UserSkill"] = userSkill };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<EditSkill>("Edit Skill", parameters, dialogOptions);
+    }
+    private async Task NavigateEditEvent(StudentActivityDTO studentActivity)
+    {
+        var parameters = new DialogParameters { ["StudentEvent"] = studentActivity };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<EditStudentEvent>("Edit Event", parameters, dialogOptions);
+    }
+    private async Task NavigateEditChallenge(StudentActivityDTO studentActivity)
+    {
+        var parameters = new DialogParameters { ["StudentChallenge"] = studentActivity };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<EditStudentChallenge>("Edit Challenge", parameters, dialogOptions);
+    }
+    private async Task NavigateEditAsset(StudentActivityDTO studentActivity)
+    {
+        var parameters = new DialogParameters { ["StudentAsset"] = studentActivity };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<EditStudentAsset>("Edit Asset", parameters, dialogOptions);
+    }
+    private async Task DeleteStudentActivity(StudentActivityDTO studentActivity)
+    {
+        var parameters = new DialogParameters { ["DeleteData"] = new DeleteDTO() { ItemId = studentActivity.StudentActivityId, Type = 2 } };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<ConfirmDelete>("Confirm Delete ?", parameters, dialogOptions);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            await LoadProfile();
+        }
+    }
+    
+    private async Task DeleteSkill(UserSkillDTO userSkill)
+    {
+        var parameters = new DialogParameters { ["DeleteData"] = new DeleteDTO() {  ItemId = userSkill.UserSkillId, Type = 1 } };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<ConfirmDelete>("Confirm Delete ?", parameters, dialogOptions);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            await LoadProfile();
+        }
+    }
+    private async Task AddSkill()
+    {
+        UserSkillDTO userSkill = new UserSkillDTO();
+        userSkill.UserId = student.UserId;
+        var parameters = new DialogParameters { ["UserSkill"] = userSkill };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<AddStudentSkill>("Add Student Skill", parameters, dialogOptions);
+
+    }
+    private async Task AddEvent()
+    {
+        StudentActivityDTO studentEvent = new StudentActivityDTO();
+        studentEvent.UserId = student.UserId;
+        var parameters = new DialogParameters { ["StudentEvent"] = studentEvent };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<AddStudentEvent>("Add Student Event", parameters, dialogOptions);
+    }
+    private async Task AddChallenge()
+    {
+        StudentActivityDTO studentChallenge = new StudentActivityDTO();
+        studentChallenge.UserId = student.UserId;
+        studentChallenge.Type = 4;
+        var parameters = new DialogParameters { ["StudentChallenge"] = studentChallenge };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<AddStudentChallenge>("Add Student Challenge", parameters, dialogOptions);
+    }
+    private async Task AddAsset()
+    {
+        StudentActivityDTO studentAsset = new StudentActivityDTO();
+        studentAsset.UserId = student.UserId;
+        var parameters = new DialogParameters { ["StudentAsset"] = studentAsset };
+        DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+        var dialog = DialogService.Show<AddStudentAsset>("Add Student Asset", parameters, dialogOptions);
+    }
+
+    private string GetActivityName(int id)
+    {
+        switch (id)
+        {
+            case 1:
+                return "Group Discussion";
+            case 2:
+                return "Hackathon";
+            case 3:
+                return "R & D Solutioning";
+            case 4:
+                return "Challenge";
+            case 5:
+                return "Blog";
+            case 6:
+                return "Vlog";
+            default:
+                return "General";
+        }
+    }
+    private string GetActivityStatus(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                return "Pending";
+            case 1:
+                return "Approved";
+            default:
+                return "Pending";
+        }
+    }
+}

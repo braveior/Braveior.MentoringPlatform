@@ -13,7 +13,22 @@
 </head>
 
 <body>
-    <div id="app">Loading...</div>
+    <div id="app">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-8">
+                    <p></p>
+                    Loading ...
+                    <br />
+                    <div class="progress">
+                        <div id="progressbar" class="progress-bar progress-bar-striped active" role="progressbar" style="width:0"></div>
+                    </div>
+                </div>
+                <div class="col-2"></div>
+            </div>
+        </div>
+    </div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
@@ -23,8 +38,36 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
     <script src="_content/Fluxor.Blazor.Web/scripts/index.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-    <script src="_framework/blazor.webassembly.js"></script>
-    <script src="_content/TinyMCE.Blazor/tinymce-blazor.js"></script>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <script>
+        var i = 0;
+        var allResourcesBeingLoaded = [];
+        Blazor.start({ // start manually with loadBootResource
+            loadBootResource: function (type, name, defaultUri, integrity) {
+                if (type == "dotnetjs")
+                    return defaultUri;
+
+                var fetchResources = fetch(defaultUri, {
+                    cache: 'no-cache',
+                    integrity: integrity,
+                    headers: { 'MyCustomHeader': 'My custom value' }
+                });
+
+
+                allResourcesBeingLoaded.push(fetchResources);
+                fetchResources.then((r) => {
+                    i++;
+                    var total = allResourcesBeingLoaded.length;
+                    var progressbar = document.getElementById('progressbar');
+                    var value = parseInt((i * 100.0) / total);
+                    var pct = value + '%';
+                    progressbar.style.width = pct;
+                    console.info(i + '/' + total + ' (' + pct + ') ' + name);
+                });
+                return fetchResources;
+            }
+        });
+    </script>
     <script src="_content/ChartJs.Blazor.Fork/ChartJsBlazorInterop.js"></script>
 </body>
 

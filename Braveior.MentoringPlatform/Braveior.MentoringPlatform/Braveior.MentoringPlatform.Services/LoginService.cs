@@ -22,18 +22,19 @@ namespace Braveior.MentoringPlatform.Services
     public class LoginService : ILoginService
     {
 
-
+        braveiordbContext _dbContext;
         private readonly IMapper _mapper;
-        public LoginService(IMapper mapper)
+        public LoginService(IMapper mapper, braveiordbContext dbContext)
         {
             _mapper = mapper;
+            _dbContext = dbContext;
         }
 
 
         public void Register(UserDTO userDTO)
         {
-            using (var db = new braveiordbContext())
-            {
+            //using (var db = new braveiordbContext())
+            //{
                 User newUser = new User()
                 {
 
@@ -43,9 +44,9 @@ namespace Braveior.MentoringPlatform.Services
                      Password = userDTO.Password
                           
                 };
-                db.Users.Add(newUser);
-                db.SaveChanges();
-            }
+            _dbContext.Users.Add(newUser);
+            _dbContext.SaveChanges();
+            //}
         }
 
 
@@ -56,10 +57,10 @@ namespace Braveior.MentoringPlatform.Services
         /// <returns></returns>
         public UserDTO Login(LoginDTO userDTO)
         {
-            using (var db = new braveiordbContext())
-            {
+            //using (var db = new braveiordbContext())
+            //{
                 //var user = db.Users.Where(a => a.Email == userDTO.Email && a.Password == userDTO.Password).Include(g => g.Group).ThenInclude(k => k.Kanboards).FirstOrDefault();
-                var user = db.Users.Where(a => a.Email == userDTO.Email && a.Password == userDTO.Password).Include(g=>g.Group).ThenInclude(i=>i.Institution).FirstOrDefault();
+                var user = _dbContext.Users.Where(a => a.Email == userDTO.Email && a.Password == userDTO.Password).Include(g=>g.Group).ThenInclude(i=>i.Institution).FirstOrDefault();
 
 
                 if (user == null)
@@ -72,7 +73,7 @@ namespace Braveior.MentoringPlatform.Services
                     userWithToken.AccessToken = GenerateAccessToken(userWithToken);
                     return userWithToken;
                 }
-            }
+            //}
 
         }
         /// <summary>
@@ -85,11 +86,11 @@ namespace Braveior.MentoringPlatform.Services
             var email = ValidateAccessToken(accessToken);
             if (!String.IsNullOrEmpty(email))
             {
-                using (var db = new braveiordbContext())
-                {
-                    var user = db.Users.Where(a => a.Email == email).Include(g => g.Group).ThenInclude(i => i.Institution).FirstOrDefault();
+               // using (var db = new braveiordbContext())
+               // {
+                    var user = _dbContext.Users.Where(a => a.Email == email).Include(g => g.Group).ThenInclude(i => i.Institution).FirstOrDefault();
                     return _mapper.Map<UserDTO>(user);
-                }
+              //  }
             }
 
             throw new Exception("Invalid access Token");
@@ -111,7 +112,7 @@ namespace Braveior.MentoringPlatform.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Email, userDTO.Email),
-                    new Claim(ClaimTypes.Role, userDTO.Role),
+                    new Claim(ClaimTypes.Role, userDTO.Role.ToString()),
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
