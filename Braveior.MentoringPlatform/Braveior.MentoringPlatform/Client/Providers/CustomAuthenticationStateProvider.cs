@@ -7,6 +7,7 @@ using Braveior.MentoringPlatform.Client.Services;
 using Braveior.MentoringPlatform.DTO;
 using Braveior.MentoringPlatform.Client.State.Common;
 using Fluxor;
+using System;
 
 namespace Braveior.MentoringPlatform.Client.Providers
 {
@@ -34,24 +35,32 @@ namespace Braveior.MentoringPlatform.Client.Providers
         /// <returns></returns>
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-
-            //Get Access token stored in the Browser Local storage
-            var accessToken = await _localStorageService.GetItemAsync<string>("accessToken");
             ClaimsPrincipal claimsprincipal;
-
-            if (accessToken != null && accessToken != string.Empty)
+            try
             {
-                //REST API call to authenticate User by Access Token
-                UserDTO member = await _loginService.GetUserByAccessTokenAsync(accessToken);
-                claimsprincipal = GetClaimsPrincipal(member);
-                if (member.Email != null)
+                //Get Access token stored in the Browser Local storage
+                var accessToken = await _localStorageService.GetItemAsync<string>("accessToken");
+                
+
+                if (accessToken != null && accessToken != string.Empty)
                 {
-                    //Set the Authenticated User data in Fluxor Global State
-                    _dispatcher.Dispatch(new CommonAction(member));
+                    //REST API call to authenticate User by Access Token
+                    UserDTO member = await _loginService.GetUserByAccessTokenAsync(accessToken);
+                    claimsprincipal = GetClaimsPrincipal(member);
+                    if (member.Email != null)
+                    {
+                        //Set the Authenticated User data in Fluxor Global State
+                        _dispatcher.Dispatch(new CommonAction(member));
+                    }
+                }
+                else
+                {
+                    claimsprincipal = new ClaimsPrincipal(new ClaimsIdentity());
                 }
             }
-            else
+            catch (Exception ex)
             {
+                await _localStorageService.RemoveItemAsync("accessToken");
                 claimsprincipal = new ClaimsPrincipal(new ClaimsIdentity());
             }
             return await Task.FromResult(new AuthenticationState(claimsprincipal));
@@ -112,6 +121,8 @@ namespace Braveior.MentoringPlatform.Client.Providers
                                 }, "apiauth_type");
             }
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+            
+
             return claimsPrincipal;
         }
 

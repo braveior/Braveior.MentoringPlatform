@@ -46,6 +46,8 @@ namespace Braveior.MentoringPlatform.Client
             builder.Services.AddMudServices();
             builder.Services.AddBlazorDragDrop();
 
+            builder.Services.AddApiAuthorization();
+
             await builder.Build().RunAsync();
         }
     }

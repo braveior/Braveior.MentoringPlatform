@@ -12,11 +12,15 @@
             <MudTextField T="string" Variant="Variant.Outlined" Value="@GetActivityName(StudentChallenge.Type)" Disabled="true" />
             <MudTextField T="string" Variant="Variant.Outlined" Value="@StudentChallenge.Challenge.Name" Disabled="true" />
             <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="@StudentChallenge.AssetUrl" />
-            <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentChallenge.Points" />
-            <MudRadioGroup @bind-SelectedOption="@StudentChallenge.Status">
-                <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
-                <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
-            </MudRadioGroup>
+            <AuthorizeView Roles="2">
+                <Authorized>
+                    <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentChallenge.Points" />
+                    <MudRadioGroup @bind-SelectedOption="@StudentChallenge.Status">
+                        <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
+                        <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
+                    </MudRadioGroup>
+                </Authorized>
+            </AuthorizeView>
         </DialogContent>
         <DialogActions>
             <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => UpdateStudentChallenge())">Update Challenge</MudButton>
@@ -28,7 +32,7 @@
     @code {
         private SkillDTO skill;
 
-       //private long points = 0;
+        //private long points = 0;
 
         //private int status = 0;
 
@@ -45,8 +49,16 @@
         {
             //StudentActivity.Points = points;
             //StudentActivity.Status = status;
-            await ProfileService.UpdateStudentChallenge(StudentChallenge);
-            MudDialog.Close();
+            try
+            {
+                await ProfileService.UpdateStudentChallenge(StudentChallenge);
+                MudDialog.Close();
+            }
+            catch (Exception)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
         }
         private string GetActivityName(int id)
         {

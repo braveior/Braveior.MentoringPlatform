@@ -26,17 +26,25 @@
 
         private async Task Delete()
         {
-            switch (DeleteData.Type)
+            try
             {
-                case 1:
-                    await ProfileService.DeleteUserSkill(DeleteData.ItemId);
-                    break;
-                case 2:
-                    await ProfileService.DeleteStudentActivity(DeleteData.ItemId);
-                    break;
-            }
+                switch (DeleteData.Type)
+                {
+                    case 1:
+                        await ProfileService.DeleteUserSkill(DeleteData.ItemId);
+                        break;
+                    case 2:
+                        await ProfileService.DeleteStudentActivity(DeleteData.ItemId);
+                        break;
+                }
 
-            MudDialog.Close();
+                MudDialog.Close();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
         }
 
 

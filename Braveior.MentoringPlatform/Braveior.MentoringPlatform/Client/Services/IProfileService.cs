@@ -35,6 +35,12 @@ namespace Braveior.MentoringPlatform.Client.Services
 
         Task UpdateStudentAsset(StudentActivityDTO studentActitityDTO);
 
+        Task ResetPassword(UserDTO userDTO);
+
+        Task ApproveStudentActivity(StudentActivityDTO studentActivityDTO);
+
+        Task<List<StudentActivityDTO>> GetPendingStudentActivities();
+
         Task AddUserSkill(UserSkillDTO userSkillDTO);
 
         Task AddStudentEvent(StudentActivityDTO studentActivityDTO);

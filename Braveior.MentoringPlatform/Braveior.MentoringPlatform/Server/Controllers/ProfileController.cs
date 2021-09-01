@@ -29,6 +29,8 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         [HttpGet("getprofile/{userId}")]
         public IActionResult GetProfile(long userId)
         {
+
+
             return Ok(_service.GetProfile(userId));
         }
 
@@ -42,6 +44,19 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         {
             return Ok(_service.GetProfiles());
         }
+
+        /// <summary>
+        /// Endpoint to get monthly average ratings for member
+        /// </summary>
+        /// <param name="ratedfor"></param>
+        /// <returns></returns>
+        [HttpGet("getpendingstudentactivities")]
+        public IActionResult GetPendingStudentActivties()
+        {
+            return Ok(_service.GetPendingStudentActivties());
+        }
+
+        
 
         /// <summary>
         /// Endpoint to get monthly average ratings for member
@@ -105,6 +120,8 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         [HttpGet("getuserskills/{userId}")]
         public IActionResult GetUserSkills(long userId)
         {
+            var accessToken = HttpContext;
+            var accessToken1 = Request.Headers["Authorization"];
             return Ok(_service.GetUserSkills(userId));
         }
 
@@ -158,6 +175,31 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// </summary>
         /// <param name="ratedfor"></param>
         /// <returns></returns>
+        [HttpPost("approvestudentactivity")]
+        public IActionResult ApproveStudentActivity(StudentActivityDTO studentActivityDTO)
+        {
+            _service.ApproveStudentActivity(studentActivityDTO);
+            return Ok();
+        }
+        
+
+        /// <summary>
+        /// Endpoint to get monthly average ratings for member
+        /// </summary>
+        /// <param name="ratedfor"></param>
+        /// <returns></returns>
+        [HttpPost("resetpassword")]
+        public IActionResult ResetPassword(UserDTO userDTO)
+        {
+            _service.ResetPassword(userDTO);
+            return Ok();
+        }
+
+        /// <summary>
+        /// Endpoint to get monthly average ratings for member
+        /// </summary>
+        /// <param name="ratedfor"></param>
+        /// <returns></returns>
         [HttpPost("updateuserprofile")]
         public IActionResult UpdateProfile(UserDTO userDTO)
         {
@@ -197,7 +239,12 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         [HttpPost("updatestudentevent")]
         public IActionResult UpdateStudentEvent(StudentActivityDTO studentActivityDTO)
         {
-            _service.UpdateStudentEvent(studentActivityDTO);
+            bool isAdmin = false;
+            if (HttpContext.User.Claims.Where(a => a.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").FirstOrDefault().Value == "2")
+            {
+                isAdmin = true;
+            }
+            _service.UpdateStudentEvent(studentActivityDTO,isAdmin);
             return Ok();
         }
 
@@ -209,7 +256,12 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         [HttpPost("updatestudentchallenge")]
         public IActionResult UpdateStudentChallenge(StudentActivityDTO studentActivityDTO)
         {
-            _service.UpdateStudentChallenge(studentActivityDTO);
+            bool isAdmin = false;
+            if (HttpContext.User.Claims.Where(a => a.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").FirstOrDefault().Value == "2")
+            {
+                isAdmin = true;
+            }
+            _service.UpdateStudentChallenge(studentActivityDTO,isAdmin);
             return Ok();
         }
 
@@ -221,7 +273,12 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         [HttpPost("updatestudentasset")]
         public IActionResult UpdateStudentAsset(StudentActivityDTO studentActivityDTO)
         {
-            _service.UpdateStudentAsset(studentActivityDTO);
+            bool isAdmin = false;
+            if (HttpContext.User.Claims.Where(a => a.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").FirstOrDefault().Value == "2")
+            {
+                isAdmin = true;
+            }
+            _service.UpdateStudentAsset(studentActivityDTO, isAdmin);
             return Ok();
         }
 
@@ -245,7 +302,12 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         [HttpPost("addstudentevent")]
         public IActionResult AddStudentEvent(StudentActivityDTO studentActivityDTO)
         {
-            _service.AddStudentEvent(studentActivityDTO);
+            bool isAdmin = false;
+            if (HttpContext.User.Claims.Where(a => a.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").FirstOrDefault().Value == "2")
+            {
+                isAdmin = true;
+            }
+            _service.AddStudentEvent(studentActivityDTO,isAdmin);
             return Ok();
         }
 
@@ -257,7 +319,12 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         [HttpPost("addstudentchallenge")]
         public IActionResult AddStudentChallenge(StudentActivityDTO studentActivityDTO)
         {
-            _service.AddStudentChallenge(studentActivityDTO);
+            bool isAdmin = false;
+            if (HttpContext.User.Claims.Where(a => a.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").FirstOrDefault().Value == "2")
+            {
+                isAdmin = true;
+            }
+            _service.AddStudentChallenge(studentActivityDTO,isAdmin);
             return Ok();
         }
 
@@ -269,7 +336,12 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         [HttpPost("addstudentasset")]
         public IActionResult AddStudentAsset(StudentActivityDTO studentActivityDTO)
         {
-            _service.AddStudentAsset(studentActivityDTO);
+            bool isAdmin = false;
+            if (HttpContext.User.Claims.Where(a => a.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").FirstOrDefault().Value == "2")
+            {
+                isAdmin = true;
+            }
+            _service.AddStudentAsset(studentActivityDTO,isAdmin);
             return Ok();
         }
     }

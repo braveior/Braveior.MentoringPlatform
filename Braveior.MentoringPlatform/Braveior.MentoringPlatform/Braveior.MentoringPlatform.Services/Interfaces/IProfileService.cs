@@ -13,6 +13,8 @@ namespace Braveior.MentoringPlatform.Services.Interfaces
 
         List<ProfileDTO> GetProfiles();
 
+        List<StudentActivityDTO> GetPendingStudentActivties();
+
         List<ProfileDTO> GetProfiles(long institutionId);
         //List<AssetDTO> GetAssets(long userId);
 
@@ -34,11 +36,16 @@ namespace Braveior.MentoringPlatform.Services.Interfaces
 
         List<StudentActivityDTO> GetStudentActivities(long userId);
 
-        void UpdateStudentEvent(StudentActivityDTO studentActitityDTO);
+        void UpdateStudentEvent(StudentActivityDTO studentActitityDTO, bool IsAdmin);
 
-        void UpdateStudentChallenge(StudentActivityDTO studentActitityDTO);
+        void UpdateStudentChallenge(StudentActivityDTO studentActitityDTO, bool IsAdmin);
 
-        void UpdateStudentAsset(StudentActivityDTO studentActitityDTO);
+        void UpdateStudentAsset(StudentActivityDTO studentActitityDTO,bool IsAdmin);
+
+        void ApproveStudentActivity(StudentActivityDTO studentActitityDTO);
+        
+
+        void ResetPassword(UserDTO userDTO);
 
         void DeleteUserSkill(long userSkillId);
 
@@ -46,11 +53,11 @@ namespace Braveior.MentoringPlatform.Services.Interfaces
 
         void AddUserSkill(UserSkillDTO userSkillDTO);
 
-        void AddStudentEvent(StudentActivityDTO studentActivityDTO);
+        void AddStudentEvent(StudentActivityDTO studentActivityDTO, bool IsAdmin);
 
-        void AddStudentChallenge(StudentActivityDTO studentActivityDTO);
+        void AddStudentChallenge(StudentActivityDTO studentActivityDTO, bool IsAdmin);
 
-        void AddStudentAsset(StudentActivityDTO studentActivityDTO);
+        void AddStudentAsset(StudentActivityDTO studentActivityDTO, bool IsAdmin);
 
 
     }

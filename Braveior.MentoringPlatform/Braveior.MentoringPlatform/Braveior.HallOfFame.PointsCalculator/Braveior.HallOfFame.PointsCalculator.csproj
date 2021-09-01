@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Braveior.MentoringPlatform.DTO\Braveior.MentoringPlatform.DTO.csproj" />
     <ProjectReference Include="..\Braveior.MentoringPlatform.Repository\Braveior.MentoringPlatform.Repository.csproj" />
   </ItemGroup>

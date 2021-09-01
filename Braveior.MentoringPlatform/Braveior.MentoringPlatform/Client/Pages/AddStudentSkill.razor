@@ -41,10 +41,18 @@
         }
         private async Task CreateSkill()
         {
-            UserSkill.SkillId = skill.SkillId;
-            await ProfileService.AddUserSkill(UserSkill);
-            MudDialog.Close();
+            try
+            {
+                UserSkill.SkillId = skill.SkillId;
+                await ProfileService.AddUserSkill(UserSkill);
+                MudDialog.Close();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
         }
-        
+
 
     }

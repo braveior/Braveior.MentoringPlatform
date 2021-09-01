@@ -13,6 +13,8 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection;
 using Braveior.MentoringPlatform.Repository;
+using System.Security.Cryptography;
+using System.IO;
 
 namespace Braveior.MentoringPlatform.Services
 {
@@ -60,7 +62,7 @@ namespace Braveior.MentoringPlatform.Services
             //using (var db = new braveiordbContext())
             //{
                 //var user = db.Users.Where(a => a.Email == userDTO.Email && a.Password == userDTO.Password).Include(g => g.Group).ThenInclude(k => k.Kanboards).FirstOrDefault();
-                var user = _dbContext.Users.Where(a => a.Email == userDTO.Email && a.Password == userDTO.Password).Include(g=>g.Group).ThenInclude(i=>i.Institution).FirstOrDefault();
+                var user = _dbContext.Users.Where(a => a.Email == userDTO.Email && a.Password == Encrypt(userDTO.Password)).Include(g=>g.Group).ThenInclude(i=>i.Institution).FirstOrDefault();
 
 
                 if (user == null)
@@ -112,9 +114,9 @@ namespace Braveior.MentoringPlatform.Services
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Email, userDTO.Email),
-                    new Claim(ClaimTypes.Role, userDTO.Role.ToString()),
+                    new Claim(ClaimTypes.Role, userDTO.Role.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = DateTime.UtcNow.AddYears(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature)
             };
@@ -155,6 +157,36 @@ namespace Braveior.MentoringPlatform.Services
                     throw new Exception("Invalid access Token");
             }
             throw new Exception("Invalid access Token");
+        }
+
+        private string Encrypt(string text)
+        {
+            var b = Encoding.UTF8.GetBytes(text);
+            var encrypted = getAes().CreateEncryptor().TransformFinalBlock(b, 0, b.Length);
+            return Convert.ToBase64String(encrypted);
+        }
+
+        private string Decrypt(string encrypted)
+        {
+            var b = Convert.FromBase64String(encrypted);
+            var decrypted = getAes().CreateDecryptor().TransformFinalBlock(b, 0, b.Length);
+            return Encoding.UTF8.GetString(decrypted);
+        }
+
+        private Aes getAes()
+        {
+            var keyBytes = new byte[16];
+            var skeyBytes = Encoding.UTF8.GetBytes("12345678901234567890123456789012");
+            Array.Copy(skeyBytes, keyBytes, Math.Min(keyBytes.Length, skeyBytes.Length));
+
+            Aes aes = Aes.Create();
+            aes.Mode = CipherMode.CBC;
+            aes.Padding = PaddingMode.PKCS7;
+            aes.KeySize = 128;
+            aes.Key = keyBytes;
+            aes.IV = keyBytes;
+
+            return aes;
         }
 
     }

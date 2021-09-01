@@ -249,6 +249,33 @@ namespace Braveior.MentoringPlatform.Client.Services
             }
         }
 
+        public async Task<List<StudentActivityDTO>> GetPendingStudentActivities()
+        {
+            string authToken = "";
+            //Get AccessToken from local storage
+            authToken = await _localStorageService.GetItemAsync<string>("accessToken");
+            if (authToken == null)
+            {
+                throw new Exception("Access Token not found");
+            }
+            //Add AccessToken to the Bearer header
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+
+            //REST API call for Search
+            var response = await _httpClient.GetAsync($"api/Profile/getpendingstudentactivities");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<StudentActivityDTO>>();
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Invalid Access Token");
+            }
+            else
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
         public async Task<List<UserSkillDTO>> GetStudent(long userId)
         {
             string authToken = "";
@@ -376,6 +403,73 @@ namespace Braveior.MentoringPlatform.Client.Services
                 throw new Exception("Internal Server Error");
             }
         }
+
+        /// <summary>
+        /// REST API call to add Rating to a member
+        /// </summary>
+        /// <param name="rating"></param>
+        /// <returns></returns>
+        public async Task ResetPassword(UserDTO userDTO)
+        {
+            string authToken = "";
+            //Get AccessToken from local storage
+            authToken = await _localStorageService.GetItemAsync<string>("accessToken");
+            if (authToken == null)
+            {
+                throw new Exception("Access Token not found");
+            }
+            //Add AccessToken to the Bearer header
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+
+            //REST API call to add the rating for a member
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/resetpassword", userDTO);
+            if (response.IsSuccessStatusCode)
+            {
+
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Invalid Access Token");
+            }
+            else
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+        /// <summary>
+        /// REST API call to add Rating to a member
+        /// </summary>
+        /// <param name="rating"></param>
+        /// <returns></returns>
+        public async Task ApproveStudentActivity(StudentActivityDTO studentActivityDTO)
+        {
+            string authToken = "";
+            //Get AccessToken from local storage
+            authToken = await _localStorageService.GetItemAsync<string>("accessToken");
+            if (authToken == null)
+            {
+                throw new Exception("Access Token not found");
+            }
+            //Add AccessToken to the Bearer header
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+
+            //REST API call to add the rating for a member
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/approvestudentactivity", studentActivityDTO);
+            if (response.IsSuccessStatusCode)
+            {
+
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Invalid Access Token");
+            }
+            else
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
 
         /// <summary>
         /// REST API call to add Rating to a member

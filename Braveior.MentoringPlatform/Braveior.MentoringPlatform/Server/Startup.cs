@@ -103,7 +103,7 @@ namespace Braveior.MentoringPlatform.Server
             services.AddRazorPages();
             services.AddDbContext<braveiordbContext>(options =>
               //options.UseMySql("server=localhost;user=root;password=password;database=taskmanager_dotnet", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.26-mysql")));
-            options.UseSqlServer("Data Source=tcp:s10.everleap.com;Initial Catalog=DB_7090_braveior;User ID=DB_7090_braveior_user;Password=Sreelami1981$$;Integrated Security=False;"));
+            options.UseSqlServer("Data Source=tcp:s10.everleap.com;Initial Catalog=DB_7090_braveior;User ID=DB_7090_braveior_user;Password=Sreelami1981$$;Integrated Security=False;", providerOptions => providerOptions.EnableRetryOnFailure()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

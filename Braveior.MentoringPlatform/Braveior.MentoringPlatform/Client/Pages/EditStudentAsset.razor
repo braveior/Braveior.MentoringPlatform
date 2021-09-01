@@ -13,11 +13,15 @@
             <MudTextField T="string" Variant="Variant.Outlined" Label="Name" @bind-Value="@StudentAsset.AssetName" />
             <MudTextField T="string" Variant="Variant.Outlined" Label="Description" @bind-Value="@StudentAsset.AssetDescription" />
             <MudTextField T="string" Variant="Variant.Outlined" Label="URL" @bind-Value="@StudentAsset.AssetUrl" />
-            <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentAsset.Points" />
-            <MudRadioGroup @bind-SelectedOption="@StudentAsset.Status">
-                <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
-                <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
-            </MudRadioGroup>
+            <AuthorizeView Roles="2">
+                <Authorized>
+                    <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentAsset.Points" />
+                    <MudRadioGroup @bind-SelectedOption="@StudentAsset.Status">
+                        <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
+                        <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
+                    </MudRadioGroup>
+                </Authorized>
+            </AuthorizeView>
         </DialogContent>
         <DialogActions>
             <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => UpdateStudentAsset())">Update Asset</MudButton>
@@ -29,7 +33,7 @@
     @code {
         private SkillDTO skill;
 
-       //private long points = 0;
+        //private long points = 0;
 
         //private int status = 0;
 
@@ -43,8 +47,16 @@
         }
         private async Task UpdateStudentAsset()
         {
-            await ProfileService.UpdateStudentAsset(StudentAsset);
-            MudDialog.Close();
+            try
+            {
+                await ProfileService.UpdateStudentAsset(StudentAsset);
+                MudDialog.Close();
+            }
+            catch (Exception)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
         }
         private string GetActivityName(int id)
         {

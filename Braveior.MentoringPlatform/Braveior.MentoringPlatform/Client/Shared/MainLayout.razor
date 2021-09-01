@@ -18,17 +18,17 @@
             <MudText Typo="Typo.h6">Menu</MudText>
         </MudDrawerHeader>
         <MudNavMenu>
-            <AuthorizeView Roles="Admin">
+            <AuthorizeView Roles="2">
                 <Authorized>
-
+                    <MudNavLink Href="/profile">Profile</MudNavLink>
+                    <MudNavLink Href="/approvals">Approval</MudNavLink>
                 </Authorized>
             </AuthorizeView>
-            <AuthorizeView>
+            <AuthorizeView Roles="1">
                 <Authorized>
-                    <MudNavLink Href="/index">Home</MudNavLink>
-                    <MudNavLink Href="/viewkanboard">Kanboard</MudNavLink>
-                    <MudNavLink Href="/assets">Assets</MudNavLink>
                     <MudNavLink Href="/profile">Profile</MudNavLink>
+                    <MudNavLink Href="/resetpassword">Reset Password</MudNavLink>
+                    <MudNavLink Href="/videobook">VideoBook</MudNavLink>
                 </Authorized>
             </AuthorizeView>
         </MudNavMenu>

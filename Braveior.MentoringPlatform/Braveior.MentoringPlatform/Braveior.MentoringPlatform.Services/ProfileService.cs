@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace Braveior.MentoringPlatform.Services
 {
@@ -30,9 +32,10 @@ namespace Braveior.MentoringPlatform.Services
         //}
         public ProfileDTO GetProfile(long userId)
         {
+           
             //using (var db = new braveiordbContext())
             //{
-                var user = _dbContext.Users.Where(u => u.UserId == userId).Include(i => i.Institution).Include(uk => uk.UserSkills).ThenInclude(a => a.Skill).FirstOrDefault();
+            var user = _dbContext.Users.Where(u => u.UserId == userId).Include(i => i.Institution).Include(uk => uk.UserSkills).ThenInclude(a => a.Skill).FirstOrDefault();
                 var studentWorkItems = _dbContext.StudentActivities.Where(u => u.UserId == userId).Include(a=>a.Event).Include(a => a.Challenge).ThenInclude(a=>a.Product);
                 ProfileDTO profileDTO = new ProfileDTO()
                 {
@@ -49,6 +52,12 @@ namespace Braveior.MentoringPlatform.Services
                 };
                 return profileDTO;
             //}
+        }
+
+        public List<StudentActivityDTO> GetPendingStudentActivties()
+        {
+            var studentActivities = _dbContext.StudentActivities.Where(u => u.Status == 0).Include(i => i.User).ThenInclude(i=>i.Institution).ToList();
+            return _mapper.Map<List<StudentActivityDTO>>(studentActivities);
         }
 
         public List<ProfileDTO> GetProfiles()
@@ -191,7 +200,7 @@ namespace Braveior.MentoringPlatform.Services
         {
            // using (var db = new braveiordbContext())
            // {
-                var studentActivities = _dbContext.StudentActivities.Where(us => us.UserId == userId).Include(s => s.Challenge).Include(s => s.Event).ToList();
+                var studentActivities = _dbContext.StudentActivities.Where(us => us.UserId == userId && us.Status == 1).Include(s => s.Challenge).Include(s => s.Event).ToList();
                 return _mapper.Map<List<StudentActivityDTO>>(studentActivities);
           //  }
         }
@@ -216,41 +225,66 @@ namespace Braveior.MentoringPlatform.Services
                 userProfile.LastName = userDTO.LastName;
                 userProfile.Description = userDTO.Description;
                 userProfile.LinkedInUrl = userDTO.LinkedInUrl;
+                userProfile.Email = userDTO.Email;
             _dbContext.Users.Update(userProfile);
             _dbContext.SaveChanges();
             //}
         }
-
-        public void UpdateStudentEvent(StudentActivityDTO studentActitityDTO)
+        
+        public void ApproveStudentActivity(StudentActivityDTO studentActitityDTO)
         {
             //using (var db = new braveiordbContext())
             //{
+            var studentActitity = _dbContext.StudentActivities.Where(sa => sa.StudentActivityId == studentActitityDTO.StudentActivityId).FirstOrDefault();
+            if (studentActitity != null)
+            {
+                studentActitity.Status = studentActitityDTO.Status;
+                studentActitity.Points = studentActitityDTO.Points;
+                _dbContext.StudentActivities.Update(studentActitity);
+                _dbContext.SaveChanges();
+            }
+
+            //}
+        }
+        public void UpdateStudentEvent(StudentActivityDTO studentActitityDTO,bool isAdmin)
+        {
                 var studentEvent = _dbContext.StudentActivities.Where(sa => sa.StudentActivityId == studentActitityDTO.StudentActivityId).FirstOrDefault();
-                studentEvent.Points = studentActitityDTO.Points;
+                if(isAdmin)        
+                    studentEvent.Points = studentActitityDTO.Points;
                 studentEvent.Status = studentActitityDTO.Status;
             _dbContext.StudentActivities.Update(studentEvent);
             _dbContext.SaveChanges();
-           // }
         }
-
-        public void UpdateStudentChallenge(StudentActivityDTO studentActitityDTO)
+        public void ResetPassword(UserDTO userDTO)
+        {
+            var loggedInUser = _dbContext.Users.Where(u => u.UserId == userDTO.UserId).FirstOrDefault();
+            if (loggedInUser != null)
+            {
+                loggedInUser.Password = Encrypt(userDTO.Password);
+                _dbContext.Users.Update(loggedInUser);
+                _dbContext.SaveChanges();
+            }
+        }
+        public void UpdateStudentChallenge(StudentActivityDTO studentActitityDTO, bool isAdmin)
         {
             //using (var db = new braveiordbContext())
             //{
                 var studentChallenge = _dbContext.StudentActivities.Where(sa => sa.StudentActivityId == studentActitityDTO.StudentActivityId).FirstOrDefault();
-                studentChallenge.Points = studentActitityDTO.Points;
+                if(isAdmin)
+                    studentChallenge.Points = studentActitityDTO.Points;
                 studentChallenge.Status = studentActitityDTO.Status;
                 studentChallenge.AssetUrl = studentActitityDTO.AssetUrl;
             _dbContext.StudentActivities.Update(studentChallenge);
             _dbContext.SaveChanges();
             //}
         }
-        public void UpdateStudentAsset(StudentActivityDTO studentActitityDTO)
+        public void UpdateStudentAsset(StudentActivityDTO studentActitityDTO, bool isAdmin)
         {
             //using (var db = new braveiordbContext())
             //{
                 var studentAsset = _dbContext.StudentActivities.Where(sa => sa.StudentActivityId == studentActitityDTO.StudentActivityId).FirstOrDefault();
-                studentAsset.Points = studentActitityDTO.Points;
+                if(isAdmin)
+                    studentAsset.Points = studentActitityDTO.Points;
                 studentAsset.Status = studentActitityDTO.Status;
                 studentAsset.AssetName = studentActitityDTO.AssetName;
                 studentAsset.AssetDescription = studentActitityDTO.AssetDescription;
@@ -278,13 +312,13 @@ namespace Braveior.MentoringPlatform.Services
            // }
         }
 
-        public void AddStudentEvent(StudentActivityDTO studentActivityDTO)
+        public void AddStudentEvent(StudentActivityDTO studentActivityDTO,bool isAdmin)
         {
             StudentActivity studentActivity = new StudentActivity()
             {
                 UserId = studentActivityDTO.UserId,
                 EventId = studentActivityDTO.EventId,
-                Points = studentActivityDTO.Points,
+                Points = isAdmin?studentActivityDTO.Points:0,
                 Type = studentActivityDTO.Type,
                 Status = studentActivityDTO.Status,
             };
@@ -295,13 +329,19 @@ namespace Braveior.MentoringPlatform.Services
            // }
         }
 
-        public void AddStudentChallenge(StudentActivityDTO studentActivityDTO)
+        public void AddStudentChallenge(StudentActivityDTO studentActivityDTO,bool isAdmin)
         {
+
+            var studentChallenge = _dbContext.StudentActivities.Where(us => us.UserId == studentActivityDTO.UserId && us.ChallengeId == studentActivityDTO.ChallengeId).FirstOrDefault();
+            if (studentChallenge != null)
+            {
+                throw new Exception("Challenge already exists for the user");
+            }
             StudentActivity studentActivity = new StudentActivity()
             {
                 UserId = studentActivityDTO.UserId,
                 ChallengeId = studentActivityDTO.ChallengeId,
-                Points = studentActivityDTO.Points,
+                Points = isAdmin?studentActivityDTO.Points:0,
                 Type = studentActivityDTO.Type,
                 AssetUrl = studentActivityDTO.AssetUrl,
                 Status = studentActivityDTO.Status,
@@ -313,12 +353,12 @@ namespace Braveior.MentoringPlatform.Services
             //}
         }
 
-        public void AddStudentAsset(StudentActivityDTO studentActivityDTO)
+        public void AddStudentAsset(StudentActivityDTO studentActivityDTO,bool isAdmin)
         {
             StudentActivity studentActivity = new StudentActivity()
             {
                 UserId = studentActivityDTO.UserId,
-                Points = studentActivityDTO.Points,
+                Points = isAdmin?studentActivityDTO.Points:0,
                 Type = studentActivityDTO.Type,
                 AssetName = studentActivityDTO.AssetName,
                 AssetDescription = studentActivityDTO.AssetDescription,
@@ -446,6 +486,34 @@ namespace Braveior.MentoringPlatform.Services
             _dbContext.SaveChanges();
           //  }
         }
+        private string Encrypt(string text)
+        {
+            var b = Encoding.UTF8.GetBytes(text);
+            var encrypted = getAes().CreateEncryptor().TransformFinalBlock(b, 0, b.Length);
+            return Convert.ToBase64String(encrypted);
+        }
 
+        private string Decrypt(string encrypted)
+        {
+            var b = Convert.FromBase64String(encrypted);
+            var decrypted = getAes().CreateDecryptor().TransformFinalBlock(b, 0, b.Length);
+            return Encoding.UTF8.GetString(decrypted);
+        }
+
+        private Aes getAes()
+        {
+            var keyBytes = new byte[16];
+            var skeyBytes = Encoding.UTF8.GetBytes("12345678901234567890123456789012");
+            Array.Copy(skeyBytes, keyBytes, Math.Min(keyBytes.Length, skeyBytes.Length));
+
+            Aes aes = Aes.Create();
+            aes.Mode = CipherMode.CBC;
+            aes.Padding = PaddingMode.PKCS7;
+            aes.KeySize = 128;
+            aes.Key = keyBytes;
+            aes.IV = keyBytes;
+
+            return aes;
+        }
     }
 }

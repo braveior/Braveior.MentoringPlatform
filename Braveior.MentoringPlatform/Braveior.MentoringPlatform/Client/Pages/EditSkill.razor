@@ -36,9 +36,17 @@
 
         private async Task UpdateSkills()
         {
-            await ProfileService.UpdateUserSkill(UserSkill);
-            MudDialog.Close();
+            try
+            {
+                await ProfileService.UpdateUserSkill(UserSkill);
+                MudDialog.Close();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
         }
-        
+
 
     }

@@ -11,13 +11,20 @@
         <DialogContent>
 
             <MudAutocomplete T="ChallengeDTO" Label="Choose Challenge" @bind-Value="SelectedChallenge" SearchFunc="@SearchChallenge" ToStringFunc="@(e=> e==null?null : $" {e.Name}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
-
-            <MudTextField T="long" Variant="Variant.Outlined" Label="Points" @bind-Value="@StudentChallenge.Points" />
-            <MudTextField T="string" Variant="Variant.Outlined" Label="URL" @bind-Value="@StudentChallenge.AssetUrl" />
-            <MudRadioGroup @bind-SelectedOption="@StudentChallenge.Status">
-                <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
-                <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
-            </MudRadioGroup>
+            <AuthorizeView Roles="2">
+                <Authorized>
+                    <MudTextField T="long" Variant="Variant.Outlined" Label="Points" @bind-Value="@StudentChallenge.Points" />
+                    </Authorized>
+                </AuthorizeView>
+                    <MudTextField T="string" Variant="Variant.Outlined" Label="URL" @bind-Value="@StudentChallenge.AssetUrl" />
+                    <AuthorizeView Roles="2">
+                        <Authorized>
+                            <MudRadioGroup @bind-SelectedOption="@StudentChallenge.Status">
+                                <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
+                                <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
+                            </MudRadioGroup>
+                        </Authorized>
+                    </AuthorizeView>
         </DialogContent>
         <DialogActions>
             <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => CreateStudentChallenge())">Add Challenge</MudButton>
@@ -45,9 +52,17 @@
 
         private async Task CreateStudentChallenge()
         {
-            StudentChallenge.ChallengeId = SelectedChallenge.ChallengeId;
-            await ProfileService.AddStudentChallenge(StudentChallenge);
-            MudDialog.Close();
+            try
+            {
+                StudentChallenge.ChallengeId = SelectedChallenge.ChallengeId;
+                await ProfileService.AddStudentChallenge(StudentChallenge);
+                MudDialog.Close();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
         }
 
         private async Task<IEnumerable<ChallengeDTO>> SearchChallenge(string key)

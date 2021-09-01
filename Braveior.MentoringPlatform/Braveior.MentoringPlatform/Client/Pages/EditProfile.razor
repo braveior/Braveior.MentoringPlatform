@@ -11,8 +11,9 @@
         <DialogContent>
             <MudTextField T="string" Variant="Variant.Outlined" Label="FirstName" @bind-Value="Student.FirstName" />
             <MudTextField T="string" Variant="Variant.Outlined" Label="LastName" @bind-Value="Student.LastName" />
-            <MudTextField T="string" Variant="Variant.Outlined" Label="About myself" @bind-Value="Student.Description"  Lines="8"/>
+            <MudTextField T="string" Variant="Variant.Outlined" Label="About myself" @bind-Value="Student.Description" Lines="8" />
             <MudTextField T="string" Variant="Variant.Outlined" Label="LinkedIn" @bind-Value="Student.LinkedInUrl" />
+            <MudTextField T="string" Variant="Variant.Outlined" Label="Email Address" @bind-Value="Student.Email" />
         </DialogContent>
         <DialogActions>
             <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => UpdateProfile())">Update Profile</MudButton>
@@ -38,9 +39,17 @@
 
         private async Task UpdateProfile()
         {
-            await ProfileService.UpdateUserProfile(Student);
-            MudDialog.Close();
+            try
+            {
+                await ProfileService.UpdateUserProfile(Student);
+                MudDialog.Close();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
         }
-        
+
 
     }

@@ -11,11 +11,15 @@
         <DialogContent>
             <MudTextField T="string" Variant="Variant.Outlined" Value="@GetActivityName(StudentEvent.Type)" Disabled="true" />
             <MudTextField T="string" Variant="Variant.Outlined" Value="@StudentEvent.Event.Name" Disabled="true" />
-            <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentEvent.Points" />
-            <MudRadioGroup @bind-SelectedOption="@StudentEvent.Status">
-                <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
-                <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
-            </MudRadioGroup>
+            <AuthorizeView Roles="2">
+                <Authorized>
+                    <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentEvent.Points" />
+                    <MudRadioGroup @bind-SelectedOption="@StudentEvent.Status">
+                        <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
+                        <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
+                    </MudRadioGroup>
+                </Authorized>
+            </AuthorizeView>
         </DialogContent>
         <DialogActions>
             <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => UpdateStudentEvent())">Update Event</MudButton>
@@ -39,12 +43,19 @@
         {
         }
 
-        
+
         private async Task UpdateStudentEvent()
         {
-
-            await ProfileService.UpdateStudentEvent(StudentEvent);
-            MudDialog.Close();
+            try
+            {
+                await ProfileService.UpdateStudentEvent(StudentEvent);
+                MudDialog.Close();
+            }
+            catch (Exception)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
         }
         private string GetActivityName(int id)
         {

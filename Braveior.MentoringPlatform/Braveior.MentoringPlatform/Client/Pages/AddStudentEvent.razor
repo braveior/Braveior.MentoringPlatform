@@ -15,12 +15,15 @@
                 <MudRadio Option="@(3)" Color="Color.Secondary">R & D Solutioning</MudRadio>
             </MudRadioGroup>
             <MudAutocomplete T="EventDTO" Label="Choose Event" @bind-Value="SelectedEvent" SearchFunc="@SearchEvent" ToStringFunc="@(e=> e==null?null : $"{e.Name}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
-
-            <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentEvent.Points" />
-            <MudRadioGroup @bind-SelectedOption="@StudentEvent.Status">
-                <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
-                <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
-            </MudRadioGroup>
+            <AuthorizeView Roles="2">
+                <Authorized>
+                    <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentEvent.Points" />
+                    <MudRadioGroup @bind-SelectedOption="@StudentEvent.Status">
+                        <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
+                        <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
+                    </MudRadioGroup>
+                </Authorized>
+            </AuthorizeView>
         </DialogContent>
         <DialogActions>
             <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => CraeteStudentEvent())">Add Event</MudButton>
@@ -50,12 +53,20 @@
             //status = StudentActivity.Status;
         }
 
-        
+
         private async Task CraeteStudentEvent()
         {
-            StudentEvent.EventId = SelectedEvent.EventId;
-            await ProfileService.AddStudentEvent(StudentEvent);
-            MudDialog.Close();
+            try
+            {
+                StudentEvent.EventId = SelectedEvent.EventId;
+                await ProfileService.AddStudentEvent(StudentEvent);
+                MudDialog.Close();
+            }
+            catch(Exception ex)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
         }
         private string GetActivityName(int id)
         {
