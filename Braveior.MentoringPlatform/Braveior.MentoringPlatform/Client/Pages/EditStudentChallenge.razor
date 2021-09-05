@@ -12,6 +12,7 @@
             <MudTextField T="string" Variant="Variant.Outlined" Value="@GetActivityName(StudentChallenge.Type)" Disabled="true" />
             <MudTextField T="string" Variant="Variant.Outlined" Value="@StudentChallenge.Challenge.Name" Disabled="true" />
             <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="@StudentChallenge.AssetUrl" />
+            <MudDatePicker Label="Date" Editable="true" @bind-Date="@StudentChallenge.CreatedDate" />
             <AuthorizeView Roles="2">
                 <Authorized>
                     <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentChallenge.Points" />

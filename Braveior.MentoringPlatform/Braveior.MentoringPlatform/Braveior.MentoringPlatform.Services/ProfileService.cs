@@ -147,9 +147,11 @@ namespace Braveior.MentoringPlatform.Services
                     studentAchievementDTO.Challenge3Complete = true;
                     studentAchievementDTO.Challenge3Points = studentActivitiy.Points;
                 }
-                studentAchievementDTO.PointsTimeline.Add(new GraphDataDTO() { XAxis1 = studentActivitiy.CreatedDate.ToShortDateString(), YAxis1 = studentActivitiy.Points });
+                //studentAchievementDTO.PointsTimeline.Add(new GraphDataDTO() { XAxis1 = studentActivitiy.CreatedDate.ToShortDateString(), YAxis1 = studentActivitiy.Points });
             }
             studentAchievementDTO.PointsSplitup = studentActivities.GroupBy(a => a.Type).Select(a => new GraphDataDTO() { XAxis1 = GetActivityName(a.First().Type),YAxis1 = a.Sum(p=>p.Points)}).ToList();
+
+            studentAchievementDTO.PointsTimeline = studentActivities.GroupBy(a => new {a.CreatedDate.Month, a.CreatedDate.Year }).Select(a => new GraphDataDTO() { XAxis1 = $"{a.Key.Month}|{a.Key.Year}", YAxis1 = a.Sum(p => p.Points) }).ToList();
             return studentAchievementDTO;
         }
         private string GetActivityName(int id)
@@ -244,6 +246,8 @@ namespace Braveior.MentoringPlatform.Services
                 if(isAdmin)        
                     studentEvent.Points = studentActitityDTO.Points;
                 studentEvent.Status = studentActitityDTO.Status;
+            studentEvent.CreatedDate = studentActitityDTO.CreatedDate.Value;
+            studentEvent.ModifiedDate= DateTime.Now;
             _dbContext.StudentActivities.Update(studentEvent);
             _dbContext.SaveChanges();
         }
@@ -264,6 +268,8 @@ namespace Braveior.MentoringPlatform.Services
                     studentChallenge.Points = studentActitityDTO.Points;
                 studentChallenge.Status = studentActitityDTO.Status;
                 studentChallenge.AssetUrl = studentActitityDTO.AssetUrl;
+            studentChallenge.ModifiedDate = DateTime.Now;
+            studentChallenge.CreatedDate = studentActitityDTO.CreatedDate.Value;
             _dbContext.StudentActivities.Update(studentChallenge);
             _dbContext.SaveChanges();
         }
@@ -276,6 +282,8 @@ namespace Braveior.MentoringPlatform.Services
                 studentAsset.AssetName = studentActitityDTO.AssetName;
                 studentAsset.AssetDescription = studentActitityDTO.AssetDescription;
                 studentAsset.AssetUrl = studentActitityDTO.AssetUrl;
+                studentAsset.ModifiedDate = DateTime.Now;
+                studentAsset.CreatedDate = studentActitityDTO.CreatedDate.Value;
             _dbContext.StudentActivities.Update(studentAsset);
             _dbContext.SaveChanges();
         }
@@ -304,6 +312,8 @@ namespace Braveior.MentoringPlatform.Services
                 Points = isAdmin?studentActivityDTO.Points:0,
                 Type = studentActivityDTO.Type,
                 Status = studentActivityDTO.Status,
+                ModifiedDate = DateTime.Now,
+                CreatedDate = studentActivityDTO.CreatedDate.Value
             };
             _dbContext.StudentActivities.Add(studentActivity);
             _dbContext.SaveChanges();
@@ -327,6 +337,8 @@ namespace Braveior.MentoringPlatform.Services
                 Type = studentActivityDTO.Type,
                 AssetUrl = studentActivityDTO.AssetUrl,
                 Status = studentActivityDTO.Status,
+                ModifiedDate = DateTime.Now,
+                CreatedDate = studentActivityDTO.CreatedDate.Value
             };
             _dbContext.StudentActivities.Add(studentActivity);
             _dbContext.SaveChanges();
@@ -343,6 +355,8 @@ namespace Braveior.MentoringPlatform.Services
                 AssetDescription = studentActivityDTO.AssetDescription,
                 AssetUrl = studentActivityDTO.AssetUrl,
                 Status = studentActivityDTO.Status,
+                ModifiedDate = DateTime.Now,
+                CreatedDate = studentActivityDTO.CreatedDate.Value
             };
             _dbContext.StudentActivities.Add(studentActivity);
             _dbContext.SaveChanges();

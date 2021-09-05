@@ -22,6 +22,9 @@ namespace Braveior.MentoringPlatform.DTO
         public virtual EventDTO Event { get; set; }
         public virtual ChallengeDTO Challenge { get; set; }
 
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+
 
     }
 }

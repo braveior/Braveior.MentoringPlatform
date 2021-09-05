@@ -11,9 +11,10 @@
         <DialogContent>
             <MudTextField T="string" Variant="Variant.Outlined" Value="@GetActivityName(StudentEvent.Type)" Disabled="true" />
             <MudTextField T="string" Variant="Variant.Outlined" Value="@StudentEvent.Event.Name" Disabled="true" />
+            <MudDatePicker Label="Date" Editable="true" @bind-Date="@StudentEvent.CreatedDate" />
             <AuthorizeView Roles="2">
                 <Authorized>
-                    <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentEvent.Points" />
+                    <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="StudentEvent.Points" />
                     <MudRadioGroup @bind-SelectedOption="@StudentEvent.Status">
                         <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
                         <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>

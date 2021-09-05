@@ -14,45 +14,45 @@
         <MudItem xs="8">
             <MudText Typo="Typo.h6">Braveior Student Timeline</MudText>
             <MudDivider />
-            <MudTimeline Class="pa-4" TimelineAlign="TimelineAlign.Start" TimelineOrientation="TimelineOrientation.Horizontal" TimelinePosition="TimelinePosition.Alternate" DisableModifiers="false">
-                <MudTimelineItem Color="Color.Dark" Size="Size.Small" Variant="Variant.Outlined" Elevation="4">
+            <MudTimeline TimelineAlign="TimelineAlign.Start" TimelineOrientation="TimelineOrientation.Horizontal" TimelinePosition="TimelinePosition.Alternate" >
+                <MudTimelineItem Color="Color.Dark" Size="Size.Small" Variant="Variant.Outlined" >
                     <ItemContent>
-                        <MudText Typo="Typo.overline">Joined</MudText>
+                        <MudText GutterBottom="false" Align="Align.Center" Typo="Typo.overline">Joined</MudText>
                     </ItemContent>
                     @*<ItemOpposite>
                         <MudText Typo="Typo.overline">12-Aug-2021</MudText>
                     </ItemOpposite>*@
                 </MudTimelineItem>
-                <MudTimelineItem Color="Color.Success" Size="Size.Small" Variant="Variant.Outlined" Elevation="4">
+                <MudTimelineItem Color="Color.Success" Size="Size.Small" Variant="Variant.Outlined" >
                     <ItemContent>
-                        <MudText Typo="Typo.overline">Concepts</MudText>
+                        <MudText GutterBottom="false" Typo="Typo.overline">Concepts</MudText>
                     </ItemContent>
                     <ItemOpposite>
-                        <MudText Typo="Typo.overline">@studentAchievementDTO.Challenge1CompleteDate.ToShortDateString()</MudText>
+                        <MudText GutterBottom="false" Typo="Typo.overline">@studentAchievementDTO.Challenge1CompleteDate.ToShortDateString()</MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
-                <MudTimelineItem Color=@(studentAchievementDTO.Challenge1Complete && studentAchievementDTO.Challenge2Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined" Elevation="4">
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge1Complete && studentAchievementDTO.Challenge2Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined" >
                     <ItemContent>
-                        <MudText Typo="Typo.overline">Level-1 Certified</MudText>
+                        <MudText GutterBottom="false" Typo="Typo.overline">Level-1 Certified</MudText>
                     </ItemContent>
                     <ItemOpposite>
-                        <MudText Typo="Typo.overline">@studentAchievementDTO.Challenge2CompleteDate.ToShortDateString()</MudText>
+                        <MudText GutterBottom="false" Typo="Typo.overline">@studentAchievementDTO.Challenge2CompleteDate.ToShortDateString()</MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
-                <MudTimelineItem Color=@(studentAchievementDTO.Challenge3Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined" Elevation="4">
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge3Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined" >
                     <ItemContent>
-                        <MudText Typo="Typo.overline">Level-2 Certified</MudText>
+                        <MudText GutterBottom="false" Typo="Typo.overline">Level-2 Certified</MudText>
                     </ItemContent>
                     <ItemOpposite>
-                        <MudText Typo="Typo.overline">@studentAchievementDTO.Challenge3CompleteDate.ToShortDateString()</MudText>
+                        <MudText GutterBottom="false" Typo="Typo.overline">@studentAchievementDTO.Challenge3CompleteDate.ToShortDateString()</MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
-                <MudTimelineItem Color=@(studentAchievementDTO.BraveiorChampion ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined" Elevation="4">
+                <MudTimelineItem Color=@(studentAchievementDTO.BraveiorChampion ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined" >
                     <ItemContent>
-                        <MudText Typo="Typo.overline">Braveior Champion</MudText>
+                        <MudText GutterBottom="false" Typo="Typo.overline">Braveior Champion</MudText>
                     </ItemContent>
                     <ItemOpposite>
-                        <MudText Typo="Typo.overline">@studentAchievementDTO.Challenge3CompleteDate.ToShortDateString()</MudText>
+                        <MudText GutterBottom="false" Typo="Typo.overline">@studentAchievementDTO.Challenge3CompleteDate.ToShortDateString()</MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
             </MudTimeline>
@@ -122,6 +122,9 @@
 
     bool isVisible = false;
 
+    [Inject]
+    private IState<CommonState> CommonState { get; set; }
+
     private LineConfig configPointsTimeline;
 
     private List<VideoBookDTO> VideoBooks = new List<VideoBookDTO>();
@@ -141,9 +144,6 @@
     private List<InstitutionDTO> AssetsList { get; set; } = new List<InstitutionDTO>();
 
 
-    [Inject]
-    private IState<CommonState> CommonState { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
 
@@ -158,7 +158,7 @@
     private async Task LoadStudentActivities()
     {
         ToggleOverlay(true);
-        studentAchievementDTO = await ProfileService.GetStudentAchievements(1);
+        studentAchievementDTO = await ProfileService.GetStudentAchievements(CommonState.Value.LoggedInUser.UserId);
         await LoadStudentPointsSplitupChart();
         await LoadStudentPointsTimelineChart();
         await LoadVideoBooks();
