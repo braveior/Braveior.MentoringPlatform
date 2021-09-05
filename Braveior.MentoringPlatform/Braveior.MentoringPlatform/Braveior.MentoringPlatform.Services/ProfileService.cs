@@ -21,20 +21,8 @@ namespace Braveior.MentoringPlatform.Services
             _mapper = mapper;
             _dbContext = dbContext;
         }
-
-        //public List<AssetDTO> GetAssets(long userId)
-        //{
-        //    using (var db = new braveiordbContext())
-        //    {
-        //        var assets = db.Assets.Where(u => u.UserId == userId).ToList();
-        //        return _mapper.Map<List<AssetDTO>>(assets);
-        //    }
-        //}
         public ProfileDTO GetProfile(long userId)
         {
-           
-            //using (var db = new braveiordbContext())
-            //{
             var user = _dbContext.Users.Where(u => u.UserId == userId).Include(i => i.Institution).Include(uk => uk.UserSkills).ThenInclude(a => a.Skill).FirstOrDefault();
                 var studentWorkItems = _dbContext.StudentActivities.Where(u => u.UserId == userId).Include(a=>a.Event).Include(a => a.Challenge).ThenInclude(a=>a.Product);
                 ProfileDTO profileDTO = new ProfileDTO()
@@ -51,7 +39,6 @@ namespace Braveior.MentoringPlatform.Services
                     StudentWorkItems = _mapper.Map<List<StudentActivityDTO>>(studentWorkItems)
                 };
                 return profileDTO;
-            //}
         }
 
         public List<StudentActivityDTO> GetPendingStudentActivties()
@@ -62,8 +49,6 @@ namespace Braveior.MentoringPlatform.Services
 
         public List<ProfileDTO> GetProfiles()
         {
-            //using (var db = new braveiordbContext())
-            //{
                 var students = _dbContext.Users.Where(u => u.Role == 1).Include(us => us.UserSkills).Include(i => i.Institution).ToList();
                 List<ProfileDTO> profiles = new List<ProfileDTO>();
                 foreach (var student in students)
@@ -83,15 +68,11 @@ namespace Braveior.MentoringPlatform.Services
                     };
                     profiles.Add(profileDTO);
                 }
-                //return GetRankedProfiles(profiles);
                 return profiles.OrderByDescending(p => p.Points).ToList();
-            //}
         }
 
         public List<ProfileDTO> GetProfiles(long institutionId)
         {
-            //using (var db = new braveiordbContext())
-            //{
             var students = _dbContext.Users.Where(u => u.Role == 1 && u.InstitutionId== institutionId).Include(us => us.UserSkills).Include(i => i.Institution).ToList();
             List<ProfileDTO> profiles = new List<ProfileDTO>();
             foreach (var student in students)
@@ -111,9 +92,7 @@ namespace Braveior.MentoringPlatform.Services
                 };
                 profiles.Add(profileDTO);
             }
-            //return GetRankedProfiles(profiles);
             return profiles.OrderByDescending(p => p.Points).ToList();
-            //}
         }
 
         private List<ProfileDTO> GetRankedProfiles(List<ProfileDTO> profiles)
@@ -142,99 +121,114 @@ namespace Braveior.MentoringPlatform.Services
         }
         public List<InstitutionDTO> GetColleges()
         {
-            //using (var db = new braveiordbContext())
-           // {
                 var colleges = _dbContext.Institutions.ToList();
                 return _mapper.Map<List<InstitutionDTO>>(colleges);
-           // }
         }
 
+        public StudentAchievementDTO GetStudentAchievements(long studentId)
+        {
+            StudentAchievementDTO studentAchievementDTO = new StudentAchievementDTO();
+            studentAchievementDTO.PointsTimeline = new List<GraphDataDTO>();
+            var studentActivities = _dbContext.StudentActivities.Where(a => a.UserId == studentId).ToList();
+            foreach (var studentActivitiy in studentActivities)
+            {
+                if (studentActivitiy.ChallengeId == 1 && studentActivitiy.Status== 1)
+                {
+                    studentAchievementDTO.Challenge1Complete = true;
+                    studentAchievementDTO.Challenge1Points = studentActivitiy.Points;
+                }
+                else if (studentActivitiy.ChallengeId == 2 && studentActivitiy.Status == 1)
+                {
+                    studentAchievementDTO.Challenge2Complete = true;
+                    studentAchievementDTO.Challenge2Points = studentActivitiy.Points;
+                }
+                else if (studentActivitiy.ChallengeId == 3 && studentActivitiy.Status == 1)
+                {
+                    studentAchievementDTO.Challenge3Complete = true;
+                    studentAchievementDTO.Challenge3Points = studentActivitiy.Points;
+                }
+                studentAchievementDTO.PointsTimeline.Add(new GraphDataDTO() { XAxis1 = studentActivitiy.CreatedDate.ToShortDateString(), YAxis1 = studentActivitiy.Points });
+            }
+            studentAchievementDTO.PointsSplitup = studentActivities.GroupBy(a => a.Type).Select(a => new GraphDataDTO() { XAxis1 = GetActivityName(a.First().Type),YAxis1 = a.Sum(p=>p.Points)}).ToList();
+            return studentAchievementDTO;
+        }
+        private string GetActivityName(int id)
+        {
+            switch (id)
+            {
+                case 1:
+                    return "Group Discussion";
+                case 2:
+                    return "Hackathon";
+                case 3:
+                    return "R & D Solutioning";
+                case 4:
+                    return "Challenge";
+                case 5:
+                    return "Blog";
+                case 6:
+                    return "Vlog";
+                default:
+                    return "General";
+            }
+        }
         public List<UserDTO> GetUsers(long institutionId, string key)
         {
-            //using (var db = new braveiordbContext())
-            //{
                 var users = _dbContext.Users.Where(i=>i.InstitutionId == institutionId && i.FirstName.StartsWith(key)).ToList();
                 return _mapper.Map<List<UserDTO>>(users);
-            //}
         }
 
         public List<SkillDTO> GetSkills(string key)
         {
-           // using (var db = new braveiordbContext())
-           // {
                 var skills = _dbContext.Skills.Where(a => a.Name.StartsWith(key)).OrderBy(a => a.Name).ToList();
                 return _mapper.Map<List<SkillDTO>>(skills);
-           // }
         }
 
         public List<UserSkillDTO> GetUserSkills(long userId)
         {
-           // using (var db = new braveiordbContext())
-           // {
                 var skills = _dbContext.UserSkills.Where(us=>us.UserId== userId).Include(s=>s.Skill).ToList();
                 return _mapper.Map<List<UserSkillDTO>>(skills);
-           // }
         }
 
         public List<EventDTO> GetEvents()
         {
-           // using (var db = new braveiordbContext())
-           // {
                 var events = _dbContext.Events.ToList();
                 return _mapper.Map<List<EventDTO>>(events);
-           // }
         }
 
         public List<ChallengeDTO> GetChallenges()
         {
-           // using (var db = new braveiordbContext())
-           // {
                 var challenges = _dbContext.Challenges.ToList();
                 return _mapper.Map<List<ChallengeDTO>>(challenges);
-           // }
         }
-
-
-
         public List<StudentActivityDTO> GetStudentActivities(long userId)
         {
-           // using (var db = new braveiordbContext())
-           // {
                 var studentActivities = _dbContext.StudentActivities.Where(us => us.UserId == userId && us.Status == 1).Include(s => s.Challenge).Include(s => s.Event).ToList();
                 return _mapper.Map<List<StudentActivityDTO>>(studentActivities);
-          //  }
         }
 
         public void UpdateUserSkill(UserSkillDTO userSkillDTO)
         {
-            //using (var db = new braveiordbContext())
-            //{
                 var userSkill = _dbContext.UserSkills.Where(us => us.UserSkillId == userSkillDTO.UserSkillId).FirstOrDefault();
                 userSkill.Stars = userSkillDTO.Stars;
             _dbContext.UserSkills.Update(userSkill);
             _dbContext.SaveChanges();
-           // }
         }
 
         public void UpdateProfile(UserDTO userDTO)
         {
-            //using (var db = new braveiordbContext())
-            //{
                 var userProfile = _dbContext.Users.Where(us => us.UserId == userDTO.UserId).FirstOrDefault();
                 userProfile.FirstName = userDTO.FirstName;
                 userProfile.LastName = userDTO.LastName;
                 userProfile.Description = userDTO.Description;
                 userProfile.LinkedInUrl = userDTO.LinkedInUrl;
-                userProfile.Email = userDTO.Email;
+                userProfile.Email = userDTO.Email.Trim();
             _dbContext.Users.Update(userProfile);
             _dbContext.SaveChanges();
-            //}
         }
         
         public void ApproveStudentActivity(StudentActivityDTO studentActitityDTO)
         {
-            //using (var db = new braveiordbContext())
-            //{
             var studentActitity = _dbContext.StudentActivities.Where(sa => sa.StudentActivityId == studentActitityDTO.StudentActivityId).FirstOrDefault();
             if (studentActitity != null)
             {
@@ -243,8 +237,6 @@ namespace Braveior.MentoringPlatform.Services
                 _dbContext.StudentActivities.Update(studentActitity);
                 _dbContext.SaveChanges();
             }
-
-            //}
         }
         public void UpdateStudentEvent(StudentActivityDTO studentActitityDTO,bool isAdmin)
         {
@@ -267,8 +259,6 @@ namespace Braveior.MentoringPlatform.Services
         }
         public void UpdateStudentChallenge(StudentActivityDTO studentActitityDTO, bool isAdmin)
         {
-            //using (var db = new braveiordbContext())
-            //{
                 var studentChallenge = _dbContext.StudentActivities.Where(sa => sa.StudentActivityId == studentActitityDTO.StudentActivityId).FirstOrDefault();
                 if(isAdmin)
                     studentChallenge.Points = studentActitityDTO.Points;
@@ -276,12 +266,9 @@ namespace Braveior.MentoringPlatform.Services
                 studentChallenge.AssetUrl = studentActitityDTO.AssetUrl;
             _dbContext.StudentActivities.Update(studentChallenge);
             _dbContext.SaveChanges();
-            //}
         }
         public void UpdateStudentAsset(StudentActivityDTO studentActitityDTO, bool isAdmin)
         {
-            //using (var db = new braveiordbContext())
-            //{
                 var studentAsset = _dbContext.StudentActivities.Where(sa => sa.StudentActivityId == studentActitityDTO.StudentActivityId).FirstOrDefault();
                 if(isAdmin)
                     studentAsset.Points = studentActitityDTO.Points;
@@ -291,7 +278,6 @@ namespace Braveior.MentoringPlatform.Services
                 studentAsset.AssetUrl = studentActitityDTO.AssetUrl;
             _dbContext.StudentActivities.Update(studentAsset);
             _dbContext.SaveChanges();
-            //}
         }
 
         public void AddUserSkill(UserSkillDTO userSkillDTO)
@@ -305,11 +291,8 @@ namespace Braveior.MentoringPlatform.Services
                 IsActive = true,
                 Stars = userSkillDTO.Stars
             };
-            // using (var db = new braveiordbContext())
-            // {
             _dbContext.UserSkills.Add(userSkill);
             _dbContext.SaveChanges();
-           // }
         }
 
         public void AddStudentEvent(StudentActivityDTO studentActivityDTO,bool isAdmin)
@@ -322,12 +305,11 @@ namespace Braveior.MentoringPlatform.Services
                 Type = studentActivityDTO.Type,
                 Status = studentActivityDTO.Status,
             };
-            // using (var db = new braveiordbContext())
-            //  {
             _dbContext.StudentActivities.Add(studentActivity);
             _dbContext.SaveChanges();
-           // }
         }
+
+        
 
         public void AddStudentChallenge(StudentActivityDTO studentActivityDTO,bool isAdmin)
         {
@@ -346,11 +328,8 @@ namespace Braveior.MentoringPlatform.Services
                 AssetUrl = studentActivityDTO.AssetUrl,
                 Status = studentActivityDTO.Status,
             };
-            //using (var db = new braveiordbContext())
-            //{
             _dbContext.StudentActivities.Add(studentActivity);
             _dbContext.SaveChanges();
-            //}
         }
 
         public void AddStudentAsset(StudentActivityDTO studentActivityDTO,bool isAdmin)
@@ -365,11 +344,8 @@ namespace Braveior.MentoringPlatform.Services
                 AssetUrl = studentActivityDTO.AssetUrl,
                 Status = studentActivityDTO.Status,
             };
-            //using (var db = new braveiordbContext())
-            // {
             _dbContext.StudentActivities.Add(studentActivity);
             _dbContext.SaveChanges();
-           // }
         }
 
         public void DeleteUserSkill(long userSkillId)
@@ -392,99 +368,15 @@ namespace Braveior.MentoringPlatform.Services
                 _dbContext.SaveChanges();
             }
         }
-        //public void CreateUser(UserDTO userDTO)
-        //{
-        //    User newUser = new User()
-        //    {
-        //        Name = userDTO.Name,
-        //        InstitutionId = userDTO.InstitutionId
-        //    };
-        //    using (var db = new braveiordbContext())
-        //    {
-        //        db.Users.Add(newUser);
-        //        db.SaveChanges();
-        //    }
-        //}
-        //public void UpdateUser(UserDTO userDTO)
-        //{
-
-        //    User newUser = new User()
-        //    {
-        //        Name = userDTO.Name,
-        //        InstitutionId = userDTO.InstitutionId
-        //    };
-        //    using (var db = new braveiordbContext())
-        //    {
-        //        var user = db.Users.Where(a => a.UserId == userDTO.Id).FirstOrDefault();
-        //        if (user != null)
-        //        {
-        //            user.InstitutionId = userDTO.InstitutionId;
-        //            user.Name = userDTO.Name;
-        //            db.Users.Update(user);
-        //            db.SaveChanges();
-        //        }
-        //    }
-        //}
-
-
-        //public void CreateTask(TaskDTO taskDTO)
-        //{
-        //    Task newTask = new Task()
-        //    {
-        //        Name = taskDTO.Name,
-        //        Description = taskDTO.Description,
-        //        Status = 0,
-        //    };
-        //    using (var db = new braveiordbContext())
-        //    {
-        //        db.Tasks.Add(newTask);
-        //        db.SaveChanges();
-        //    }
-        //}
-
-
-        //public void CreateProduct(ProductDTO productDTO)
-        //{
-        //    Product newProduct = new Product()
-        //    {
-        //        Name = productDTO.Name,
-        //        Description = productDTO.Description,
-        //    };
-        //    using (var db = new braveiordbContext())
-        //    {
-        //        db.Products.Add(newProduct);
-        //        db.SaveChanges();
-        //    }
-        //}
-        //public void CreateInstitution(InstitutionDTO institutionDTO)
-        //{
-        //    Institution newInstitution = new Institution()
-        //    {
-        //        Name = institutionDTO.Name,
-        //        Type = institutionDTO.Type,
-        //        Country = institutionDTO.Country,
-        //        State = institutionDTO.State,
-        //        District = institutionDTO.District,
-        //        City = institutionDTO.City,
-        //        PinCode = institutionDTO.PinCode,
-        //    };
-        //    using (var db = new braveiordbContext())
-        //    {
-        //        db.Institutions.Add(newInstitution);
-        //        db.SaveChanges();
-        //    }
-        //}
+       
         public void CreateKanboard(KanboardDTO kanboardDTO)
         {
             Kanboard newKanboard = new Kanboard()
             {
                 Name = kanboardDTO.Name
             };
-            // using (var db = new braveiordbContext())
-            // {
             _dbContext.Kanboards.Add(newKanboard);
             _dbContext.SaveChanges();
-          //  }
         }
         private string Encrypt(string text)
         {

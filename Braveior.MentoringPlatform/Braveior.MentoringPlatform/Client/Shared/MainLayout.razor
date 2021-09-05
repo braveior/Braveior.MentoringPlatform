@@ -3,15 +3,31 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 <MudLayout>
-    <MudAppBar Color="Color.Dark"  Elevation="1">
-        <AuthorizeView>
-            <Authorized>
-                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
-            </Authorized>
-        </AuthorizeView>
-        <img align="left" src="images/braveior-logo.png" />
-        <MudAppBarSpacer />
-        <LoginInfo></LoginInfo>
+    <MudAppBar Color="Color.Dark" Elevation="1">
+                    <img align="left" src="images/braveior-logo.png" />
+                    <MudSpacer />
+                    <AuthorizeView Roles="2">
+                        <Authorized>
+                            <MudMenu Label="Admin" Color="Color.Inherit" Dense="true" Direction="Direction.Bottom">
+                                <MudMenuItem Link="/profile">Search Profile</MudMenuItem>
+                                <MudMenuItem Link="/approvals">Approval</MudMenuItem>
+                                <MudMenuItem Link="/managevideobooks">Manage Video Book</MudMenuItem>
+                                <MudMenuItem Link="/managebootcampactivities">Manage Boot Camps</MudMenuItem>
+                            </MudMenu>
+                        </Authorized>
+                    </AuthorizeView>
+                    <AuthorizeView Roles="1,2">
+                        <Authorized>
+                            <MudMenu Label="Profile" Color="Color.Inherit" Dense="true" Direction="Direction.Bottom">
+                                <MudMenuItem Link="/profile">Profile</MudMenuItem>
+                            </MudMenu>
+                            <MudMenu Label="Help" Color="Color.Inherit" Dense="true" Direction="Direction.Bottom">
+                                <MudMenuItem Link="/resetpassword">Reset Password</MudMenuItem>
+                            </MudMenu>
+                        </Authorized>
+                    </AuthorizeView>
+                    <MudSpacer />
+                    <LoginInfo></LoginInfo>
     </MudAppBar>
     <MudDrawer @bind-Open="@open" Elevation="1">
         <MudDrawerHeader>
@@ -22,6 +38,7 @@
                 <Authorized>
                     <MudNavLink Href="/profile">Profile</MudNavLink>
                     <MudNavLink Href="/approvals">Approval</MudNavLink>
+                    <MudNavLink Href="/managevideobooks">Manage Video Book</MudNavLink>
                 </Authorized>
             </AuthorizeView>
             <AuthorizeView Roles="1">

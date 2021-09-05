@@ -117,7 +117,7 @@ namespace Braveior.MentoringPlatform.Client.Providers
                 claimsIdentity = new ClaimsIdentity(new[]
                                 {
                                     new Claim(ClaimTypes.Email, member.Email),
-                                     new Claim(ClaimTypes.Role, member.Role.ToString())
+                                     new Claim(ClaimTypes.Role, member.Role.ToString().Trim())
                                 }, "apiauth_type");
             }
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);

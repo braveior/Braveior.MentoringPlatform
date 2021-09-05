@@ -17,6 +17,8 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public string AssetUrl { get; set; }
         public string AssetName { get; set; }
         public string AssetDescription { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
         public virtual Challenge Challenge { get; set; }
         public virtual Event Event { get; set; }

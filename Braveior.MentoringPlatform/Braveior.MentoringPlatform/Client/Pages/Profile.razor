@@ -50,12 +50,14 @@
                             <HeaderContent>
 
                                 <MudTh>Skill</MudTh>
+                                <MudTh>Description</MudTh>
                                 <MudTh>Rating</MudTh>
                                 <MudTh></MudTh>
                                 <MudTh></MudTh>
                             </HeaderContent>
                             <RowTemplate>
                                 <MudTd DataLabel="Skill">@context.Skill.Name</MudTd>
+                                <MudTd DataLabel="Skill">@context.Skill.Description</MudTd>
                                 <MudTd DataLabel="Rating">@context.Stars</MudTd>
                                 <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => NavigateEditSkill(@context))">Edit</MudButton></MudTd>
                                 <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Error" OnClick="@(() => DeleteSkill(@context))">Delete</MudButton></MudTd>
@@ -67,33 +69,33 @@
                     <AuthorizeView Roles="2">
                         <Authorized>
                             <MudButton Disabled="@(student.UserId==0? true:false)" Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddEvent())">Add</MudButton>
-                            </Authorized>
-                        </AuthorizeView>
-                            <MudTable Dense="true" Items="@Events" Hover="true" Breakpoint="Breakpoint.Sm">
-                                <HeaderContent>
+                        </Authorized>
+                    </AuthorizeView>
+                    <MudTable Dense="true" Items="@Events" Hover="true" Breakpoint="Breakpoint.Sm">
+                        <HeaderContent>
 
-                                    <MudTh>Type</MudTh>
-                                    <MudTh>Name</MudTh>
-                                    <MudTh>Points</MudTh>
-                                    <MudTh>URL</MudTh>
-                                    <MudTh>Status</MudTh>
-                                    <MudTh></MudTh>
-                                    <MudTh></MudTh>
-                                </HeaderContent>
-                                <RowTemplate>
-                                    <MudTd DataLabel="Type">@GetActivityName(context.Type)</MudTd>
-                                    <MudTd DataLabel="Name">@(context.Event!=null ? context.Event.Name : " ")</MudTd>
-                                    <MudTd DataLabel="Points">@context.Points</MudTd>
-                                    <MudTd DataLabel="URL">@context.Event.URL</MudTd>
-                                    <MudTd DataLabel="Status">@GetActivityStatus(context.Status)</MudTd>
-                                    <AuthorizeView Roles="2">
-                                        <Authorized Context="auth">
-                                            <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => NavigateEditEvent(@context))">Edit</MudButton></MudTd>
-                                            <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Error" OnClick="@(() => DeleteStudentActivity(@context))">Delete</MudButton></MudTd>
-                                            </Authorized>
-                                        </AuthorizeView>
-                                </RowTemplate>
-                            </MudTable>
+                            <MudTh>Type</MudTh>
+                            <MudTh>Name</MudTh>
+                            <MudTh>Points</MudTh>
+                            <MudTh>URL</MudTh>
+                            <MudTh>Status</MudTh>
+                            <MudTh></MudTh>
+                            <MudTh></MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Type">@GetActivityName(context.Type)</MudTd>
+                            <MudTd DataLabel="Name">@(context.Event!=null ? context.Event.Name : " ")</MudTd>
+                            <MudTd DataLabel="Points">@context.Points</MudTd>
+                            <MudTd DataLabel="URL">@context.Event.URL</MudTd>
+                            <MudTd DataLabel="Status">@GetActivityStatus(context.Status)</MudTd>
+                            <AuthorizeView Roles="2">
+                                <Authorized Context="auth">
+                                    <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => NavigateEditEvent(@context))">Edit</MudButton></MudTd>
+                                    <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Error" OnClick="@(() => DeleteStudentActivity(@context))">Delete</MudButton></MudTd>
+                                </Authorized>
+                            </AuthorizeView>
+                        </RowTemplate>
+                    </MudTable>
                 </MudTabPanel>
                 <MudTabPanel Disabled="@(student.UserId==0? true:false)" Text="Challenges">
                     <MudButton Disabled="@(student.UserId==0? true:false)" Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddChallenge())">Add</MudButton>

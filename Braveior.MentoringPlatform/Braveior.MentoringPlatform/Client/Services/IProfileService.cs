@@ -16,6 +16,8 @@ namespace Braveior.MentoringPlatform.Client.Services
 
         Task<List<UserSkillDTO>> GetUserSkills(long userId);
 
+        Task<StudentAchievementDTO> GetStudentAchievements(long studentId);
+
         Task<List<EventDTO>> GetEvents();
 
         Task<List<ChallengeDTO>> GetChallenges();

@@ -1,0 +1,889 @@
+<div class="container-lg bg-light">
+<h2>Level 1- Building a basic Task Manager Application</h2></br>
+
+<h4>Building the ReactJS web application for Task Manager</h4>
+
+<h6>Clean up and Setting up dependencies</h6>
+
+<p>Create a folder taskmanager-web in your hard drive. Open the folder in Visual Studio Code.
+Open the Terminal and run the below command. 
+</p>
+
+
+npx create-react-app task-manager
+
+
+The basic ReactJs application will be created now.
+Navigate to the task-manager folder.
+
+Use the below command to start the developmnet server and run the application.
+
+
+npm run start
+
+
+The development server starts and the application can be run at http://localhost:3000
+
+<p>
+Remove the header section from the App.js file.
+Also remove the references to logo and app.css
+</p>
+
+<pre data-line="2,3,7-20"><code class="language-jsx">
+import logo from './logo.svg';
+import './App.css';
+function App() {
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;header className=&quot;App-header&quot;&gt;
+        &lt;img src={logo} className=&quot;App-logo&quot; alt=&quot;logo&quot; /&gt;
+        &lt;p&gt;
+          Edit &lt;code&gt;src/App.js&lt;/code&gt; and save to reload.
+        &lt;/p&gt;
+        &lt;a
+          className=&quot;App-link&quot;
+          href=&quot;https://reactjs.org&quot;
+          target=&quot;_blank&quot;
+          rel=&quot;noopener noreferrer&quot;
+        &gt;
+          Learn React
+        &lt;/a&gt;
+      &lt;/header&gt;
+    &lt;/div&gt;
+  );
+}
+export default App;
+</code></pre>
+
+<p>Remove the un-necessary files generated, which are out of scope for this workshop.</p>
+<pre><code class="language-jsx">
+public/logo192.
+public/logo512.png
+src/reportWebVitals.js
+src/setupTests.js
+src/logo.svg
+src/app.test.js
+src/App.css
+</code>
+</pre>
+
+In the index.is, remove the reportwebvitals reference and the call to the reportwebvitals();.
+
+<pre data-line="6,18"><code class="language-jsx">
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+
+ReactDOM.render(
+  &lt;React.StrictMode&gt;
+    &lt;App /&gt;
+  &lt;/React.StrictMode&gt;,
+  document.getElementById('root')
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+
+</code>
+</pre>
+
+In the index.html file , remove the reference to the manifest.json file.
+<pre data-line="18"><code class="language-jsx">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot; /&gt;
+    &lt;link rel=&quot;icon&quot; href=&quot;%PUBLIC_URL%/favicon.ico&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;
+    &lt;meta name=&quot;theme-color&quot; content=&quot;#000000&quot; /&gt;
+    &lt;meta
+      name=&quot;description&quot;
+      content=&quot;Web site created using create-react-app&quot;
+    /&gt;
+    &lt;link rel=&quot;apple-touch-icon&quot; href=&quot;%PUBLIC_URL%/logo192.png&quot; /&gt;
+    &lt;!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    --&gt;
+    &lt;link rel=&quot;manifest&quot; href=&quot;%PUBLIC_URL%/manifest.json&quot; /&gt;
+    &lt;!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike &quot;/favicon.ico&quot; or &quot;favicon.ico&quot;, &quot;%PUBLIC_URL%/favicon.ico&quot; will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    --&gt;
+    &lt;title&gt;React App&lt;/title&gt;
+  &lt;/head&gt;
+&lt;/html&gt;
+</code>
+</pre>
+
+<p>
+Add the below stylesheet references of Material-UI to the index.html head tag to support icons and related fonts.
+</p>
+
+<pre data-line="29,30"><code class="language-jsx">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot; /&gt;
+    &lt;link rel=&quot;icon&quot; href=&quot;%PUBLIC_URL%/favicon.ico&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;
+    &lt;meta name=&quot;theme-color&quot; content=&quot;#000000&quot; /&gt;
+    &lt;meta
+      name=&quot;description&quot;
+      content=&quot;Web site created using create-react-app&quot;
+    /&gt;
+    &lt;link rel=&quot;apple-touch-icon&quot; href=&quot;%PUBLIC_URL%/logo192.png&quot; /&gt;
+    &lt;!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    --&gt;
+    &lt;link rel=&quot;manifest&quot; href=&quot;%PUBLIC_URL%/manifest.json&quot; /&gt;
+    &lt;!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike &quot;/favicon.ico&quot; or &quot;favicon.ico&quot;, &quot;%PUBLIC_URL%/favicon.ico&quot; will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    --&gt;
+    &lt;title&gt;React App&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&amp;display=swap&quot; /&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://fonts.googleapis.com/icon?family=Material+Icons&quot; /&gt;
+  &lt;/head&gt;
+</code>
+</pre>
+
+<p>
+Run the below commands One-by-One in the terminal to install the core material-ui library , material-ui Icons and the react-router-dom
+</p>
+
+<pre>
+<code class="language-jsx">
+npm install @material-ui/core
+npm install @material-ui/icons
+npm install react-router-dom
+</code>
+</pre>
+
+<h6>Building the App Bar</h6>
+
+In the App.js file , add the references to AppBar, Toolbar and the styles.
+
+<pre data-line="2-4">
+<code class="language-jsx">
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from '@material-ui/core/styles';
+function App() {
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+    &lt;/div&gt;
+  );
+}
+export default App;
+</code>
+</pre>
+
+Create the needed styles for the appbar background color in the App.js file.
+
+<pre data-line="5-9">
+<code class="language-jsx">
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from '@material-ui/core/styles';
+const useStyles = makeStyles(() => ({
+  appbarColor: {
+    background : 'black',
+  },
+}));
+function App() {
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+    &lt;/div&gt;
+  );
+}
+<del>export default App;</del>
+</code>
+</pre>
+
+Change the function declaration to export default in the App.js file.
+
+<pre data-line="10">
+<code class="language-jsx">
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from '@material-ui/core/styles';
+const useStyles = makeStyles(() => ({
+  appbarColor: {
+    background : 'black',
+  },
+}));
+export default function App() {
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+    &lt;/div&gt;
+  );
+}
+</code>
+</pre>
+
+Add the App Bar Component in the App.js file. 
+
+<pre data-line="12-15">
+<code class="language-jsx">
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from '@material-ui/core/styles';
+const useStyles = makeStyles(() => ({
+  appbarColor: {
+    background : 'black',
+  },
+}));
+export default function App() {
+  return (
+&nbsp; &nbsp; &nbsp; &lt;AppBar className={classes.appbarColor} position=&quot;static&quot;&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Toolbar &gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/Toolbar&gt;
+&nbsp; &nbsp; &nbsp; &lt;/AppBar&gt;
+  );
+}
+</code>
+</pre>
+
+<h6>Building the App Bar</h6>
+
+<p>
+Create the folder components within the src folder.
+Within the components folder, create a new files Home.js and AddTask.js
+</p>
+
+<pre>
+<code class="language-jsx">
+import Container from '@material-ui/core/Container';
+export default function Home () {
+return(
+&lt;Container maxWidth=&quot;sm&quot;&gt;
+Home
+&lt;/Container&gt;
+)
+}
+</code>
+</pre>
+<pre>
+<code class="language-jsx">
+import Container from '@material-ui/core/Container';
+export default function AddTask () {
+return(
+&lt;Container maxWidth=&quot;sm&quot;&gt;
+Add Task
+&lt;/Container&gt;
+)
+}
+</code>
+</pre>
+
+<h6>Creating the navigations in the AppToolBar </h6>
+Add the dependencies below in the App.js file
+BrowserRouter, Route and Switch from react-router-dom
+Add the reference to the AddTask and Home components.
+
+<pre data-line="5-7"><code class="language-jsx">
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from '@material-ui/core/styles';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import AddTask from './components/AddTask'
+import Home from './components/Home'
+const useStyles = makeStyles(() => ({
+  appbarColor: {
+    background : 'black',
+  },
+}));
+export default function App() {
+  return (
+&nbsp; &nbsp; &nbsp; &lt;AppBar className={classes.appbarColor} position=&quot;static&quot;&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Toolbar &gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/Toolbar&gt;
+&nbsp; &nbsp; &nbsp; &lt;/AppBar&gt;
+  );
+}
+</code>
+</pre>
+
+<p>
+Add the Router tags around the AppBar. Add the Switch Tag with the Routes.
+Router brings in the navigation functionality to the application. In a React Application, each page is a component.
+Navigating between pages is taken care by the Router component. The Switch component is used to define the routes in the application.
+The Task Manager has two routes which means two page components.Default route is Home page. Route addtask navigates to AddTask page.
+</p>
+
+<pre data-line="15,21-25"><code class="language-jsx">
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from '@material-ui/core/styles';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import AddTask from './components/AddTask'
+import Home from './components/Home'
+const useStyles = makeStyles(() => ({
+  appbarColor: {
+    background : 'black',
+  },
+}));
+export default function App() {
+  return (
+&lt;Router&gt;
+&nbsp; &nbsp; &nbsp; &lt;AppBar className={classes.appbarColor} position=&quot;static&quot;&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Toolbar &gt;
+
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/Toolbar&gt;
+&nbsp; &nbsp; &nbsp; &lt;/AppBar&gt;
+&nbsp; &nbsp; &nbsp; &lt;Switch&gt;
+&nbsp; &nbsp; &lt;Route path='/addtask' component={AddTask} /&gt;
+&nbsp; &nbsp; &lt;Route path='/' component={Home} /&gt;
+&nbsp; &nbsp; &lt;/Switch&gt;
+&nbsp; &nbsp; &nbsp; &lt;/Router&gt;
+  );
+}
+</code>
+</pre>
+
+Add dependencies for the Typography and Link Components used for Font style and Hyperlink respectively.
+Add the Hyperlinks with font style to addtask and default link to home component using Typography and Link components.
+
+<pre data-line="8,9,20-25"><code class="language-jsx">
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from '@material-ui/core/styles';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import AddTask from './components/AddTask'
+import Home from './components/Home'
+import { Link } from 'react-router-dom'
+import Typography from '@material-ui/core/Typography';
+const useStyles = makeStyles(() => ({
+  appbarColor: {
+    background : 'black',
+  },
+}));
+export default function App() {
+  return (
+&lt;Router&gt;
+&nbsp; &nbsp; &nbsp; &lt;AppBar className={classes.appbarColor} position=&quot;static&quot;&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;Toolbar &gt;
+ &nbsp; &nbsp; &nbsp; &lt;Typography variant=&quot;h6&quot; color='textPrimary'&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;Link to='/addtask'&gt;Add Task&lt;/Link&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/Typography&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;Typography variant=&quot;h6&quot; &gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;Link to='/listtasks'&gt;List Tasks&lt;/Link&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &lt;/Typography&gt;
+&nbsp; &nbsp; &nbsp; &nbsp; &lt;/Toolbar&gt;
+&nbsp; &nbsp; &nbsp; &lt;/AppBar&gt;
+&nbsp; &nbsp; &nbsp; &lt;Switch&gt;
+&nbsp; &nbsp; &lt;Route path='/addtask' component={AddTask} /&gt;
+&nbsp; &nbsp; &lt;Route path='/' component={Home} /&gt;
+&nbsp; &nbsp; &lt;/Switch&gt;
+&nbsp; &nbsp; &nbsp; &lt;/Router&gt;
+  );
+}
+</code>
+</pre>
+
+Test the navigations for the pages. For now , the pages are empty.
+
+<h6>Styling the Navigation Links </h6>
+
+<script type="text/plain" class="language-jsx" data-line="13-16,24,27">
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from '@material-ui/core/styles';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import AddTask from './components/AddTask'
+import Home from './components/Home'
+import { Link } from 'react-router-dom'
+import Typography from '@material-ui/core/Typography';
+const useStyles = makeStyles(() => ({
+  appbarColor: {
+    background : 'black',
+  },
+  LinkColor: {
+    color : 'white',
+  },
+}));
+export default function App() {
+  return (
+<Router>
+      <AppBar className={classes.appbarColor} position="static">
+        <Toolbar >
+          <Typography variant="h6" color='textPrimary'>
+            <Link className={classes.LinkColor} to='/addtask'>Add Task</Link>
+          </Typography>
+          <Typography variant="h6" >
+          <Link className={classes.LinkColor} to='/listtasks'>List Tasks</Link>
+          </Typography>
+        </Toolbar>
+      </AppBar>
+    <Switch>
+    <Route path='/addtask' component={AddTask} />
+    <Route path='/' component={Home} />
+    </Switch>
+    </Router>
+  );
+}
+</script>
+
+<p>
+Using the Grid Layout, assign 10 columns empty and 1 column for Add Task Link and 1 column for List Tasks. This will right align the two links.
+
+
+</p>
+<script type="text/plain" class="language-jsx" data-line="10,24-26,30-31,35-36">
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import { makeStyles } from '@material-ui/core/styles';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import AddTask from './components/AddTask'
+import Home from './components/Home'
+import { Link } from 'react-router-dom'
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+const useStyles = makeStyles(() => ({
+  appbarColor: {
+    background : 'black',
+  },
+  LinkColor: {
+    color : 'white',
+  },
+}));
+export default function App() {
+  return (
+<Router>
+      <AppBar className={classes.appbarColor} position="static">
+        <Toolbar >
+          <Grid container>
+          <Grid item xs={10} />
+          <Grid item xs={1} >
+          <Typography variant="h6" color='textPrimary'>
+            <Link className={classes.LinkColor} to='/addtask'>Add Task</Link>
+          </Typography>
+          </Grid>
+          <Grid item xs={1} >
+          <Typography variant="h6" >
+          <Link className={classes.LinkColor} to='/listtasks'>List Tasks</Link>
+          </Typography>
+          </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
+    <Switch>
+    <Route path='/addtask' component={AddTask} />
+    <Route path='/' component={Home} />
+    </Switch>
+    </Router>
+  );
+}
+</script>
+
+<p>
+Add a new file TaskList.js. TaskList component is used within the homepage component to display the tasks.
+Tasklist component uses the List, ListItem, ListItemext components to display the tasks.
+Impor them alogn with the Box, Paper and Typography components.
+Refer the material-ui website for a detailed overview of all these UI components.
+
+
+The Home page component uses the taskList Component to display the list of tasks.
+So the taskList is passed as a parameter to the tasklist component from the home page
+
+Use the map method to iterate the tasklist and display each task in the Listem and ListItemText component. Use the taskname property in the task object to display the task name.
+
+taskItemId is used as the key to the List Component.
+</p>
+
+<script type="text/plain" class="language-jsx">
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+
+export default function TaskList ({tasks }) {
+  return (
+        <Box p={2}>
+          <Paper>
+          <Typography variant="h6" component="h2">Task List</Typography>
+        <List component="nav" >
+        {tasks.map(task => (
+            <ListItem button divider key={task.taskItemId}>
+                <ListItemText primary={task.taskName} />
+            </ListItem>
+          ))}
+        </List>
+        </Paper>
+        </Box>
+  );
+}
+ </script>
+
+<p>
+In the Home page component, add references to the TaskList component, React and the React Hooks useState and useEffect.
+React Hooks useState and useEffect are used in this application. useState is used to store the objects in State and useEffect is used to make the API calls
+during the page load everytime after rendering the components.
+</p>
+
+<p>
+we declare three State variables,  tasks,isPending and error.tasks is used to get the list of tasks from the API call.isPending is a boolean value which will be true when the data is retrieved by the API and becomes false when the data is already received. This is typically used to activate the loading screen
+during API call.error variable is used if there is an error during the api call.SetData,SetISpending and SetError are used to assign the value to the State variables.
+</p>
+
+<p>
+Add the UseEffect React lifecycle Hook to fetch the data from the API to get the tasks.
+Use the API endpoint for the GET call in the fetch method.
+In the fetch method , we check three conditions using the then and catch blocks.
+if the response is not 200 ok , then throw an error.
+if the data is received , set the Ispending to false and also set the data in the State Variables.
+In the Catch , we will receive the error , even in case of error , we will set the ispending to false , to remove the loading indicator which will be included later.
+SetError is used to set the error for the state variable.
+A time out value is also set to mention how long to wait before the error during an API call.
+display the error when error not equal to null and 
+Use the TaskList component to display the tasks . pass tha tasks state variable to the TaskList component.
+Use the ListTasks page to list the tasks.
+</p>
+
+<script type="text/plain" class="language-jsx" data-line="3-5,8-34,38-39">
+import Container from '@material-ui/core/Container';
+import React from 'react';
+import TaskList from "./TaskList";
+import { useState, useEffect } from 'react';
+
+export default function Home () {
+  const [tasks, setData] = useState(null);
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState(null);
+  
+useEffect(() => {
+   fetchData();
+  }, []);
+
+const fetchData = () => {
+ setTimeout(() => {
+      fetch('http://localhost:28908/api/Task/tasks')
+      .then(res => {
+        if (!res.ok) { // error coming back from server
+          throw Error('could not fetch the data for that resource');
+        } 
+        return res.json();
+      })
+      .then(data => {
+        setIsPending(false);
+        setData(data);
+      })
+      .catch(err => {
+          // auto catches network / connection error
+          setIsPending(false);
+          setError('API call Error !!');
+      })
+    }, 1000);
+}
+  return (
+      <Container maxWidth="sm">
+      { error && <div>{ error }</div> }
+      { tasks && <TaskList tasks={tasks} /> }
+      </Container>
+    )
+  }
+</script>
+
+<h6>Adding the Progress Control</h6>
+
+Next add the Backdrop and CircularProgress indicator Components which will be used durig the API call.
+
+Add the reference to Backdrop and CicularProgress components.
+
+Add the styles for the backdrop.
+
+USe the Backdrp Component with the parameter open set to isPending state variable.
+
+Check the page to see if the tasks are displayed.
+
+<script type="text/plain" class="language-jsx" data-line="6-8,10-15,22,52-54">
+import Container from '@material-ui/core/Container';
+import React from 'react';
+import TaskList from "./TaskList";
+import { useState, useEffect } from 'react';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
+}));
+
+export default function Home () {
+  const [tasks, setData] = useState(null);
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const classes = useStyles();
+
+useEffect(() => {
+   fetchData();
+  }, []);
+
+const fetchData = () => {
+ setTimeout(() => {
+      fetch('http://localhost:28908/api/Task/tasks')
+      .then(res => {
+        if (!res.ok) { // error coming back from server
+          throw Error('could not fetch the data for that resource');
+        } 
+        return res.json();
+      })
+      .then(data => {
+        setIsPending(false);
+        setData(data);
+      })
+      .catch(err => {
+          // auto catches network / connection error
+          setIsPending(false);
+          setError('API call Error !!');
+      })
+    }, 1000);
+}
+  return (
+      <Container maxWidth="sm">
+      { error && <div>{ error }</div> }
+      { tasks && <TaskList tasks={tasks} /> }
+      <Backdrop className={classes.backdrop} open={isPending} >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      </Container>
+    )
+  }
+</script>
+<h6>Basic Add Tasks Functinality </h6>
+
+<p>
+In the Add Task page component, add the reference to the TextField Button components and useState.
+Create a Form and include a Material-UI TextField and a Button field to it
+Create a StateVariable taskName which holds the task name entered in the text field.
+Create a method HandleSubmit and use the fetch method to make the POST API call to add the tasks.
+pass the taskName as JSON string in the POST API call body section.
+Call the handlesubmit method on the Onsubmit event of the Form.
+In the OnChange event of the Text Field , call the setTaskName State method to set the state variable.
+</p>
+
+<script type="text/plain" class="language-jsx" data-line="3-6,11-25,29-32">
+import Container from '@material-ui/core/Container';
+import React from 'react';
+import { useState } from "react";
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+
+
+export default function AddTask () {
+
+  const [taskName, setTaskName] = useState('');
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const task = { taskName };
+
+    fetch('http://localhost:28908/api/task/add', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(task)
+    }).then(() => {
+    })
+    .catch(err => {
+    })
+  }  
+
+  return (
+    <Container maxWidth="sm">
+      <form onSubmit={handleSubmit}>
+            <TextField id="outlined-basic" size="small" label="Task name" variant="outlined" required={true} onChange={(e) => setTaskName(e.target.value)}/>
+            <Button type="submit" variant="outlined" >Submit</Button>
+      </form>
+</Container>
+  )
+}
+</script>
+
+<h6>Add Notification feature using the snackbar </h6>
+<p>
+Now use the Snack bar component to display a notification when the task is submitted.
+Add references to the SnackBar component
+Add the snackbar component. Create a State Variable Open to activate and deactivate the Snackbar component.
+</p>
+
+<script type="text/plain" class="language-jsx" data-line="8-10,15,21-26,33,46-62">
+import Container from '@material-ui/core/Container';
+import React from 'react';
+import { useState } from "react";
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
+export default function AddTask () {
+
+  const [taskName, setTaskName] = useState('');
+  const [open, setOpen] = useState(false);
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const task = { taskName };
+  
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
+    fetch('http://localhost:28908/api/task/add', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(task)
+    }).then(() => {
+       setOpen(true);   
+    })
+    .catch(err => {
+    })
+  }  
+
+  return (
+    <Container maxWidth="sm">
+      <form onSubmit={handleSubmit}>
+            <TextField id="outlined-basic" size="small" label="Task name" variant="outlined" required={true} onChange={(e) => setTaskName(e.target.value)}/>
+            <Button type="submit" variant="outlined" >Submit</Button>
+      </form>
+
+    <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Task Added"
+        action={
+          <React.Fragment>
+            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
+</Container>
+  )
+}
+</script>
+
+<h6>Add the Layout and alignment for the Add Tasks page</h6>
+
+<p>
+Do some layout alignmnents using the Grid and Box components.
+Test the application by adding the tasks and checking if it displays right in the List tasks  page.
+</p>
+
+<script type="text/plain" class="language-jsx" data-line="11-15,46-49,51-58,60-61">
+import Container from '@material-ui/core/Container';
+import React from 'react';
+import { useState } from "react";
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+
+export default function AddTask () {
+
+  const [taskName, setTaskName] = useState('');
+  const [open, setOpen] = useState(false);
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const task = { taskName };
+  
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
+    fetch('http://localhost:28908/api/task/add', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(task)
+    }).then(() => {
+       setOpen(true);   
+    })
+    .catch(err => {
+    })
+  }  
+
+  return (
+    <Container maxWidth="sm">
+    <Box m={4}>
+    <Paper>
+    <Typography variant="h6" component="h2">Add Task</Typography>
+    <Divider />
+      <form onSubmit={handleSubmit}>
+    <Grid container direction="column">
+          <Grid item>
+           <Box m={2}> <TextField id="outlined-basic" size="small" label="Task name" variant="outlined" required={true} onChange={(e) => setTaskName(e.target.value)}/></Box>
+        </Grid>
+        <Grid item>
+            <Box m={2}><Button type="submit" variant="outlined" >Submit</Button></Box>
+        </Grid>
+        </Grid>
+      </form>
+    </Paper>
+     </Box>
+    <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Task Added"
+        action={
+          <React.Fragment>
+            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </React.Fragment>
+        }
+      />
+</Container>
+  )
+}
+</script>
+
+
+</div>

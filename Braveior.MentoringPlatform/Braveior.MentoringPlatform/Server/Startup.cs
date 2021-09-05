@@ -5,12 +5,14 @@ using Braveior.MentoringPlatform.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +54,8 @@ namespace Braveior.MentoringPlatform.Server
             services.AddScoped<ILoginService, LoginService>();
             services.AddScoped<IStoryService, StoryService>();
             services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IVideoBookService, VideoBookService>();
+            services.AddScoped<IWebinarService, WebinarService>();
 
             services.AddAuthentication(cfg =>
             {
@@ -102,8 +106,9 @@ namespace Braveior.MentoringPlatform.Server
 
             services.AddRazorPages();
             services.AddDbContext<braveiordbContext>(options =>
-              //options.UseMySql("server=localhost;user=root;password=password;database=taskmanager_dotnet", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.26-mysql")));
+            //options.UseMySql("server=localhost;user=root;password=password;database=taskmanager_dotnet", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.26-mysql")));
             options.UseSqlServer("Data Source=tcp:s10.everleap.com;Initial Catalog=DB_7090_braveior;User ID=DB_7090_braveior_user;Password=Sreelami1981$$;Integrated Security=False;", providerOptions => providerOptions.EnableRetryOnFailure()));
+            //options.UseSqlServer("Server=.\\sqlexpress;Database=DB_7090_braveior;Trusted_Connection=True;", providerOptions => providerOptions.EnableRetryOnFailure()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

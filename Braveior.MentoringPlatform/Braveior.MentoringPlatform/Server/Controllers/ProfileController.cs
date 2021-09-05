@@ -12,7 +12,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
+    
     public class ProfileController : ControllerBase
     {
 
@@ -51,6 +51,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getpendingstudentactivities")]
+        [Authorize]
         public IActionResult GetPendingStudentActivties()
         {
             return Ok(_service.GetPendingStudentActivties());
@@ -64,6 +65,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getprofiles/{institutionId}")]
+        [Authorize]
         public IActionResult GetProfiles(long institutionId)
         {
             return Ok(_service.GetProfiles(institutionId));
@@ -85,6 +87,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getcolleges")]
+        [Authorize]
         public IActionResult GetColleges()
         {
             return Ok(_service.GetColleges());
@@ -96,6 +99,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getstudents/{collegeId}/{key}")]
+        [Authorize]
         public IActionResult GetStudents(long collegeId, string key)
         {
             return Ok(_service.GetUsers(collegeId,key));
@@ -107,6 +111,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getskills/{key}")]
+        [Authorize]
         public IActionResult GetSkills(string key)
         {
             return Ok(_service.GetSkills(key));
@@ -118,6 +123,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getuserskills/{userId}")]
+        [Authorize]
         public IActionResult GetUserSkills(long userId)
         {
             var accessToken = HttpContext;
@@ -131,6 +137,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getchallenges")]
+        [Authorize]
         public IActionResult GetChallenges()
         {
             return Ok(_service.GetChallenges());
@@ -142,6 +149,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getevents")]
+        [Authorize]
         public IActionResult GetEvents()
         {
             return Ok(_service.GetEvents());
@@ -153,17 +161,25 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getstudentactivities/{userId}")]
+        [Authorize]
         public IActionResult GetStudentActivities(long userId)
         {
             return Ok(_service.GetStudentActivities(userId));
         }
 
+        [HttpGet("getstudentachievements/{studentId}")]
+        [Authorize]
+        public IActionResult GetStudentAchievements(long studentId)
+        {
+            return Ok(_service.GetStudentAchievements(studentId));
+        }
         /// <summary>
         /// Endpoint to get monthly average ratings for member
         /// </summary>
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpPost("updateuserskill")]
+        [Authorize]
         public IActionResult UpdateUserSkill(UserSkillDTO userSkillDTO)
         {
             _service.UpdateUserSkill(userSkillDTO);
@@ -176,6 +192,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpPost("approvestudentactivity")]
+        [Authorize]
         public IActionResult ApproveStudentActivity(StudentActivityDTO studentActivityDTO)
         {
             _service.ApproveStudentActivity(studentActivityDTO);
@@ -189,6 +206,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpPost("resetpassword")]
+        [Authorize]
         public IActionResult ResetPassword(UserDTO userDTO)
         {
             _service.ResetPassword(userDTO);
@@ -201,6 +219,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpPost("updateuserprofile")]
+        [Authorize]
         public IActionResult UpdateProfile(UserDTO userDTO)
         {
             _service.UpdateProfile(userDTO);
@@ -213,6 +232,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpDelete("deleteuserskill/{userSkillId}")]
+        [Authorize]
         public IActionResult DeleteUserSkill(long userSkillId)
         {
             _service.DeleteUserSkill(userSkillId);
@@ -225,6 +245,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpDelete("deletestudentactivity/{studentActivityId}")]
+        [Authorize]
         public IActionResult DeleteStudentActivity(long studentActivityId)
         {
             _service.DeleteStudentActivity(studentActivityId);
@@ -237,6 +258,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpPost("updatestudentevent")]
+        [Authorize]
         public IActionResult UpdateStudentEvent(StudentActivityDTO studentActivityDTO)
         {
             bool isAdmin = false;
@@ -254,6 +276,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpPost("updatestudentchallenge")]
+        [Authorize]
         public IActionResult UpdateStudentChallenge(StudentActivityDTO studentActivityDTO)
         {
             bool isAdmin = false;
@@ -271,6 +294,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpPost("updatestudentasset")]
+        [Authorize]
         public IActionResult UpdateStudentAsset(StudentActivityDTO studentActivityDTO)
         {
             bool isAdmin = false;
@@ -288,6 +312,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpPost("addstudentskill")]
+        [Authorize]
         public IActionResult AddStudentSkill(UserSkillDTO userSkillDTO)
         {
             _service.AddUserSkill(userSkillDTO);
@@ -300,6 +325,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpPost("addstudentevent")]
+        [Authorize]
         public IActionResult AddStudentEvent(StudentActivityDTO studentActivityDTO)
         {
             bool isAdmin = false;
@@ -317,6 +343,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpPost("addstudentchallenge")]
+        [Authorize]
         public IActionResult AddStudentChallenge(StudentActivityDTO studentActivityDTO)
         {
             bool isAdmin = false;
@@ -334,6 +361,7 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpPost("addstudentasset")]
+        [Authorize]
         public IActionResult AddStudentAsset(StudentActivityDTO studentActivityDTO)
         {
             bool isAdmin = false;

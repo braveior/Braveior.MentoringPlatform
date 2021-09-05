@@ -109,7 +109,34 @@ namespace Braveior.MentoringPlatform.Client.Services
                 throw new Exception("Internal Server Error");
             }
         }
+        
+        public async Task<StudentAchievementDTO> GetStudentAchievements(long studentId)
+        {
+            string authToken = "";
+            //Get AccessToken from local storage
+            authToken = await _localStorageService.GetItemAsync<string>("accessToken");
+            if (authToken == null)
+            {
+                throw new Exception("Access Token not found");
+            }
+            //Add AccessToken to the Bearer header
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
 
+            //REST API call for Search
+            var response = await _httpClient.GetAsync($"api/Profile/getstudentachievements/{studentId}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<StudentAchievementDTO>();
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Invalid Access Token");
+            }
+            else
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
         public async Task<List<SkillDTO>> GetSkills(string key)
         {
             string authToken = "";

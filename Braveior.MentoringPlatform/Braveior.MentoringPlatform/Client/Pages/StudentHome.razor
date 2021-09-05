@@ -1,0 +1,346 @@
+﻿@page "/studenthome"
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IProfileService ProfileService
+@inject IVideoBookService VideoBookService
+@inject IWebinarService WebinarService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@using Braveior.MentoringPlatform.Client.Pages
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudGrid>
+        <MudItem xs="8">
+            <MudText Typo="Typo.h6">Braveior Student Timeline</MudText>
+            <MudDivider />
+            <MudTimeline Class="pa-4" TimelineAlign="TimelineAlign.Start" TimelineOrientation="TimelineOrientation.Horizontal" TimelinePosition="TimelinePosition.Alternate" DisableModifiers="false">
+                <MudTimelineItem Color="Color.Dark" Size="Size.Small" Variant="Variant.Outlined" Elevation="4">
+                    <ItemContent>
+                        <MudText Typo="Typo.overline">Joined</MudText>
+                    </ItemContent>
+                    @*<ItemOpposite>
+                        <MudText Typo="Typo.overline">12-Aug-2021</MudText>
+                    </ItemOpposite>*@
+                </MudTimelineItem>
+                <MudTimelineItem Color="Color.Success" Size="Size.Small" Variant="Variant.Outlined" Elevation="4">
+                    <ItemContent>
+                        <MudText Typo="Typo.overline">Concepts</MudText>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudText Typo="Typo.overline">@studentAchievementDTO.Challenge1CompleteDate.ToShortDateString()</MudText>
+                    </ItemOpposite>
+                </MudTimelineItem>
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge1Complete && studentAchievementDTO.Challenge2Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined" Elevation="4">
+                    <ItemContent>
+                        <MudText Typo="Typo.overline">Level-1 Certified</MudText>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudText Typo="Typo.overline">@studentAchievementDTO.Challenge2CompleteDate.ToShortDateString()</MudText>
+                    </ItemOpposite>
+                </MudTimelineItem>
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge3Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined" Elevation="4">
+                    <ItemContent>
+                        <MudText Typo="Typo.overline">Level-2 Certified</MudText>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudText Typo="Typo.overline">@studentAchievementDTO.Challenge3CompleteDate.ToShortDateString()</MudText>
+                    </ItemOpposite>
+                </MudTimelineItem>
+                <MudTimelineItem Color=@(studentAchievementDTO.BraveiorChampion ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined" Elevation="4">
+                    <ItemContent>
+                        <MudText Typo="Typo.overline">Braveior Champion</MudText>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudText Typo="Typo.overline">@studentAchievementDTO.Challenge3CompleteDate.ToShortDateString()</MudText>
+                    </ItemOpposite>
+                </MudTimelineItem>
+            </MudTimeline>
+
+        </MudItem>
+        <MudItem xs="4">
+            <MudText Typo="Typo.h6">Upcoming Boot Camps</MudText>
+            <MudDivider />
+            @if (BootCampActivities != null)
+            {
+                <MudPaper Class="mt-16" Elevation="3">
+                    <MudList Class="pa-2" Clickable="true" Dense="true" DisableGutters="true">
+                        @foreach (var bootCampActivity in BootCampActivities)
+                        {
+                            <MudListItem Text=@(bootCampActivity.BootCamp.Name + " " + bootCampActivity.StartDate.ToShortDateString() + " " + bootCampActivity.EndDate.ToShortDateString()) />
+                        }
+                    </MudList>
+                </MudPaper>
+            }
+        </MudItem>
+        
+        <MudItem xs="6">
+            <MudText Typo="Typo.h6">Points Breakup</MudText>
+            <MudDivider />
+            @if (configPointsSplitup != null)
+            {
+
+                <MudPaper Class="mt-16" Elevation="3">
+                    <Chart Config="configPointsSplitup"></Chart>
+                </MudPaper>
+            }
+            </MudItem>
+        
+        
+            
+        <MudItem xs="6">
+            <MudText Typo="Typo.h6">Points Timeline</MudText>
+            <MudDivider />
+            @if (configPointsTimeline != null)
+            {
+                <MudPaper Class="mt-16" Elevation="3">
+                    <Chart Config="configPointsTimeline"></Chart>
+                </MudPaper>
+            }
+            </MudItem>
+        
+    <MudItem xs="6">
+        <MudText Typo="Typo.h6">Video Books</MudText>
+        <MudDivider />
+        <MudPaper Class="mt-16" Elevation="3">
+            <MudList Class="pa-2" Clickable="true" Dense="true" DisableGutters="true">
+                @foreach (var videobook in VideoBooks)
+                {
+                    <MudListItem Text="@videobook.Name" Href=@("/videobook/" + videobook.VideoBookId) Icon="@Icons.Filled.VideoLibrary" />
+                }
+            </MudList>
+        </MudPaper>
+    </MudItem>
+        <MudItem xs="6">
+        </MudItem>
+    </MudGrid>
+    <MudOverlay @bind-Visible="isVisible" DarkBackground="true" />
+</MudContainer>
+@code {
+
+    private BarConfig configPointsSplitup;
+
+    bool isVisible = false;
+
+    private LineConfig configPointsTimeline;
+
+    private List<VideoBookDTO> VideoBooks = new List<VideoBookDTO>();
+
+    private List<BootCampActivityDTO> BootCampActivities = new List<BootCampActivityDTO>();
+
+    private StudentAchievementDTO studentAchievementDTO = new StudentAchievementDTO();
+
+    private UserDTO student = new UserDTO();
+
+    private List<UserSkillDTO> UserSkills = new List<UserSkillDTO>();
+
+    private List<StudentActivityDTO> Events = new List<StudentActivityDTO>();
+    private List<StudentActivityDTO> Challenges = new List<StudentActivityDTO>();
+    private List<StudentActivityDTO> Blogs = new List<StudentActivityDTO>();
+
+    private List<InstitutionDTO> AssetsList { get; set; } = new List<InstitutionDTO>();
+
+
+    [Inject]
+    private IState<CommonState> CommonState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await LoadStudentHome();
+    }
+    private async Task LoadStudentHome()
+    {
+        await LoadStudentActivities();
+        StateHasChanged();
+
+    }
+    private async Task LoadStudentActivities()
+    {
+        ToggleOverlay(true);
+        studentAchievementDTO = await ProfileService.GetStudentAchievements(1);
+        await LoadStudentPointsSplitupChart();
+        await LoadStudentPointsTimelineChart();
+        await LoadVideoBooks();
+        await LoadBootCampActivities();
+        ToggleOverlay(false);
+
+    }
+    public void ToggleOverlay(bool value)
+    {
+        isVisible = value;
+        StateHasChanged();
+    }
+    private async Task LoadVideoBooks()
+    {
+        VideoBooks = await VideoBookService.GetVideoBooks();
+
+    }
+    private async Task LoadBootCampActivities()
+    {
+        BootCampActivities = await WebinarService.GetBootCampActivities();
+
+    }
+    private async Task LoadStudentPointsSplitupChart()
+    {
+        configPointsSplitup = GetBarChartConfig();
+        //Y Axes Configuration
+        BarDataset<double> dataset = new BarDataset<double>()
+        {
+            Label = "Points Splitup",
+            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.FromArgb(128, System.Drawing.Color.Blue)),
+            BorderColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue),
+            BorderWidth = 1
+        };
+
+        foreach (var val in studentAchievementDTO.PointsSplitup)
+        {
+            dataset.Add(val.YAxis1);
+            configPointsSplitup.Data.Labels.Add(val.XAxis1);
+        }
+        configPointsSplitup.Data.Datasets.Add(dataset);
+    }
+
+    private async Task LoadStudentPointsTimelineChart()
+    {
+        configPointsTimeline = GetLineChartConfig();
+        //Y Axes Configuration
+        LineDataset<double> dataset = new LineDataset<double>()
+        {
+            Label = "Points Splitup",
+            BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.FromArgb(128, System.Drawing.Color.Green)),
+            BorderColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Green),
+            BorderWidth = 1
+        };
+
+        foreach (var val in studentAchievementDTO.PointsTimeline)
+        {
+            dataset.Add(val.YAxis1);
+            configPointsTimeline.Data.Labels.Add(val.XAxis1);
+        }
+        configPointsTimeline.Data.Datasets.Add(dataset);
+    }
+
+    private string GetActivityName(int id)
+    {
+        switch (id)
+        {
+            case 1:
+                return "Group Discussion";
+            case 2:
+                return "Hackathon";
+            case 3:
+                return "R & D Solutioning";
+            case 4:
+                return "Challenge";
+            case 5:
+                return "Blog";
+            case 6:
+                return "Vlog";
+            default:
+                return "General";
+        }
+    }
+    private string GetActivityStatus(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                return "Pending";
+            case 1:
+                return "Approved";
+            default:
+                return "Pending";
+        }
+    }
+    //Configuration for the CharJS Bar Chart
+    private BarConfig GetBarChartConfig()
+    {
+
+        var config = new BarConfig(horizontal: false)
+        {
+            Options = new BarOptions
+            {
+                Responsive = true,
+                Legend = new Legend
+                {
+                    Position = ChartJs.Blazor.Common.Enums.Position.Top
+
+                },
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Monthly Average Rating"
+                },
+                Scales = new BarScales
+                {
+
+                    YAxes = new List<CartesianAxis>
+            {
+                            new LinearCartesianAxis
+                            {
+                                  Ticks = new LinearCartesianTicks
+                                  {
+                                       SuggestedMin =0
+                                  }
+                            }
+                    }
+                }
+            }
+        };
+        return config;
+    }
+
+    //Configuration for the CharJS Bar Chart
+    private LineConfig GetLineChartConfig()
+    {
+
+        var config = new LineConfig()
+        {
+            Options = new LineOptions
+            {
+                Responsive = true,
+                Title = new OptionsTitle
+                {
+                    Display = true,
+                    Text = "Line Chart"
+                },
+                Tooltips = new Tooltips
+                {
+                    Mode = InteractionMode.Nearest,
+                    Intersect = true
+                },
+                Hover = new Hover
+                {
+                    Mode = InteractionMode.Nearest,
+                    Intersect = true
+                },
+                Scales = new Scales
+                {
+                    XAxes = new List<CartesianAxis>
+            {
+                        new CategoryAxis
+                        {
+                            ScaleLabel = new ScaleLabel
+                            {
+                                LabelString = "Month"
+                            }
+                        }
+                    },
+                    YAxes = new List<CartesianAxis>
+            {
+                        new LinearCartesianAxis
+                        {
+                            ScaleLabel = new ScaleLabel
+                            {
+                                LabelString = "Value"
+                            }
+                        }
+                    }
+                }
+
+            }
+        };
+        return config;
+    }
+}

@@ -17,11 +17,14 @@ namespace Braveior.MentoringPlatform.Repository.Models
         {
         }
 
+        public virtual DbSet<BootCamp> BootCamps { get; set; }
+        public virtual DbSet<BootCampActivity> BootCampActivities { get; set; }
         public virtual DbSet<Challenge> Challenges { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Group> Groups { get; set; }
         public virtual DbSet<Institution> Institutions { get; set; }
         public virtual DbSet<Kanboard> Kanboards { get; set; }
+        public virtual DbSet<Lesson> Lessons { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Skill> Skills { get; set; }
         public virtual DbSet<Story> Stories { get; set; }
@@ -30,20 +33,59 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserSkill> UserSkills { get; set; }
         public virtual DbSet<UserTask> UserTasks { get; set; }
+        public virtual DbSet<VideoBook> VideoBooks { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                //optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=braveior-remote;Trusted_Connection=True;");
-                optionsBuilder.UseSqlServer("Data Source=tcp:s10.everleap.com;Initial Catalog=DB_7090_braveior;User ID=DB_7090_braveior_user;Password=Sreelami1981$$;Integrated Security=False;");
-            }
-        }
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+//                //optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=DB_7090_braveior;Trusted_Connection=True;");
+//                optionsBuilder.UseSqlServer("Data Source=tcp:s10.everleap.com;Initial Catalog=DB_7090_braveior;User ID=DB_7090_braveior_user;Password=Sreelami1981$$;Integrated Security=False;", providerOptions => providerOptions.EnableRetryOnFailure());
+//            }
+//        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<BootCamp>(entity =>
+            {
+                entity.ToTable("BootCamp");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<BootCampActivity>(entity =>
+            {
+                entity.ToTable("BootCampActivity");
+
+                entity.Property(e => e.EndDate).HasColumnType("datetime");
+
+                entity.Property(e => e.MeetingUrl).HasColumnName("MeetingURL");
+
+                entity.Property(e => e.StartDate).HasColumnType("datetime");
+
+                entity.HasOne(d => d.BootCamp)
+                    .WithMany(p => p.BootCampActivities)
+                    .HasForeignKey(d => d.BootCampId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_BootCampActivity_BootCamp");
+            });
 
             modelBuilder.Entity<Challenge>(entity =>
             {
@@ -160,6 +202,44 @@ namespace Braveior.MentoringPlatform.Repository.Models
                 entity.Property(e => e.Name).IsRequired();
             });
 
+            modelBuilder.Entity<Lesson>(entity =>
+            {
+                entity.ToTable("Lesson");
+
+                entity.Property(e => e.CreationDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description).IsRequired();
+
+                entity.Property(e => e.DisplayOrder).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.Type).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.Url)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .HasColumnName("URL");
+
+                entity.Property(e => e.VimeoId)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.VideoBook)
+                    .WithMany(p => p.Lessons)
+                    .HasForeignKey(d => d.VideoBookId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Lesson_VideoBook");
+            });
+
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("Product");
@@ -236,6 +316,14 @@ namespace Braveior.MentoringPlatform.Repository.Models
                 entity.HasIndex(e => e.UserId, "IX_User");
 
                 entity.Property(e => e.AssetUrl).HasColumnName("AssetURL");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
 
                 entity.HasOne(d => d.Challenge)
                     .WithMany(p => p.StudentActivities)
@@ -383,6 +471,27 @@ namespace Braveior.MentoringPlatform.Repository.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserTask_User");
+            });
+
+            modelBuilder.Entity<VideoBook>(entity =>
+            {
+                entity.ToTable("VideoBook");
+
+                entity.Property(e => e.CreationDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(250);
             });
 
             OnModelCreatingPartial(modelBuilder);

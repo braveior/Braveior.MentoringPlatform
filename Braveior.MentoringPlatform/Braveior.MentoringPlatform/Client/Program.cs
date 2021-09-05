@@ -30,6 +30,8 @@ namespace Braveior.MentoringPlatform.Client
             builder.Services.AddHttpClient<IKanboardService, KanboardService>(sp => { sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
             builder.Services.AddHttpClient<IStoryService, StoryService>(sp => { sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
             builder.Services.AddHttpClient<IProfileService, ProfileService>(sp => { sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
+            builder.Services.AddHttpClient<IVideoBookService, VideoBookService>(sp => { sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
+            builder.Services.AddHttpClient<IWebinarService, WebinarService>(sp => { sp.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
 
 
 
@@ -47,6 +49,8 @@ namespace Braveior.MentoringPlatform.Client
             builder.Services.AddBlazorDragDrop();
 
             builder.Services.AddApiAuthorization();
+
+           
 
             await builder.Build().RunAsync();
         }

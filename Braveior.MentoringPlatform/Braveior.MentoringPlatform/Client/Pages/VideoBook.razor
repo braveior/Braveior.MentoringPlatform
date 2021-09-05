@@ -1,39 +1,56 @@
-﻿@page "/videobook"
+﻿@page "/videobook/{VideoBookId:long}"
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
-@inject IProfileService ProfileService
+@inject IVideoBookService VideoBookService
 @inject ISnackbar Snackbar
 
 <MudGrid>
     <MudItem xs="4">
         <MudPaper Width="100%">
-            <MudList Clickable="true" Dense="true" DisableGutters="true" SelectedItemChanged="@((e)=>SelectedVideoChanged(Convert.ToString(e.Tag)))">
-                @foreach (var item in Videos)
-                {
-                    <MudListItem Text="@item.Name" Tag="@item.VideoId" />
-                }
-            </MudList>
-
+            <MudTable T="LessonDTO" Items="@videoBook.Lessons" Dense="true" Hover="true" Bordered="true" Striped="true" SelectedItemChanged="(e)=>SelectedVideoChanged(e)">
+                <HeaderContent>
+                    <MudTh>Lessons</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Nr">@context.Name</MudTd>
+                </RowTemplate>
+            </MudTable>
         </MudPaper>
     </MudItem>
     <MudItem xs="8">
-        <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="@url" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Group Discussion - MCET Team B-Hybrid vs Native Development"></iframe></div>
+        <MudText Typo="Typo.h6">@SelectedVideoName</MudText>
+        @if (SelectedLesson != null)
+        {
+            @if (SelectedLesson.Type == 1)
+            {
+                <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="@url" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Group Discussion - MCET Team B-Hybrid vs Native Development"></iframe></div>
+            }
+            else if (SelectedLesson.Type == 2)
+            {
+                @((MarkupString)content)
+            }
+        }
     </MudItem>
+    <MudOverlay @bind-Visible="isVisible" DarkBackground="true" />
 </MudGrid>
 
 @code {
     private List<StudentActivityDTO> ApprovalList = new List<StudentActivityDTO>();
-    MudListItem SelectedVideo = new MudListItem();
+    private string SelectedVideoName = "";
     bool isShow;
+    bool isVisible = false;
     string url = string.Empty;
     bool success;
     InputType PasswordInput = InputType.Password;
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
     ClaimsPrincipal claimsPrincipal;
     MudForm frmLogin;
-    List<VideoDTO> Videos = new List<VideoDTO>();
+    VideoBookDTO videoBook = new VideoBookDTO() { Lessons = new List<LessonDTO>() };
+    private string content = string.Empty;
 
+    [Parameter]
+    public long VideoBookId { get; set; }
 
     //Global Authentication State to get the Login Status and data
     [CascadingParameter]
@@ -42,9 +59,14 @@
     [Inject]
     private IState<CommonState> CommonState { get; set; }
 
+    LessonDTO SelectedLesson = new LessonDTO();
+
     protected override async Task OnInitializedAsync()
     {
-        Videos.Add(new VideoDTO() { Name = "Web API", VideoId = "592231074" });
+        await LoadVideoBook();
+
+
+        /*Videos.Add(new VideoDTO() { Name = "Web API", VideoId = "592231074" });
         Videos.Add(new VideoDTO() { Name = "Generate a ReactJS application using ngx Create-React-App", VideoId = "591412548" });
         Videos.Add(new VideoDTO() { Name = "Clean up of the generated ReactJS application and add dependencies", VideoId = "591412741" });
         Videos.Add(new VideoDTO() { Name = "Add a basic Material-UI app bar", VideoId = "591413317" });
@@ -54,15 +76,35 @@
         Videos.Add(new VideoDTO() { Name = "Create the form to add tasks and make api call to submit the task to the database", VideoId = "591415757" });
         Videos.Add(new VideoDTO() { Name = "Add the snackbar to show the notification and layout alignments", VideoId = "591415946" });
         //url = $"https://player.vimeo.com/video/{videoId}?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;h=d379c76bf2";
-
+        */
     }
-
-    private async Task SelectedVideoChanged(string val)
+    private async Task LoadVideoBook()
     {
-        url = $"https://player.vimeo.com/video/{val}?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;h=d379c76bf2";
+        ToggleOverlay(true);
+        videoBook = await VideoBookService.GetVideoBook(VideoBookId);
+        ToggleOverlay(false);
         StateHasChanged();
     }
-
+    public void ToggleOverlay(bool value)
+    {
+        isVisible = value;
+        StateHasChanged();
+    }
+    private async Task SelectedVideoChanged(LessonDTO selectedLesson)
+    {
+        if (selectedLesson.Type == 1)
+        {
+            SelectedLesson = selectedLesson;
+            url = $"https://player.vimeo.com/video/{selectedLesson.VimeoId}?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;h=d379c76bf2";
+        }
+        else if (selectedLesson.Type == 2)
+        {
+            SelectedLesson = selectedLesson;
+            HttpClient client = new HttpClient();
+            content = await client.GetStringAsync($"http://localhost:28804/content/react-div.txt");
+        }
+        StateHasChanged();
+    }
 
 
 }

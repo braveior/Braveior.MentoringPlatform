@@ -1,0 +1,89 @@
+﻿@namespace Braveior.MentoringPlatform.Client.Pages
+@inject ISnackbar Snackbar
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IWebinarService WebinarService
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                Edit Boot Camp Activity
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudSelect Dense="true" @bind-Value="@BootCampActivity.BootCampId" Variant="Variant.Outlined">
+                @foreach (var bootCamp in BootCamps)
+                {
+                    <MudSelectItem T="long" Value="bootCamp.BootCampId">@bootCamp.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudDateRangePicker @ref="_picker" Label="Select Date Range" >
+                <PickerActions>
+                    <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Clear</MudButton>
+                    <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+                    <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+                </PickerActions>
+            </MudDateRangePicker>
+            <MudTextField T="string" Label="Meeting URL" Variant="Variant.Text" @bind-Text="BootCampActivity.MeetingUrl" Lines="5" />
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => UpdateBootCampActivity())">Save</MudButton>
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Default" OnClick="Cancel">Close</MudButton>
+        </DialogActions>
+    </MudDialog>
+
+
+    @code {
+
+        [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+        [Parameter] public BootCampActivityDTO BootCampActivity { get; set; }
+        private List<BootCampDTO> BootCamps = new List<BootCampDTO>();
+
+        MudDateRangePicker _picker = new MudDateRangePicker();
+
+        private void Cancel()
+        {
+            MudDialog.Cancel();
+        }
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadBootCampActivities();
+
+        }
+        private async Task LoadBootCampActivities()
+        {
+            //ToggleOverlay(true);
+            BootCamps = await WebinarService.GetBootCamps();
+            //_picker.DateRange = new DateRange();
+            DateRange range = new DateRange(BootCampActivity.StartDate, BootCampActivity.EndDate);
+            _picker.DateRange = range;
+            //_picker.DateRange.Start = BootCampActivity.StartDate;
+            //_picker.DateRange.End = BootCampActivity.EndDate;
+            //ToggleOverlay(false);
+            StateHasChanged();
+        }
+        private async Task UpdateBootCampActivity()
+        {
+            try
+            {
+                if (_picker.DateRange.Start != null && _picker.DateRange.Start != null && BootCampActivity.BootCampId > 0)
+                {
+                    BootCampActivity.StartDate = _picker.DateRange.Start.Value;
+                    BootCampActivity.EndDate = _picker.DateRange.End.Value;
+                    await WebinarService.UpdateBootCampActivity(BootCampActivity);
+                    MudDialog.Close();
+                }
+                else
+                {
+                    Snackbar.Clear();
+                    Snackbar.Add("Invalid Data", Severity.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
+        }
+
+
+    }

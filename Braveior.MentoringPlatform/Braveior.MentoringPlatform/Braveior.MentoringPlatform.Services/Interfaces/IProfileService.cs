@@ -43,8 +43,8 @@ namespace Braveior.MentoringPlatform.Services.Interfaces
         void UpdateStudentAsset(StudentActivityDTO studentActitityDTO,bool IsAdmin);
 
         void ApproveStudentActivity(StudentActivityDTO studentActitityDTO);
-        
 
+        StudentAchievementDTO GetStudentAchievements(long studentId);
         void ResetPassword(UserDTO userDTO);
 
         void DeleteUserSkill(long userSkillId);
