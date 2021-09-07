@@ -99,6 +99,8 @@ namespace Braveior.MentoringPlatform.Client.Providers
 
             var member = new ClaimsPrincipal(identity);
 
+            //_dispatcher.Dispatch(new CommonAction(new UserDTO()));
+
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(member)));
         }
 

@@ -11,106 +11,112 @@
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudGrid>
-        <MudItem xs="8">
-            <MudText Typo="Typo.h6">Braveior Student Timeline</MudText>
-            <MudDivider />
-            <MudTimeline TimelineAlign="TimelineAlign.Start" TimelineOrientation="TimelineOrientation.Horizontal" TimelinePosition="TimelinePosition.Alternate" >
-                <MudTimelineItem Color="Color.Dark" Size="Size.Small" Variant="Variant.Outlined" >
+        <MudItem xs="12">
+            <MudTimeline Class="mt-5" DisableModifiers="false" TimelineAlign="TimelineAlign.Default" TimelineOrientation="TimelineOrientation.Horizontal" TimelinePosition="TimelinePosition.Alternate">
+                <MudTimelineItem Color="Color.Success" Size="Size.Small" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudText GutterBottom="false" Align="Align.Center" Typo="Typo.overline">Joined</MudText>
-                    </ItemContent>
-                    @*<ItemOpposite>
-                        <MudText Typo="Typo.overline">12-Aug-2021</MudText>
-                    </ItemOpposite>*@
-                </MudTimelineItem>
-                <MudTimelineItem Color="Color.Success" Size="Size.Small" Variant="Variant.Outlined" >
-                    <ItemContent>
-                        <MudText GutterBottom="false" Typo="Typo.overline">Concepts</MudText>
+                        <MudAlert Variant="Variant.Text" NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Joined</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
-                        <MudText GutterBottom="false" Typo="Typo.overline">@studentAchievementDTO.Challenge1CompleteDate.ToShortDateString()</MudText>
+                        <MudText Typo="Typo.overline">@studentAchievementDTO.StartDate.ToShortDateString()</MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
-                <MudTimelineItem Color=@(studentAchievementDTO.Challenge1Complete && studentAchievementDTO.Challenge2Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined" >
+                <MudTimelineItem Color="Color.Dark" Size="Size.Small" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudText GutterBottom="false" Typo="Typo.overline">Level-1 Certified</MudText>
+                        <MudAlert NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Concepts</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
-                        <MudText GutterBottom="false" Typo="Typo.overline">@studentAchievementDTO.Challenge2CompleteDate.ToShortDateString()</MudText>
+                        <MudText Typo="Typo.overline"></MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
-                <MudTimelineItem Color=@(studentAchievementDTO.Challenge3Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined" >
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge2Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudText GutterBottom="false" Typo="Typo.overline">Level-2 Certified</MudText>
+                        <MudAlert Severity=@(studentAchievementDTO.Challenge2Complete ? Severity.Success : Severity.Normal) NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Level 1 Certified</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
-                        <MudText GutterBottom="false" Typo="Typo.overline">@studentAchievementDTO.Challenge3CompleteDate.ToShortDateString()</MudText>
+                        <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge2Complete ? studentAchievementDTO.Challenge2CompleteDate.ToShortDateString() : "")</MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
-                <MudTimelineItem Color=@(studentAchievementDTO.BraveiorChampion ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined" >
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge3Complete ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudText GutterBottom="false" Typo="Typo.overline">Braveior Champion</MudText>
+                        <MudAlert Severity=@(studentAchievementDTO.Challenge3Complete ? Severity.Success : Severity.Normal) NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Level 2 Certified</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
-                        <MudText GutterBottom="false" Typo="Typo.overline">@studentAchievementDTO.Challenge3CompleteDate.ToShortDateString()</MudText>
+                        <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge3Complete ? studentAchievementDTO.Challenge3CompleteDate.ToShortDateString() : "")</MudText>
+                    </ItemOpposite>
+                </MudTimelineItem>
+                <MudTimelineItem Size="Size.Large" Variant="Variant.Filled">
+                    <ItemDot>
+                        <MudIcon Size="Size.Large" Color="Color.Default" Icon="fas fa-trophy" />
+                    </ItemDot>
+                    <ItemContent>
+                        <MudAlert Severity=@(studentAchievementDTO.BraveiorChampion ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Braveior Champion</MudAlert>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudText Typo="Typo.overline"></MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
             </MudTimeline>
-
         </MudItem>
-        <MudItem xs="4">
-            <MudText Typo="Typo.h6">Upcoming Boot Camps</MudText>
-            <MudDivider />
-            @if (BootCampActivities != null)
-            {
-                <MudPaper Class="mt-16" Elevation="3">
-                    <MudList Class="pa-2" Clickable="true" Dense="true" DisableGutters="true">
-                        @foreach (var bootCampActivity in BootCampActivities)
-                        {
-                            <MudListItem Text=@(bootCampActivity.BootCamp.Name + " " + bootCampActivity.StartDate.ToShortDateString() + " " + bootCampActivity.EndDate.ToShortDateString()) />
-                        }
-                    </MudList>
-                </MudPaper>
-            }
-        </MudItem>
-        
         <MudItem xs="6">
-            <MudText Typo="Typo.h6">Points Breakup</MudText>
+            <MudText Typo="Typo.body1">Points Breakup</MudText>
             <MudDivider />
             @if (configPointsSplitup != null)
             {
 
-                <MudPaper Class="mt-16" Elevation="3">
+                <MudPaper Class="mt-5" Elevation="3">
                     <Chart Config="configPointsSplitup"></Chart>
                 </MudPaper>
             }
-            </MudItem>
-        
-        
-            
+        </MudItem>
         <MudItem xs="6">
-            <MudText Typo="Typo.h6">Points Timeline</MudText>
+            <MudText Typo="Typo.body1">Upcoming Boot Camps</MudText>
+            <MudDivider />
+            @if (BootCampActivities != null)
+            {
+                <MudPaper Class="mt-5" Elevation="3">
+                    <MudTable Items="@BootCampActivities" Dense="true" Hover="true" Bordered="true" Striped="true" Height="200px">
+                        <HeaderContent>
+                            <MudTh>BootCamp</MudTh>
+                            <MudTh>Start</MudTh>
+                            <MudTh>End</MudTh>
+                            <MudTh>Status</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="BootCamp">@context.BootCamp.Name</MudTd>
+                            <MudTd DataLabel="Start">@context.BootCamp.Name</MudTd>
+                            <MudTd DataLabel="End">@context.BootCamp.Name</MudTd>
+                            <MudTd DataLabel="Status">@GetBootCampStatus(context.Status)</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </MudPaper>
+            }
+        </MudItem>
+        <MudItem xs="6">
+            <MudText Typo="Typo.body1">Points Timeline</MudText>
             <MudDivider />
             @if (configPointsTimeline != null)
             {
-                <MudPaper Class="mt-16" Elevation="3">
+                <MudPaper Class="mt-5" Elevation="3">
                     <Chart Config="configPointsTimeline"></Chart>
                 </MudPaper>
             }
-            </MudItem>
-        
-    <MudItem xs="6">
-        <MudText Typo="Typo.h6">Video Books</MudText>
-        <MudDivider />
-        <MudPaper Class="mt-16" Elevation="3">
-            <MudList Class="pa-2" Clickable="true" Dense="true" DisableGutters="true">
-                @foreach (var videobook in VideoBooks)
-                {
-                    <MudListItem Text="@videobook.Name" Href=@("/videobook/" + videobook.VideoBookId) Icon="@Icons.Filled.VideoLibrary" />
-                }
-            </MudList>
-        </MudPaper>
-    </MudItem>
+        </MudItem>
+        <MudItem xs="6">
+            <MudText Typo="Typo.body1">Video Books</MudText>
+            <MudDivider />
+            <MudPaper Class="mt-5" Elevation="3">
+                <MudList Class="pa-2" Clickable="true" Dense="true" DisableGutters="true">
+                    @foreach (var videobook in VideoBooks)
+                    {
+                        <MudListItem Text="@videobook.Name" Href=@("/videobook/" + videobook.VideoBookId) Icon="@Icons.Filled.VideoLibrary" />
+                    }
+                </MudList>
+            </MudPaper>
+        </MudItem>
+
+
+
         <MudItem xs="6">
         </MudItem>
     </MudGrid>
@@ -187,7 +193,7 @@
         //Y Axes Configuration
         BarDataset<double> dataset = new BarDataset<double>()
         {
-            Label = "Points Splitup",
+            Label = "Events Point distribution",
             BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.FromArgb(128, System.Drawing.Color.Blue)),
             BorderColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Blue),
             BorderWidth = 1
@@ -207,7 +213,7 @@
         //Y Axes Configuration
         LineDataset<double> dataset = new LineDataset<double>()
         {
-            Label = "Points Splitup",
+            Label = "Points Monthly Trend",
             BackgroundColor = ColorUtil.FromDrawingColor(System.Drawing.Color.FromArgb(128, System.Drawing.Color.Green)),
             BorderColor = ColorUtil.FromDrawingColor(System.Drawing.Color.Green),
             BorderWidth = 1
@@ -253,6 +259,18 @@
                 return "Pending";
         }
     }
+    private string GetBootCampStatus(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                return "Not-Scheduled";
+            case 1:
+                return "Scheduled";
+            default:
+                return "Not-Scheduled";
+        }
+    }
     //Configuration for the CharJS Bar Chart
     private BarConfig GetBarChartConfig()
     {
@@ -270,7 +288,7 @@
                 Title = new OptionsTitle
                 {
                     Display = true,
-                    Text = "Monthly Average Rating"
+                    Text = "Events Point distribution"
                 },
                 Scales = new BarScales
                 {
@@ -303,7 +321,7 @@
                 Title = new OptionsTitle
                 {
                     Display = true,
-                    Text = "Line Chart"
+                    Text = "Points Monthly Trend"
                 },
                 Tooltips = new Tooltips
                 {
@@ -343,4 +361,5 @@
         };
         return config;
     }
+   
 }

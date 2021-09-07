@@ -2,6 +2,10 @@
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @inject NavigationManager NavigationManager
 
+@if (CommonState.Value.LoggedInUser == null || CommonState.Value.LoggedInUser.UserId==0)
+{
+    <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Secondary" OnClick="LogIn">LogIn</MudButton>
+}
 <AuthorizeView>
     <Authorized>
         <MudText Class="pr-4" Typo="Typo.subtitle1">Welcome @CommonState.Value.LoggedInUser.FirstName @CommonState.Value.LoggedInUser.LastName </MudText>
@@ -9,7 +13,7 @@
     </Authorized>
 </AuthorizeView>
 @code{
-    //Dependency Injection for the Fluxor State 
+    //Dependency Injection for the Fluxor State
     [Inject]
     private IState<CommonState> CommonState { get; set; }
 
@@ -20,6 +24,11 @@
     private async Task Logout()
     {
         await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
+
         NavigationManager.NavigateTo("/");
+    }
+    private async Task LogIn()
+    {
+        NavigationManager.NavigateTo("/login");
     }
 }

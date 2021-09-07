@@ -372,5 +372,13 @@ namespace Braveior.MentoringPlatform.Server.Controllers
             _service.AddStudentAsset(studentActivityDTO,isAdmin);
             return Ok();
         }
+
+        [HttpPost("register")]
+        [Authorize]
+        public IActionResult Register([FromBody] UserDTO user)
+        {
+            _service.Register(user);
+            return Ok();
+        }
     }
 }

@@ -7,5 +7,7 @@ namespace Braveior.MentoringPlatform.Client.Services
     {
         public Task<UserDTO> LoginAsync(LoginDTO userDTO);
         public Task<UserDTO> GetUserByAccessTokenAsync(string accessToken);
+
+
     }
 }

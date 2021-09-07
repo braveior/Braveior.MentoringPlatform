@@ -13,6 +13,8 @@ namespace Braveior.MentoringPlatform.DTO
         public DateTime EndDate { get; set; }
         public string MeetingUrl { get; set; }
 
+        public int Status { get; set; }
+
         public virtual BootCampDTO BootCamp { get; set; }
     }
 }

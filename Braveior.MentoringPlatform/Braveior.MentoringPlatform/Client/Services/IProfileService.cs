@@ -10,6 +10,12 @@ namespace Braveior.MentoringPlatform.Client.Services
 
         Task<List<InstitutionDTO>> GetColleges();
 
+        Task<List<ProfileDTO>> GetProfiles();
+
+        Task<List<ProfileDTO>> GetProfiles(long institutionId);
+
+        Task<ProfileDTO> GetProfile(long studentId);
+
         Task<List<UserDTO>> GetStudents(long institutionId, string key);
 
         Task<List<SkillDTO>> GetSkills(string key);
@@ -50,6 +56,8 @@ namespace Braveior.MentoringPlatform.Client.Services
         Task AddStudentChallenge(StudentActivityDTO studentActivityDTO);
 
         Task AddStudentAsset(StudentActivityDTO studentActivityDTO);
+
+        Task Register(UserDTO userDTO);
 
     }
 }

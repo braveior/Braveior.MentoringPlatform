@@ -16,6 +16,10 @@
                     <MudSelectItem T="long" Value="bootCamp.BootCampId">@bootCamp.Name</MudSelectItem>
                 }
             </MudSelect>
+            <MudSelect Dense="true" @bind-Value="@bootcampActivity.Status" Variant="Variant.Outlined">
+                <MudSelectItem T="int" Value=0>Not-Scheduled</MudSelectItem>
+                <MudSelectItem T="int" Value=1>Scheduled</MudSelectItem>
+            </MudSelect>
             <MudDateRangePicker @ref="_picker" Label="Select Date Range" @bind-DateRange="_dateRange">
                 <PickerActions>
                     <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Clear</MudButton>
@@ -33,7 +37,7 @@
 
 
     @code {
-        private BootCampActivityDTO bootcampActivity = new BootCampActivityDTO() { BootCampId = 1  };
+        private BootCampActivityDTO bootcampActivity = new BootCampActivityDTO() { BootCampId = 1, Status = 0  };
         private List<BootCampDTO> BootCamps = new List<BootCampDTO>();
         MudDateRangePicker _picker;
         DateRange _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(5).Date);

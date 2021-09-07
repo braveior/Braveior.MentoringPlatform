@@ -13,6 +13,8 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public DateTime EndDate { get; set; }
         public string MeetingUrl { get; set; }
 
+        public int Status { get; set; }
+
         public virtual BootCamp BootCamp { get; set; }
     }
 }

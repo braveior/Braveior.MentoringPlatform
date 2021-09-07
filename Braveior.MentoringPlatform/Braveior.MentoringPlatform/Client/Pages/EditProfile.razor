@@ -13,11 +13,13 @@
             <MudTextField T="string" Variant="Variant.Outlined" Label="LastName" @bind-Value="Student.LastName" />
             <MudTextField T="string" Variant="Variant.Outlined" Label="About myself" @bind-Value="Student.Description" Lines="8" />
             <MudTextField T="string" Variant="Variant.Outlined" Label="LinkedIn" @bind-Value="Student.LinkedInUrl" />
+            <MudCheckBox Label="Allow Display" @bind-Checked="@Student.Display" Size="Size.Medium" Color="Color.Primary"></MudCheckBox>
             <AuthorizeView Roles="2">
                 <Authorized>
                     <MudTextField T="string" Variant="Variant.Outlined" Label="Email Address" @bind-Value="Student.Email" />
-                    </Authorized>
-                </AuthorizeView>
+                    <MudCheckBox Label="Braveior Champion" @bind-Checked="@Student.IsLeader" Size="Size.Medium" Color="Color.Primary"></MudCheckBox>
+                </Authorized>
+            </AuthorizeView>
         </DialogContent>
         <DialogActions>
             <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => UpdateProfile())">Update Profile</MudButton>

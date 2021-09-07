@@ -25,5 +25,8 @@ namespace Braveior.MentoringPlatform.DTO
         public DateTime ModifiedDate { get; set; }
         public bool IsActive { get; set; }
         public string AccessToken { get; set; }
+        public bool Display { get; set; }
+
+        public bool IsLeader { get; set; }
     }
 }

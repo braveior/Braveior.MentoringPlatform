@@ -8,50 +8,44 @@
                     <MudSpacer />
                     <AuthorizeView Roles="2">
                         <Authorized>
-                            <MudMenu Label="Admin" Color="Color.Inherit" Dense="true" Direction="Direction.Bottom">
-                                <MudMenuItem Link="/profile">Search Profile</MudMenuItem>
-                                <MudMenuItem Link="/approvals">Approval</MudMenuItem>
-                                <MudMenuItem Link="/managevideobooks">Manage Video Book</MudMenuItem>
-                                <MudMenuItem Link="/managebootcampactivities">Manage Boot Camps</MudMenuItem>
+                            <MudMenu Dense="true" Direction="Direction.Bottom">
+                                <ActivatorContent><MudChip Icon="@Icons.Material.Filled.AdminPanelSettings" Color="Color.Primary">Admin</MudChip></ActivatorContent>
+                                <ChildContent>
+                                    <MudMenuItem Link="/manageprofile">Search Profile</MudMenuItem>
+                                    <MudMenuItem Link="/userregistration">New User</MudMenuItem>
+                                    <MudMenuItem Link="/approvals">Approval</MudMenuItem>
+                                    <MudMenuItem Link="/managevideobooks">Manage Video Book</MudMenuItem>
+                                    <MudMenuItem Link="/managebootcampactivities">Manage Boot Camps</MudMenuItem>
+                                    <MudMenuItem Link="/resetpassword">Reset Password</MudMenuItem>
+                                </ChildContent>
                             </MudMenu>
                         </Authorized>
                     </AuthorizeView>
                     <AuthorizeView Roles="1,2">
                         <Authorized>
-                            <MudMenu Label="Profile" Color="Color.Inherit" Dense="true" Direction="Direction.Bottom">
-                                <MudMenuItem Link="/profile">Profile</MudMenuItem>
+                            
+                            <MudChip Link="/" Icon="@Icons.Material.Filled.Home" Color="Color.Primary">Home</MudChip>
+                            
+                            <MudMenu Dense="true" Direction="Direction.Bottom">
+                                <ActivatorContent><MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary">Profile</MudChip></ActivatorContent>
+                                <ChildContent>
+                                    <MudMenuItem Link="/studenthome">Student Dashboard</MudMenuItem>
+                                    <MudMenuItem Link="/manageprofile">View Profile</MudMenuItem>
+                                </ChildContent>
                             </MudMenu>
-                            <MudMenu Label="Help" Color="Color.Inherit" Dense="true" Direction="Direction.Bottom">
-                                <MudMenuItem Link="/resetpassword">Reset Password</MudMenuItem>
+                            <MudMenu Dense="true" Direction="Direction.Bottom">
+                                <ActivatorContent><MudChip Icon="@Icons.Material.Filled.Help" Color="Color.Primary">Help</MudChip></ActivatorContent>
+                                <ChildContent>
+                                    <MudMenuItem Link="/resetpassword">Reset Password</MudMenuItem>
+                                </ChildContent>
                             </MudMenu>
                         </Authorized>
                     </AuthorizeView>
                     <MudSpacer />
                     <LoginInfo></LoginInfo>
     </MudAppBar>
-    <MudDrawer @bind-Open="@open" Elevation="1">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h6">Menu</MudText>
-        </MudDrawerHeader>
-        <MudNavMenu>
-            <AuthorizeView Roles="2">
-                <Authorized>
-                    <MudNavLink Href="/profile">Profile</MudNavLink>
-                    <MudNavLink Href="/approvals">Approval</MudNavLink>
-                    <MudNavLink Href="/managevideobooks">Manage Video Book</MudNavLink>
-                </Authorized>
-            </AuthorizeView>
-            <AuthorizeView Roles="1">
-                <Authorized>
-                    <MudNavLink Href="/profile">Profile</MudNavLink>
-                    <MudNavLink Href="/resetpassword">Reset Password</MudNavLink>
-                    <MudNavLink Href="/videobook">VideoBook</MudNavLink>
-                </Authorized>
-            </AuthorizeView>
-        </MudNavMenu>
-    </MudDrawer>
-    <MudMainContent Class="pt-16 px-16">
-        <MudContainer Class="mt-6">
+    <MudMainContent >
+        <MudContainer >
             @Body
         </MudContainer>
     </MudMainContent>

@@ -59,6 +59,6 @@ namespace Braveior.MentoringPlatform.Services.Interfaces
 
         void AddStudentAsset(StudentActivityDTO studentActivityDTO, bool IsAdmin);
 
-
+        void Register(UserDTO userDTO);
     }
 }

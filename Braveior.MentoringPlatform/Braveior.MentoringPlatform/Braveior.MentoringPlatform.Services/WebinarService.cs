@@ -28,7 +28,7 @@ namespace Braveior.MentoringPlatform.Services
         }
         public List<BootCampActivityDTO> GetBootCampActivities()
         {
-            var bootCampActivities = _dbContext.BootCampActivities.Include(l => l.BootCamp).ToList();
+            var bootCampActivities = _dbContext.BootCampActivities.Where(a=>a.Status!=2).Include(l => l.BootCamp).ToList();
             return _mapper.Map<List<BootCampActivityDTO>>(bootCampActivities);
         }
         public List<BootCampDTO> GetBootCamps()
@@ -44,7 +44,8 @@ namespace Braveior.MentoringPlatform.Services
                 BootCampId = bootCampActivityDTO.BootCampId,
                 StartDate = bootCampActivityDTO.StartDate,
                 EndDate = bootCampActivityDTO.EndDate,
-                MeetingUrl = bootCampActivityDTO.MeetingUrl
+                MeetingUrl = bootCampActivityDTO.MeetingUrl,
+                Status = bootCampActivityDTO.Status
             };
             _dbContext.BootCampActivities.Add(bootCampActivity);
             _dbContext.SaveChanges();
@@ -58,6 +59,7 @@ namespace Braveior.MentoringPlatform.Services
                 bootCampActivity.StartDate = bootCampActivityDTO.StartDate;
                 bootCampActivity.EndDate= bootCampActivityDTO.EndDate;
                 bootCampActivity.MeetingUrl = bootCampActivityDTO.MeetingUrl;
+                bootCampActivity.Status = bootCampActivityDTO.Status;
                 _dbContext.BootCampActivities.Update(bootCampActivity);
                 _dbContext.SaveChanges();
             }

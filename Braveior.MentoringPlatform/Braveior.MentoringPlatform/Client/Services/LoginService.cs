@@ -39,6 +39,8 @@ namespace Braveior.MentoringPlatform.Client.Services
                 throw new Exception("Internal Server Error");
             }
         }
+
+       
         /// <summary>
         /// REST API call to validate an accesstoken to authenticate a user
         /// </summary>

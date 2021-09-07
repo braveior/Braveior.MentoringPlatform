@@ -33,23 +33,7 @@ namespace Braveior.MentoringPlatform.Services
         }
 
 
-        public void Register(UserDTO userDTO)
-        {
-            //using (var db = new braveiordbContext())
-            //{
-                User newUser = new User()
-                {
-
-                     Email = userDTO.Email,
-                     InstitutionId = userDTO.InstitutionId,
-                     Role = userDTO.Role,
-                     Password = userDTO.Password
-                          
-                };
-            _dbContext.Users.Add(newUser);
-            _dbContext.SaveChanges();
-            //}
-        }
+        
 
 
         /// <summary>

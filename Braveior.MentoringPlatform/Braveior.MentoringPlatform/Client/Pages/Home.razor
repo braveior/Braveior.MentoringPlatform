@@ -1,0 +1,116 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IProfileService ProfileService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@using Braveior.MentoringPlatform.Client.Pages
+
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudGrid>
+        <MudItem xs="6">
+            <MudAutocomplete T="InstitutionDTO" Label="Choose College" @bind-Value="college" SearchFunc="@SearchCollege" ToStringFunc="@(e => e == null ? null : $"{e.Name}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+        </MudItem>
+        <MudItem xs="6">
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => SearchProfiles())">Search</MudButton>
+        </MudItem>
+            <MudItem xs="12">
+                <MudGrid Class="d-flex flex-row py-2 px-1" Spacing="2">
+                    @foreach (var profile in profiles)
+                    {
+                        <MudItem>
+                            <MudPaper MaxWidth="350px" Elevation="1" Class="pa-2">
+                                <MudGrid>
+                                    <MudItem xs="2">
+                                        <MudAvatar Image=@($"/images/{profile.UserId}.jpg") Size="Size.Large" Class="m-2" />
+                                    </MudItem>
+                                    <MudItem xs="9">
+                                        <MudText Align="Align.Left" Typo="Typo.body1" Class="m-2">@profile.StudentName</MudText>
+                                        <MudText Align="Align.Left" Typo="Typo.body2" Class="m-2">@profile.InsitutionName</MudText>
+                                        <MudLink Href=@($"/profile/{profile.UserId}") Typo="Typo.overline" Class="m-2">View Details</MudLink>
+                                        <MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" IconColor="Color.Dark" Size="Size.Small">@profile.Points Points</MudChip>
+                                    </MudItem>
+                                    <MudItem xs="1">
+                                    </MudItem>
+                                </MudGrid>
+                            </MudPaper>
+                        </MudItem>
+                    }
+
+                </MudGrid>
+            </MudItem>
+    </MudGrid>
+    
+        <MudOverlay @bind-Visible="isVisible" DarkBackground="true" />
+</MudContainer>
+@code {
+
+    private InstitutionDTO college = new InstitutionDTO() {  InstitutionId=0};
+
+    private BarConfig configPointsSplitup;
+
+    bool isVisible = false;
+
+    [Inject]
+    private IState<CommonState> CommonState { get; set; }
+
+    private LineConfig configPointsTimeline;
+
+    private List<VideoBookDTO> VideoBooks = new List<VideoBookDTO>();
+
+    private List<BootCampActivityDTO> BootCampActivities = new List<BootCampActivityDTO>();
+
+    private StudentAchievementDTO studentAchievementDTO = new StudentAchievementDTO();
+
+    private UserDTO student = new UserDTO();
+
+    private List<UserSkillDTO> UserSkills = new List<UserSkillDTO>();
+
+    private List<StudentActivityDTO> Events = new List<StudentActivityDTO>();
+    private List<StudentActivityDTO> Challenges = new List<StudentActivityDTO>();
+    private List<StudentActivityDTO> Blogs = new List<StudentActivityDTO>();
+
+    private List<InstitutionDTO> AssetsList { get; set; } = new List<InstitutionDTO>();
+
+    private List<ProfileDTO> profiles = new List<ProfileDTO>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await LoadHome();
+    }
+    private async Task LoadHome()
+    {
+        await LoadStudentProfiles();
+        StateHasChanged();
+
+    }
+    private async Task<IEnumerable<InstitutionDTO>> SearchCollege(string key)
+    {
+        return await ProfileService.GetColleges();
+    }
+    private async Task LoadStudentProfiles()
+    {
+        ToggleOverlay(true);
+        profiles = await ProfileService.GetProfiles();
+        ToggleOverlay(false);
+
+    }
+    private async Task SearchProfiles()
+    {
+        ToggleOverlay(true);
+        profiles = await ProfileService.GetProfiles(college.InstitutionId);
+        ToggleOverlay(false);
+
+    }
+    public void ToggleOverlay(bool value)
+    {
+        isVisible = value;
+        StateHasChanged();
+    }
+
+
+
+}

@@ -49,7 +49,7 @@ namespace Braveior.MentoringPlatform.Services
 
         public List<ProfileDTO> GetProfiles()
         {
-                var students = _dbContext.Users.Where(u => u.Role == 1).Include(us => us.UserSkills).Include(i => i.Institution).ToList();
+                var students = _dbContext.Users.Where(u => u.Role == 1 && u.Display == true).Include(us => us.UserSkills).Include(i => i.Institution).ToList();
                 List<ProfileDTO> profiles = new List<ProfileDTO>();
                 foreach (var student in students)
                 {
@@ -73,7 +73,8 @@ namespace Braveior.MentoringPlatform.Services
 
         public List<ProfileDTO> GetProfiles(long institutionId)
         {
-            var students = _dbContext.Users.Where(u => u.Role == 1 && u.InstitutionId== institutionId).Include(us => us.UserSkills).Include(i => i.Institution).ToList();
+            
+            var students = _dbContext.Users.Where(u => u.Role == 1 && u.Display == true && u.InstitutionId== institutionId).Include(us => us.UserSkills).Include(i => i.Institution).ToList();
             List<ProfileDTO> profiles = new List<ProfileDTO>();
             foreach (var student in students)
             {
@@ -129,29 +130,35 @@ namespace Braveior.MentoringPlatform.Services
         {
             StudentAchievementDTO studentAchievementDTO = new StudentAchievementDTO();
             studentAchievementDTO.PointsTimeline = new List<GraphDataDTO>();
-            var studentActivities = _dbContext.StudentActivities.Where(a => a.UserId == studentId).ToList();
+            var studentActivities = _dbContext.StudentActivities.Where(a => a.UserId == studentId && a.Status == 1).ToList().OrderBy(a=>a.CreatedDate);
+            var student = _dbContext.Users.Where(a => a.UserId == studentId).FirstOrDefault();
             foreach (var studentActivitiy in studentActivities)
             {
-                if (studentActivitiy.ChallengeId == 1 && studentActivitiy.Status== 1)
+                if (studentActivitiy.ChallengeId == 2 )
                 {
                     studentAchievementDTO.Challenge1Complete = true;
                     studentAchievementDTO.Challenge1Points = studentActivitiy.Points;
+                    studentAchievementDTO.Challenge1CompleteDate = studentActivitiy.CreatedDate;
                 }
-                else if (studentActivitiy.ChallengeId == 2 && studentActivitiy.Status == 1)
+                else if (studentActivitiy.ChallengeId == 3 )
                 {
                     studentAchievementDTO.Challenge2Complete = true;
                     studentAchievementDTO.Challenge2Points = studentActivitiy.Points;
+                    studentAchievementDTO.Challenge2CompleteDate = studentActivitiy.CreatedDate;
                 }
-                else if (studentActivitiy.ChallengeId == 3 && studentActivitiy.Status == 1)
+                else if (studentActivitiy.ChallengeId == 4 )
                 {
                     studentAchievementDTO.Challenge3Complete = true;
                     studentAchievementDTO.Challenge3Points = studentActivitiy.Points;
+                    studentAchievementDTO.Challenge3CompleteDate = studentActivitiy.CreatedDate;
                 }
                 //studentAchievementDTO.PointsTimeline.Add(new GraphDataDTO() { XAxis1 = studentActivitiy.CreatedDate.ToShortDateString(), YAxis1 = studentActivitiy.Points });
             }
             studentAchievementDTO.PointsSplitup = studentActivities.GroupBy(a => a.Type).Select(a => new GraphDataDTO() { XAxis1 = GetActivityName(a.First().Type),YAxis1 = a.Sum(p=>p.Points)}).ToList();
 
             studentAchievementDTO.PointsTimeline = studentActivities.GroupBy(a => new {a.CreatedDate.Month, a.CreatedDate.Year }).Select(a => new GraphDataDTO() { XAxis1 = $"{a.Key.Month}|{a.Key.Year}", YAxis1 = a.Sum(p => p.Points) }).ToList();
+            studentAchievementDTO.StartDate = student.CreationDate;
+            studentAchievementDTO.BraveiorChampion = student.IsLeader;
             return studentAchievementDTO;
         }
         private string GetActivityName(int id)
@@ -225,6 +232,8 @@ namespace Braveior.MentoringPlatform.Services
                 userProfile.Description = userDTO.Description;
                 userProfile.LinkedInUrl = userDTO.LinkedInUrl;
                 userProfile.Email = userDTO.Email.Trim();
+                userProfile.Display = userDTO.Display;
+                userProfile.IsLeader = userDTO.IsLeader;
             _dbContext.Users.Update(userProfile);
             _dbContext.SaveChanges();
         }
@@ -391,6 +400,39 @@ namespace Braveior.MentoringPlatform.Services
             };
             _dbContext.Kanboards.Add(newKanboard);
             _dbContext.SaveChanges();
+        }
+
+        public void Register(UserDTO userDTO)
+        {
+            var existingUser = _dbContext.Users.Where(u => u.Email == userDTO.Email).FirstOrDefault();
+
+            if (existingUser == null)
+            {
+                User newUser = new User()
+                {
+                    Email = userDTO.Email,
+                    InstitutionId = userDTO.InstitutionId,
+                    Role = userDTO.Role,
+                    Password = Encrypt("password"),
+                    Description = String.Empty,
+                    Display = false,
+                    Grade = String.Empty,
+                    FirstName = userDTO.FirstName,
+                    LastName = userDTO.LastName,
+                    IsActive = true,
+                    Points = 0,
+                    IsLeader = false,
+                    LinkedInUrl = "",
+                    CreationDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now
+                };
+                _dbContext.Users.Add(newUser);
+                _dbContext.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("User already exists");
+            }
         }
         private string Encrypt(string text)
         {

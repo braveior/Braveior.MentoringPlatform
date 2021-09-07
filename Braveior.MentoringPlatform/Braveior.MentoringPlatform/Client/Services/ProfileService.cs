@@ -81,6 +81,56 @@ namespace Braveior.MentoringPlatform.Client.Services
                 throw new Exception("Internal Server Error");
             }
         }
+        public async Task<List<ProfileDTO>> GetProfiles()
+        {
+            var response = await _httpClient.GetAsync($"api/Profile/getprofiles");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<ProfileDTO>>();
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Invalid Access Token");
+            }
+            else
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+        public async Task<List<ProfileDTO>> GetProfiles(long institutionId)
+        {
+            var response = await _httpClient.GetAsync($"api/Profile/getprofiles/{institutionId}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<ProfileDTO>>();
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Invalid Access Token");
+            }
+            else
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+        public async Task<ProfileDTO> GetProfile(long studentId)
+        {
+            var response = await _httpClient.GetAsync($"api/Profile/getprofile/{studentId}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<ProfileDTO>();
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Invalid Access Token");
+            }
+            else
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
 
         public async Task<List<UserDTO>> GetStudents(long collegeId, string key)
         {
@@ -749,6 +799,34 @@ namespace Braveior.MentoringPlatform.Client.Services
 
             //REST API call to add the rating for a member
             var response = await _httpClient.PostAsJsonAsync($"api/Profile/addstudentchallenge", studentActivityDTO);
+            if (response.IsSuccessStatusCode)
+            {
+
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new Exception("Invalid Access Token");
+            }
+            else
+            {
+                throw new Exception("Internal Server Error");
+            }
+        }
+
+        public async Task Register(UserDTO userDTO)
+        {
+            string authToken = "";
+            //Get AccessToken from local storage
+            authToken = await _localStorageService.GetItemAsync<string>("accessToken");
+            if (authToken == null)
+            {
+                throw new Exception("Access Token not found");
+            }
+            //Add AccessToken to the Bearer header
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+
+            //REST API call to add the rating for a member
+            var response = await _httpClient.PostAsJsonAsync($"api/Profile/register", userDTO);
             if (response.IsSuccessStatusCode)
             {
 
