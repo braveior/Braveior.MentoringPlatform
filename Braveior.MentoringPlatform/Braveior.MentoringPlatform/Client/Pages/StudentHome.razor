@@ -10,55 +10,10 @@
 @using Braveior.MentoringPlatform.Client.Pages
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudText Typo="Typo.h5" Align="Align.Center" Class="pa-4">Student Dashboard</MudText>
+    <MudDivider />
     <MudGrid>
-        <MudItem xs="12">
-            <MudTimeline Class="mt-5" DisableModifiers="false" TimelineAlign="TimelineAlign.Default" TimelineOrientation="TimelineOrientation.Horizontal" TimelinePosition="TimelinePosition.Alternate">
-                <MudTimelineItem Color="Color.Success" Size="Size.Small" Variant="Variant.Outlined">
-                    <ItemContent>
-                        <MudAlert Variant="Variant.Text" NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Joined</MudAlert>
-                    </ItemContent>
-                    <ItemOpposite>
-                        <MudText Typo="Typo.overline">@studentAchievementDTO.StartDate.ToShortDateString()</MudText>
-                    </ItemOpposite>
-                </MudTimelineItem>
-                <MudTimelineItem Color="Color.Dark" Size="Size.Small" Variant="Variant.Outlined">
-                    <ItemContent>
-                        <MudAlert NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Concepts</MudAlert>
-                    </ItemContent>
-                    <ItemOpposite>
-                        <MudText Typo="Typo.overline"></MudText>
-                    </ItemOpposite>
-                </MudTimelineItem>
-                <MudTimelineItem Color=@(studentAchievementDTO.Challenge2Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined">
-                    <ItemContent>
-                        <MudAlert Severity=@(studentAchievementDTO.Challenge2Complete ? Severity.Success : Severity.Normal) NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Level 1 Certified</MudAlert>
-                    </ItemContent>
-                    <ItemOpposite>
-                        <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge2Complete ? studentAchievementDTO.Challenge2CompleteDate.ToShortDateString() : "")</MudText>
-                    </ItemOpposite>
-                </MudTimelineItem>
-                <MudTimelineItem Color=@(studentAchievementDTO.Challenge3Complete ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined">
-                    <ItemContent>
-                        <MudAlert Severity=@(studentAchievementDTO.Challenge3Complete ? Severity.Success : Severity.Normal) NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Level 2 Certified</MudAlert>
-                    </ItemContent>
-                    <ItemOpposite>
-                        <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge3Complete ? studentAchievementDTO.Challenge3CompleteDate.ToShortDateString() : "")</MudText>
-                    </ItemOpposite>
-                </MudTimelineItem>
-                <MudTimelineItem Size="Size.Large" Variant="Variant.Filled">
-                    <ItemDot>
-                        <MudIcon Size="Size.Large" Color="Color.Default" Icon="fas fa-trophy" />
-                    </ItemDot>
-                    <ItemContent>
-                        <MudAlert Severity=@(studentAchievementDTO.BraveiorChampion ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Braveior Champion</MudAlert>
-                    </ItemContent>
-                    <ItemOpposite>
-                        <MudText Typo="Typo.overline"></MudText>
-                    </ItemOpposite>
-                </MudTimelineItem>
-            </MudTimeline>
-        </MudItem>
-        <MudItem xs="6">
+        <MudItem xs="12" md="6" lg="6">
             <MudText Typo="Typo.body1">Points Breakup</MudText>
             <MudDivider />
             @if (configPointsSplitup != null)
@@ -69,13 +24,23 @@
                 </MudPaper>
             }
         </MudItem>
-        <MudItem xs="6">
+        <MudItem xs="12" md="6" lg="6">
+            <MudText Typo="Typo.body1">Monthly Points</MudText>
+            <MudDivider />
+            @if (configPointsTimeline != null)
+            {
+                <MudPaper Class="mt-5" Elevation="3">
+                    <Chart Config="configPointsTimeline"></Chart>
+                </MudPaper>
+            }
+        </MudItem>
+        <MudItem xs="12" md="6" lg="6">
             <MudText Typo="Typo.body1">Upcoming Boot Camps</MudText>
             <MudDivider />
             @if (BootCampActivities != null)
             {
                 <MudPaper Class="mt-5" Elevation="3">
-                    <MudTable Items="@BootCampActivities" Dense="true" Hover="true" Bordered="true" Striped="true" Height="200px">
+                    <MudTable FixedHeader="true" Breakpoint="Breakpoint.None" Items="@BootCampActivities" Dense="true" Hover="true" Bordered="true" Striped="true" Height="200px">
                         <HeaderContent>
                             <MudTh>BootCamp</MudTh>
                             <MudTh>Start</MudTh>
@@ -92,17 +57,8 @@
                 </MudPaper>
             }
         </MudItem>
-        <MudItem xs="6">
-            <MudText Typo="Typo.body1">Points Timeline</MudText>
-            <MudDivider />
-            @if (configPointsTimeline != null)
-            {
-                <MudPaper Class="mt-5" Elevation="3">
-                    <Chart Config="configPointsTimeline"></Chart>
-                </MudPaper>
-            }
-        </MudItem>
-        <MudItem xs="6">
+
+        <MudItem xs="12" md="6" lg="6">
             <MudText Typo="Typo.body1">Video Books</MudText>
             <MudDivider />
             <MudPaper Class="mt-5" Elevation="3">
@@ -114,9 +70,6 @@
                 </MudList>
             </MudPaper>
         </MudItem>
-
-
-
         <MudItem xs="6">
         </MudItem>
     </MudGrid>

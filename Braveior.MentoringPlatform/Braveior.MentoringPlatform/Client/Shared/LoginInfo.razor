@@ -2,14 +2,15 @@
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @inject NavigationManager NavigationManager
 
-@if (CommonState.Value.LoggedInUser == null || CommonState.Value.LoggedInUser.UserId==0)
-{
-    <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Secondary" OnClick="LogIn">LogIn</MudButton>
-}
 <AuthorizeView>
+    <NotAuthorized>
+        <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Secondary" OnClick="LogIn">LogIn</MudButton>
+    </NotAuthorized>
     <Authorized>
-        <MudText Class="pr-4" Typo="Typo.subtitle1">Welcome @CommonState.Value.LoggedInUser.FirstName @CommonState.Value.LoggedInUser.LastName </MudText>
-        <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Secondary" OnClick="Logout">Logout</MudButton>
+        <MudHidden Breakpoint="Breakpoint.Xs" Invert="false">
+            <MudText Class="pr-4" Typo="Typo.subtitle1">Welcome @CommonState.Value.LoggedInUser.FirstName @CommonState.Value.LoggedInUser.LastName </MudText>
+        </MudHidden>
+            <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Secondary" OnClick="Logout">Logout</MudButton>
     </Authorized>
 </AuthorizeView>
 @code{

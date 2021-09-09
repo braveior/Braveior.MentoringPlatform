@@ -12,9 +12,9 @@
             <MudRadioGroup @bind-SelectedOption="@StudentEvent.Type">
                 <MudRadio Option="@(1)" Color="Color.Primary">Group Discussion</MudRadio>
                 <MudRadio Option="@(2)" Color="Color.Secondary">Hackathon</MudRadio>
-                <MudRadio Option="@(3)" Color="Color.Secondary">R & D Solutioning</MudRadio>
             </MudRadioGroup>
             <MudAutocomplete T="EventDTO" Label="Choose Event" @bind-Value="SelectedEvent" SearchFunc="@SearchEvent" ToStringFunc="@(e=> e==null?null : $"{e.Name}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+                        <MudDatePicker Label="Date" Editable="true" @bind-Date="@StudentEvent.CreatedDate" />
             <AuthorizeView Roles="2">
                 <Authorized>
                     <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentEvent.Points" />

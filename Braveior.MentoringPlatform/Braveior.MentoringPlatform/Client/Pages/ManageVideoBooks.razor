@@ -6,6 +6,8 @@
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 <MudContainer MaxWidth="MaxWidth.Large">
+    <MudText Typo="Typo.h5" Align="Align.Center" Class="pa-4">Manage Video Book</MudText>
+    <MudDivider />
     <MudGrid>
         <MudItem xs="4">
             <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddVideoBook())">Add</MudButton>
@@ -13,7 +15,7 @@
         <MudItem xs="8">
         </MudItem>
         <MudItem xs="12">
-            <MudTable Dense="true" Items="@VideoBooks" Hover="true" Breakpoint="Breakpoint.Md">
+            <MudTable FixedHeader="true" Dense="true" Items="@VideoBooks" Hover="true" Breakpoint="Breakpoint.Md">
                 <HeaderContent>
                     <MudTh>Name</MudTh>
                     <MudTh>Description</MudTh>
@@ -31,7 +33,7 @@
             </MudTable>
         </MudItem>
     </MudGrid>
-    <MudOverlay @bind-Visible="isVisible" DarkBackground="true"/>
+    <MudOverlay @bind-Visible="isVisible" DarkBackground="true" />
 </MudContainer>
 
 

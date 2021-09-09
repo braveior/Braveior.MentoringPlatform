@@ -58,13 +58,13 @@ namespace Braveior.MentoringPlatform.Client.Services
         {
             string authToken = "";
             //Get AccessToken from local storage
-            authToken = await _localStorageService.GetItemAsync<string>("accessToken");
-            if (authToken == null)
-            {
-                throw new Exception("Access Token not found");
-            }
+           // authToken = await _localStorageService.GetItemAsync<string>("accessToken");
+            //if (authToken == null)
+            //{
+            //    throw new Exception("Access Token not found");
+            //}
             //Add AccessToken to the Bearer header
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+           // _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
 
             //REST API call for Search
             var response = await _httpClient.GetAsync($"api/Profile/getcolleges");
@@ -164,13 +164,13 @@ namespace Braveior.MentoringPlatform.Client.Services
         {
             string authToken = "";
             //Get AccessToken from local storage
-            authToken = await _localStorageService.GetItemAsync<string>("accessToken");
-            if (authToken == null)
-            {
-                throw new Exception("Access Token not found");
-            }
+            //authToken = await _localStorageService.GetItemAsync<string>("accessToken");
+            //if (authToken == null)
+            //{
+            //    throw new Exception("Access Token not found");
+            //}
             //Add AccessToken to the Bearer header
-            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
+            //_httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken);
 
             //REST API call for Search
             var response = await _httpClient.GetAsync($"api/Profile/getstudentachievements/{studentId}");

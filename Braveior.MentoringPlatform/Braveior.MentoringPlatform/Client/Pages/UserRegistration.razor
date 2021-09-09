@@ -6,7 +6,8 @@
 @inject ISnackbar Snackbar
 
 <MudContainer MaxWidth="MaxWidth.Large">
-
+    <MudText Typo="Typo.h5" Align="Align.Center" Class="pa-4">New User</MudText>
+    <MudDivider />
     <MudCard Class="mt-16">
         <MudCardContent>
             <MudForm @bind-IsValid="@success" @ref="frmLogin">
@@ -39,7 +40,7 @@
             </MudForm>
         </MudCardContent>
         <MudCardActions>
-            <MudButton  FullWidth="true"  Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary" Disabled="@(!success)" OnClick="RegisterUser" >Register</MudButton>
+            <MudButton FullWidth="true" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary" Disabled="@(!success)" OnClick="RegisterUser">Register</MudButton>
         </MudCardActions>
     </MudCard>
 </MudContainer>

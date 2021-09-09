@@ -7,19 +7,21 @@
 @inject IDialogService DialogService
 @using Braveior.MentoringPlatform.Client.Pages
 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge">
-    <MudGrid>
-        <MudItem xs="12">
-            <MudBreadcrumbs Items="_items"></MudBreadcrumbs>
-            <MudAvatar Image=@($"/images/{profile.UserId}.jpg") Style="height:100px; width:100px;"/>
-            <MudText Align="Align.Left" Typo="Typo.h4" Class="m-2"><a href="@profile.LinkedInLink" target="_blank"><MudIcon Icon="fab fa-linkedin" Size="Size.Large" Color="Color.Primary" /></a>@profile.StudentName<MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" IconColor="Color.Dark" Size="Size.Large">@profile.Points Points</MudChip></MudText>
-            <MudText Align="Align.Left" Typo="Typo.h6" Class="m-2">@profile.InsitutionName</MudText>
-        </MudItem>
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h5" Align="Align.Left" Class="pa-4">Profile</MudText>
+        <MudDivider />
+    </MudItem>
         <MudItem xs="12" md="6" xl="6">
-            <MudText Align="Align.Left" Typo="Typo.h6" Class="m-2">About myself</MudText>
+
+            <MudAvatar Image=@($"/images/{profile.UserId}.jpg") Style="height:100px; width:100px;" />
+            <MudText Align="Align.Left" Typo="Typo.h5" Class="m-2">@profile.StudentName<MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" Color="Color.Primary" IconColor="Color.Warning" Size="Size.Large">@profile.Points Points</MudChip></MudText>
+            <MudText Align="Align.Left" Typo="Typo.h6" Class="m-2">@profile.InsitutionName</MudText>
+            <MudText Align="Align.Left" Typo="Typo.h6" Class="m-2">About myself <a href="@profile.LinkedInLink" target="_blank"><MudIcon Icon="fab fa-linkedin" Size="Size.Medium" Color="Color.Primary" /></a></MudText>
             <MudText Align="Align.Left" Typo="Typo.body2" Class="m-2">@profile.Description</MudText>
             <MudText Align="Align.Left" Typo="Typo.h6" Class="m-2">Technology Confidence Meter</MudText>
-            <MudTable Items="@profile.UserSkills" Dense="true" Hover="true" Bordered="true" Striped="true" Height="300px">
+            <MudTable FixedHeader="true" Breakpoint="Breakpoint.None" Items="@profile.UserSkills" Dense="true" Hover="true" Bordered="true" Striped="true" Height="300px">
                 <HeaderContent>
                     <MudTh>Technology</MudTh>
                     <MudTh>Rating</MudTh>
@@ -29,12 +31,16 @@
                     <MudTd DataLabel="Rating"><MudRating SelectedValue="@context.Stars" ReadOnly="true" /></MudTd>
                 </RowTemplate>
             </MudTable>
+
         </MudItem>
         <MudItem xs="12" md="6" xl="6">
+            <MudText Typo="Typo.h6" Align="Align.Center" Class="pt-16">Braveior Timeline</MudText>
+            <MudDivider />
+
             <MudTimeline Class="mt-5" DisableModifiers="false" TimelineAlign="TimelineAlign.Default" TimelineOrientation="TimelineOrientation.Vertical" TimelinePosition="TimelinePosition.Alternate">
                 <MudTimelineItem Color="Color.Success" Size="Size.Small" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudAlert Variant="Variant.Text" NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Joined</MudAlert>
+                        <MudAlert Icon="fas fa-sign-in-alt" Variant="Variant.Text" ContentAlignment="HorizontalAlignment.Center" Severity="Severity.Success">Joined</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
                         <MudText Typo="Typo.overline">@studentAchievementDTO.StartDate.ToShortDateString()</MudText>
@@ -48,34 +54,58 @@
                         <MudText Typo="Typo.overline"></MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge1Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined">
+                    <ItemContent>
+                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.Challenge1Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Simple Challege</MudAlert>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge1Complete ? studentAchievementDTO.Challenge1CompleteDate.ToShortDateString() : "")</MudText>
+                    </ItemOpposite>
+                </MudTimelineItem>
                 <MudTimelineItem Color=@(studentAchievementDTO.Challenge2Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudAlert Severity=@(studentAchievementDTO.Challenge2Complete ? Severity.Success : Severity.Normal) NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Level 1 Certified</MudAlert>
+                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.Challenge2Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Medium Challege</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
                         <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge2Complete ? studentAchievementDTO.Challenge2CompleteDate.ToShortDateString() : "")</MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
-                <MudTimelineItem Color=@(studentAchievementDTO.Challenge3Complete ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined">
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge2Complete ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudAlert Severity=@(studentAchievementDTO.Challenge3Complete ? Severity.Success : Severity.Normal) NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Level 2 Certified</MudAlert>
+                        <MudAlert Icon="fas fa-medal" Severity=@(studentAchievementDTO.Challenge2Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Level 1 Certified</MudAlert>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge2Complete ? studentAchievementDTO.Challenge2CompleteDate.ToShortDateString() : "")</MudText>
+                    </ItemOpposite>
+                </MudTimelineItem>
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge3Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined">
+                    <ItemContent>
+                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.Challenge3Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Complex Challenge</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
                         <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge3Complete ? studentAchievementDTO.Challenge3CompleteDate.ToShortDateString() : "")</MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
-                <MudTimelineItem Size="Size.Large" Variant="Variant.Filled">
-                    <ItemDot>
-                        <MudIcon Size="Size.Large" Color="Color.Default"  Icon="fas fa-trophy"  />
-                    </ItemDot>
+
+
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge3Complete ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudAlert Severity=@(studentAchievementDTO.BraveiorChampion ? Severity.Success : Severity.Normal)  ContentAlignment="HorizontalAlignment.Center">Braveior Champion</MudAlert>
+                        <MudAlert Icon="fas fa-medal" Severity=@(studentAchievementDTO.Challenge3Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Level 2 Certified</MudAlert>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge3Complete ? studentAchievementDTO.Challenge3CompleteDate.ToShortDateString() : "")</MudText>
+                    </ItemOpposite>
+                </MudTimelineItem>
+                <MudTimelineItem Size="Size.Large" Variant="Variant.Outlined">
+                    <ItemContent>
+                        <MudAlert Icon="fas fa-trophy" Severity=@(studentAchievementDTO.BraveiorChampion ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Braveior Champion</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
                         <MudText Typo="Typo.overline"></MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
             </MudTimeline>
+
         </MudItem>
         <MudItem xs="12">
             <MudText Align="Align.Left" Typo="Typo.h6" Class="m-2">Student Events</MudText>
@@ -90,7 +120,7 @@
                             @foreach (var val in profile.StudentWorkItems.Where(a => a.Type == 4))
                             {
                                 <MudListItem Avatar="@Icons.Material.Filled.FeaturedVideo">
-                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2"><a href="@val.AssetUrl" target="_blank">@val.Challenge.Name</a> <MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" IconColor="Color.Dark" Size="Size.Small">@val.Points Points</MudChip></MudText>
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2"><a href="@val.AssetUrl" target="_blank">@val.Challenge.Name</a> <MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" Color="Color.Primary" IconColor="Color.Warning" Size="Size.Small">@val.Points Points</MudChip></MudText>
                                     <MudText Align="Align.Left" Typo="Typo.subtitle2" Color="Color.Dark" Class="m-2">@val.Challenge.Description</MudText>
                                 </MudListItem>
                             }
@@ -106,7 +136,7 @@
                             @foreach (var val in profile.StudentWorkItems.Where(a => a.Type == 1))
                             {
                                 <MudListItem Avatar="@Icons.Material.Filled.Forum">
-                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2">@val.Event.Name <MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" IconColor="Color.Dark" Size="Size.Small">@val.Points Points</MudChip></MudText>
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2">@val.Event.Name <MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" Color="Color.Primary" IconColor="Color.Warning" Size="Size.Small">@val.Points Points</MudChip></MudText>
                                     <MudText Align="Align.Left" Typo="Typo.subtitle2" Color="Color.Dark" Class="m-2">@val.Event.Description</MudText>
                                 </MudListItem>
                             }
@@ -122,7 +152,7 @@
                             @foreach (var val in profile.StudentWorkItems.Where(a => a.Type == 5))
                             {
                                 <MudListItem Avatar="@Icons.Material.Filled.MenuBook">
-                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2"><a href="@val.AssetUrl" target="_blank">@val.AssetName</a> <MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" IconColor="Color.Dark" Size="Size.Small">@val.Points Points</MudChip></MudText>
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2"><a href="@val.AssetUrl" target="_blank">@val.AssetName</a> <MudChip Icon="@Icons.Material.Filled.Stars" Color="Color.Primary" IconColor="Color.Warning" Class="m-2" Size="Size.Small">@val.Points Points</MudChip></MudText>
                                     <MudText Align="Align.Left" Typo="Typo.subtitle2" Color="Color.Dark" Class="m-2">@val.AssetDescription</MudText>
                                 </MudListItem>
                             }
@@ -138,7 +168,7 @@
                             @foreach (var val in profile.StudentWorkItems.Where(a => a.Type == 6))
                             {
                                 <MudListItem Avatar="@Icons.Material.Filled.FeaturedVideo">
-                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2"><a href="@val.AssetUrl" target="_blank">@val.AssetName</a> <MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" IconColor="Color.Dark" Size="Size.Small">@val.Points Points</MudChip></MudText>
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2"><a href="@val.AssetUrl" target="_blank">@val.AssetName</a> <MudChip Icon="@Icons.Material.Filled.Stars" Color="Color.Primary" IconColor="Color.Warning" Class="m-2" Size="Size.Small">@val.Points Points</MudChip></MudText>
                                     <MudText Align="Align.Left" Typo="Typo.subtitle2" Color="Color.Dark" Class="m-2">@val.AssetDescription</MudText>
                                 </MudListItem>
                             }
@@ -147,9 +177,9 @@
                 </MudExpansionPanel>
             </MudExpansionPanels>
         </MudItem>
-    </MudGrid>
+</MudGrid>
     <MudOverlay @bind-Visible="isVisible" DarkBackground="true" />
-</MudContainer>
+
 @code {
     private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
     {
@@ -209,7 +239,7 @@
     }
     private async Task LoadStudentActivities()
     {
-        studentAchievementDTO = await ProfileService.GetStudentAchievements(CommonState.Value.LoggedInUser.UserId);
+        studentAchievementDTO = await ProfileService.GetStudentAchievements(StudentId);
     }
     public void ToggleOverlay(bool value)
     {

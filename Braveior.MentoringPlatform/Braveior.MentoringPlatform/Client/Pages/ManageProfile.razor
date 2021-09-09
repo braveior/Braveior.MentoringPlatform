@@ -8,23 +8,25 @@
 @using Braveior.MentoringPlatform.Client.Pages
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudText Typo="Typo.h5" Align="Align.Center" Class="pa-4">Manage Profile</MudText>
+    <MudDivider />
     <MudGrid>
         @if (CommonState.Value.LoggedInUser.Role == 2)
         {
-            <MudItem xs="6">
+            <MudItem xs="12" md="6" lg="6">
                 <MudAutocomplete T="InstitutionDTO" Label="Choose College" @bind-Value="college" SearchFunc="@SearchCollege" ToStringFunc="@(e => e == null ? null : $"{e.Name}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
             </MudItem>
-            <MudItem xs="6">
+            <MudItem xs="12" md="6" lg="6">
                 <MudAutocomplete Disabled="@(college == null ? true : false)" T="UserDTO" Label="Choose Student" @bind-Value="student" SearchFunc="@SearchStudent" ToStringFunc="@(e => e == null ? null : $"{e.FirstName} {e.LastName}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
             </MudItem>
             <MudItem xs="12">
                 <MudButton Disabled="@(student.UserId == 0 ? true : false)" Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => LoadProfile())">Load Student Profile</MudButton>
             </MudItem>
         }
-        <MudItem xs="6">
+        <MudItem xs="12" md="6" lg="6">
             <MudTextField T="string" Variant="Variant.Outlined" Label="FirstName" @bind-Value="student.FirstName" ReadOnly="true" />
         </MudItem>
-        <MudItem xs="6">
+        <MudItem xs="12" md="6" lg="6">
             <MudTextField T="string" Variant="Variant.Outlined" Label="LastName" @bind-Value="student.LastName" ReadOnly="true" />
         </MudItem>
         <MudItem xs="12">
@@ -46,18 +48,16 @@
                 <MudTabPanel Disabled="@(student.UserId ==0? true:false)" Text="Skills">
                     <div style='overflow:scroll; height:400px;'>
                         <MudButton Disabled="@(student.UserId==0? true:false)" Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddSkill())">Add</MudButton>
-                        <MudTable Dense="true" Items="@UserSkills" Hover="true" Breakpoint="Breakpoint.Sm">
+                        <MudTable FixedHeader="true" Dense="true" Items="@UserSkills" Hover="true" Breakpoint="Breakpoint.Sm">
                             <HeaderContent>
 
                                 <MudTh>Skill</MudTh>
-                                <MudTh>Description</MudTh>
                                 <MudTh>Rating</MudTh>
                                 <MudTh></MudTh>
                                 <MudTh></MudTh>
                             </HeaderContent>
                             <RowTemplate>
                                 <MudTd DataLabel="Skill">@context.Skill.Name</MudTd>
-                                <MudTd DataLabel="Description">@context.Skill.Description</MudTd>
                                 <MudTd DataLabel="Rating">@context.Stars</MudTd>
                                 <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => NavigateEditSkill(@context))">Edit</MudButton></MudTd>
                                 <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Error" OnClick="@(() => DeleteSkill(@context))">Delete</MudButton></MudTd>
@@ -71,7 +71,7 @@
                             <MudButton Disabled="@(student.UserId==0? true:false)" Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddEvent())">Add</MudButton>
                         </Authorized>
                     </AuthorizeView>
-                    <MudTable Dense="true" Items="@Events" Hover="true" Breakpoint="Breakpoint.Sm">
+                    <MudTable FixedHeader="true" Dense="true" Items="@Events" Hover="true" Breakpoint="Breakpoint.Sm">
                         <HeaderContent>
 
                             <MudTh>Type</MudTh>
@@ -99,7 +99,7 @@
                 </MudTabPanel>
                 <MudTabPanel Disabled="@(student.UserId==0? true:false)" Text="Challenges">
                     <MudButton Disabled="@(student.UserId==0? true:false)" Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddChallenge())">Add</MudButton>
-                    <MudTable Dense="true" Items="@Challenges" Hover="true" Breakpoint="Breakpoint.Sm">
+                    <MudTable FixedHeader="true" Dense="true" Items="@Challenges" Hover="true" Breakpoint="Breakpoint.Sm">
                         <HeaderContent>
 
                             <MudTh>Type</MudTh>
@@ -123,7 +123,7 @@
                 </MudTabPanel>
                 <MudTabPanel Disabled="@(student.UserId==0? true:false)" Text="Blogs/Vlogs">
                     <MudButton Disabled="@(student.UserId==0? true:false)" Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddAsset())">Add</MudButton>
-                    <MudTable Dense="true" Items="@Blogs" Hover="true" Breakpoint="Breakpoint.Sm">
+                    <MudTable FixedHeader="true" Dense="true" Items="@Blogs" Hover="true" Breakpoint="Breakpoint.Sm">
                         <HeaderContent>
 
                             <MudTh>Type</MudTh>
@@ -302,7 +302,7 @@
     }
     private async Task AddEvent()
     {
-        StudentActivityDTO studentEvent = new StudentActivityDTO();
+        StudentActivityDTO studentEvent = new StudentActivityDTO() { CreatedDate = DateTime.Now };
         studentEvent.UserId = student.UserId;
         var parameters = new DialogParameters { ["StudentEvent"] = studentEvent };
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
@@ -315,7 +315,7 @@
     }
     private async Task AddChallenge()
     {
-        StudentActivityDTO studentChallenge = new StudentActivityDTO();
+        StudentActivityDTO studentChallenge = new StudentActivityDTO() {  CreatedDate = DateTime.Now};
         studentChallenge.UserId = student.UserId;
         studentChallenge.Type = 4;
         var parameters = new DialogParameters { ["StudentChallenge"] = studentChallenge };
@@ -329,7 +329,7 @@
     }
     private async Task AddAsset()
     {
-        StudentActivityDTO studentAsset = new StudentActivityDTO();
+        StudentActivityDTO studentAsset = new StudentActivityDTO() { CreatedDate = DateTime.Now };
         studentAsset.UserId = student.UserId;
         var parameters = new DialogParameters { ["StudentAsset"] = studentAsset };
         DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };

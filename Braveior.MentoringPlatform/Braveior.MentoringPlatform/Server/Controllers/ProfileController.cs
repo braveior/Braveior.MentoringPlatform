@@ -65,7 +65,6 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getprofiles/{institutionId}")]
-        [Authorize]
         public IActionResult GetProfiles(long institutionId)
         {
             return Ok(_service.GetProfiles(institutionId));
@@ -87,7 +86,6 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         /// <param name="ratedfor"></param>
         /// <returns></returns>
         [HttpGet("getcolleges")]
-        [Authorize]
         public IActionResult GetColleges()
         {
             return Ok(_service.GetColleges());
@@ -168,7 +166,6 @@ namespace Braveior.MentoringPlatform.Server.Controllers
         }
 
         [HttpGet("getstudentachievements/{studentId}")]
-        [Authorize]
         public IActionResult GetStudentAchievements(long studentId)
         {
             return Ok(_service.GetStudentAchievements(studentId));

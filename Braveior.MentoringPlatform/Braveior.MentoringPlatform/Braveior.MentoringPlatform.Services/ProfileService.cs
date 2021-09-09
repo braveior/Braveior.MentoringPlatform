@@ -24,7 +24,7 @@ namespace Braveior.MentoringPlatform.Services
         public ProfileDTO GetProfile(long userId)
         {
             var user = _dbContext.Users.Where(u => u.UserId == userId).Include(i => i.Institution).Include(uk => uk.UserSkills).ThenInclude(a => a.Skill).FirstOrDefault();
-                var studentWorkItems = _dbContext.StudentActivities.Where(u => u.UserId == userId).Include(a=>a.Event).Include(a => a.Challenge).ThenInclude(a=>a.Product);
+                var studentWorkItems = _dbContext.StudentActivities.Where(u => u.UserId == userId && u.Status == 1).Include(a=>a.Event).Include(a => a.Challenge).ThenInclude(a=>a.Product);
                 ProfileDTO profileDTO = new ProfileDTO()
                 {
                     UserId = user.UserId,
@@ -49,7 +49,7 @@ namespace Braveior.MentoringPlatform.Services
 
         public List<ProfileDTO> GetProfiles()
         {
-                var students = _dbContext.Users.Where(u => u.Role == 1 && u.Display == true).Include(us => us.UserSkills).Include(i => i.Institution).ToList();
+                var students = _dbContext.Users.Where(u => u.Role == 1 && u.Display == true).Include(us => us.UserSkills).Include(i => i.Institution).Take(100).ToList();
                 List<ProfileDTO> profiles = new List<ProfileDTO>();
                 foreach (var student in students)
                 {
@@ -212,7 +212,7 @@ namespace Braveior.MentoringPlatform.Services
         }
         public List<StudentActivityDTO> GetStudentActivities(long userId)
         {
-                var studentActivities = _dbContext.StudentActivities.Where(us => us.UserId == userId && us.Status == 1).Include(s => s.Challenge).Include(s => s.Event).ToList();
+                var studentActivities = _dbContext.StudentActivities.Where(us => us.UserId == userId).Include(s => s.Challenge).Include(s => s.Event).ToList();
                 return _mapper.Map<List<StudentActivityDTO>>(studentActivities);
         }
 

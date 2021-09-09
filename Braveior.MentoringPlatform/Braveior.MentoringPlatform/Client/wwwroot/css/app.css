@@ -7,7 +7,25 @@ html, body {
 a, .btn-link {
     color: #0366d6;
 }
+a:link {
+    color: red;
+    text-decoration: underline;
+}
 
+/* visited link */
+a:visited {
+    color: green;
+}
+
+/* mouse over link */
+a:hover {
+    color: hotpink;
+}
+
+/* selected link */
+a:active {
+    color: blue;
+}
 .btn-primary {
     color: #fff;
     background-color: #1b6ec2;

@@ -45,6 +45,9 @@
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
 
+    [Inject]
+    private IState<CommonState> CommonState { get; set; }
+
     protected async override System.Threading.Tasks.Task OnInitializedAsync()
     {
 
@@ -55,7 +58,7 @@
             claimsPrincipal = (await authenticationStateTask).User;
             if (claimsPrincipal.Identity.IsAuthenticated)
             {
-                NavigationManager.NavigateTo("/studenthome");
+                NavigationManager.NavigateTo($"/profile/{CommonState.Value.LoggedInUser.UserId}");
             }
         }
         catch(Exception ex)
@@ -76,7 +79,7 @@
             {
                 //Redirect to Home page if Authentication successful
                 await ((CustomAuthenticationStateProvider)AuthenticationStateProvider).MarkUserAsAuthenticated(returnedUser);
-                NavigationManager.NavigateTo("/studenthome");
+                NavigationManager.NavigateTo($"/profile/{CommonState.Value.LoggedInUser.UserId}");
             }
             else
             {

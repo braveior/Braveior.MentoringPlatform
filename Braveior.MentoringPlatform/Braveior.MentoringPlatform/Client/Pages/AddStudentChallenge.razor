@@ -14,17 +14,18 @@
             <AuthorizeView Roles="2">
                 <Authorized>
                     <MudTextField T="long" Variant="Variant.Outlined" Label="Points" @bind-Value="@StudentChallenge.Points" />
-                    </Authorized>
-                </AuthorizeView>
-                    <MudTextField T="string" Variant="Variant.Outlined" Label="URL" @bind-Value="@StudentChallenge.AssetUrl" />
-                    <AuthorizeView Roles="2">
-                        <Authorized>
-                            <MudRadioGroup @bind-SelectedOption="@StudentChallenge.Status">
-                                <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
-                                <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
-                            </MudRadioGroup>
-                        </Authorized>
-                    </AuthorizeView>
+                </Authorized>
+            </AuthorizeView>
+            <MudTextField T="string" Variant="Variant.Outlined" Label="URL" @bind-Value="@StudentChallenge.AssetUrl" />
+            <MudDatePicker Label="Date" Editable="true" @bind-Date="@StudentChallenge.CreatedDate" />
+            <AuthorizeView Roles="2">
+                <Authorized>
+                    <MudRadioGroup @bind-SelectedOption="@StudentChallenge.Status">
+                        <MudRadio Option="@(0)" Color="Color.Primary">Pending</MudRadio>
+                        <MudRadio Option="@(1)" Color="Color.Secondary">Approved</MudRadio>
+                    </MudRadioGroup>
+                </Authorized>
+            </AuthorizeView>
         </DialogContent>
         <DialogActions>
             <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => CreateStudentChallenge())">Add Challenge</MudButton>

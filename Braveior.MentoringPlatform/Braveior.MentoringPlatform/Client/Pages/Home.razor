@@ -1,4 +1,5 @@
 ﻿@page "/"
+@page "/home"
 @inject NavigationManager NavigationManager
 @inject Blazored.LocalStorage.ILocalStorageService localStorageService
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -7,46 +8,48 @@
 @inject IDialogService DialogService
 @using Braveior.MentoringPlatform.Client.Pages
 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge">
-    <MudGrid>
-        <MudItem xs="6">
-            <MudAutocomplete T="InstitutionDTO" Label="Choose College" @bind-Value="college" SearchFunc="@SearchCollege" ToStringFunc="@(e => e == null ? null : $"{e.Name}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
-        </MudItem>
-        <MudItem xs="6">
-            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => SearchProfiles())">Search</MudButton>
-        </MudItem>
-            <MudItem xs="12">
-                <MudGrid Class="d-flex flex-row py-2 px-1" Spacing="2">
-                    @foreach (var profile in profiles)
-                    {
-                        <MudItem>
-                            <MudPaper MaxWidth="350px" Elevation="1" Class="pa-2">
-                                <MudGrid>
-                                    <MudItem xs="2">
-                                        <MudAvatar Image=@($"/images/{profile.UserId}.jpg") Size="Size.Large" Class="m-2" />
-                                    </MudItem>
-                                    <MudItem xs="9">
-                                        <MudText Align="Align.Left" Typo="Typo.body1" Class="m-2">@profile.StudentName</MudText>
-                                        <MudText Align="Align.Left" Typo="Typo.body2" Class="m-2">@profile.InsitutionName</MudText>
-                                        <MudLink Href=@($"/profile/{profile.UserId}") Typo="Typo.overline" Class="m-2">View Details</MudLink>
-                                        <MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" IconColor="Color.Dark" Size="Size.Small">@profile.Points Points</MudChip>
-                                    </MudItem>
-                                    <MudItem xs="1">
-                                    </MudItem>
-                                </MudGrid>
-                            </MudPaper>
-                        </MudItem>
-                    }
 
-                </MudGrid>
-            </MudItem>
-    </MudGrid>
-    
-        <MudOverlay @bind-Visible="isVisible" DarkBackground="true" />
-</MudContainer>
+<MudText Typo="Typo.h5" Align="Align.Center" Class="pa-4"><MudIcon Icon="fas fa-medal" Size="Size.Large" Color="Color.Warning" />  Hall of Fame</MudText>
+<MudDivider />
+<MudGrid>
+    <MudItem xs="12" md="6" lg="6">
+        <MudAutocomplete T="InstitutionDTO" Label="Choose College" @bind-Value="college" SearchFunc="@SearchCollege" ToStringFunc="@(e => e == null ? null : $"{e.Name}")" AdornmentIcon="@Icons.Material.Filled.Search" AdornmentColor="Color.Primary" />
+    </MudItem>
+    <MudItem xs="12" md="6" lg="6">
+        <MudButton Class="mt-2" Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => SearchProfiles())">Search</MudButton>
+        <MudButton Class="mt-2" Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => LoadHome())">Clear</MudButton>
+    </MudItem>
+    <MudItem xs="12">
+        <MudGrid Class="d-flex flex-row justify-center" Spacing="3">
+            @foreach (var profile in profiles)
+            {
+                <MudItem>
+                    <MudPaper Width="350px" Height="120px" Elevation="1" Style="@($"background:{Colors.BlueGrey.Lighten5};")">
+                        <MudGrid>
+                            <MudItem xs="2">
+                                <MudAvatar Image=@($"/images/{profile.UserId}.jpg") Size="Size.Large" Class="ma-2" />
+                            </MudItem>
+                            <MudItem xs="9">
+                                <MudText Align="Align.Left" Typo="Typo.body1" Class="ml-4">@profile.StudentName</MudText>
+                                <MudText Align="Align.Left" Typo="Typo.body2" Class="ml-4">@profile.InsitutionName</MudText>
+                                <MudLink Href=@($"/profile/{profile.UserId}") Typo="Typo.overline" Class="ml-4">View Details</MudLink>
+                                <MudChip Color="Color.Primary" Icon="@Icons.Material.Filled.Stars" IconColor="Color.Warning" Size="Size.Small">@profile.Points Points</MudChip>
+                            </MudItem>
+                            <MudItem xs="1">
+                            </MudItem>
+                        </MudGrid>
+                    </MudPaper>
+                </MudItem>
+            }
+
+        </MudGrid>
+    </MudItem>
+</MudGrid>
+
+<MudOverlay @bind-Visible="isVisible" DarkBackground="true" />
 @code {
 
-    private InstitutionDTO college = new InstitutionDTO() {  InstitutionId=0};
+    private InstitutionDTO college = new InstitutionDTO() { InstitutionId = 0 };
 
     private BarConfig configPointsSplitup;
 
@@ -75,14 +78,30 @@
 
     private List<ProfileDTO> profiles = new List<ProfileDTO>();
 
+    ClaimsPrincipal claimsPrincipal;
+
+    //Global Authentication State to get the Login Status and data
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        //Redirect the user to Home page if already authenticated
+        try
+        {
+
+            await LoadHome();
+        }
+        catch (Exception ex)
+        {
+
+        }
         await base.OnInitializedAsync();
-        await LoadHome();
+
     }
     private async Task LoadHome()
     {
+        college = new InstitutionDTO() { InstitutionId = 0 };
         await LoadStudentProfiles();
         StateHasChanged();
 
@@ -100,9 +119,25 @@
     }
     private async Task SearchProfiles()
     {
-        ToggleOverlay(true);
-        profiles = await ProfileService.GetProfiles(college.InstitutionId);
-        ToggleOverlay(false);
+        if (college.InstitutionId <= 0)
+        {
+            Snackbar.Clear();
+            Snackbar.Add("Select College", Severity.Error);
+        }
+        else
+        {
+            try
+            {
+                ToggleOverlay(true);
+                profiles = await ProfileService.GetProfiles(college.InstitutionId);
+                ToggleOverlay(false);
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
+        }
 
     }
     public void ToggleOverlay(bool value)

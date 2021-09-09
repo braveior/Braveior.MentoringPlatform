@@ -17,6 +17,7 @@
             <MudTextField T="string" Variant="Variant.Outlined" Label="Name" @bind-Value="@StudentAsset.AssetName" />
             <MudTextField T="string" Variant="Variant.Outlined" Label="Description" @bind-Value="@StudentAsset.AssetDescription" />
             <MudTextField T="string" Variant="Variant.Outlined" Label="URL" @bind-Value="@StudentAsset.AssetUrl" />
+            <MudDatePicker Label="Date" Editable="true" @bind-Date="@StudentAsset.CreatedDate" />
             <AuthorizeView Roles="2">
                 <Authorized>
                     <MudTextField T="long" Variant="Variant.Outlined" @bind-Value="@StudentAsset.Points" />
