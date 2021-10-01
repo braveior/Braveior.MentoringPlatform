@@ -15,28 +15,28 @@ namespace Braveior.HallOfFame.PointsCalculator
             using (var db = new braveiordbContext())
             {
                 //var users = db.Users.Include(a => a.StudentActivities).ToList();
-                //foreach (var user in users)
-                //{
-                //    var totalpoints = user.StudentActivities.Sum(a => a.Points);
-                //    user.Points = totalpoints;
-                //    //user.Password = Encrypt("password");
-                //    db.Users.Update(user);
-                //}
-                //db.SaveChanges();
-
-                BootCamp b1 = new BootCamp()
-                {
-                    Name = "Level 1 Basic - Boot Camp",
-                    Description = "Level 1 Basic - Boot Camp"
-                };
-                db.BootCamps.Add(b1);
-                BootCamp b2 = new BootCamp()
-                {
-                    Name = "Level 1 Intermediate - Boot Camp",
-                    Description = "Level 1 Intermediate - Boot Camp"
-                };
-                db.BootCamps.Add(b2);
+                var user = db.Users.Where(a => a.UserId == 1).FirstOrDefault();
+                var studentActivities = db.StudentActivities.Where(a=>a.Status ==1 && a.UserId == 1).ToList();
+                var totalpoints = studentActivities.Sum(a => a.Points);
+                user.Points = totalpoints;
+                //user.Password = Encrypt("password");
+                db.Users.Update(user);
+                
                 db.SaveChanges();
+
+                //BootCamp b1 = new BootCamp()
+                //{
+                //    Name = "Level 1 Basic - Boot Camp",
+                //    Description = "Level 1 Basic - Boot Camp"
+                //};
+                //db.BootCamps.Add(b1);
+                //BootCamp b2 = new BootCamp()
+                //{
+                //    Name = "Level 1 Intermediate - Boot Camp",
+                //    Description = "Level 1 Intermediate - Boot Camp"
+                //};
+                //db.BootCamps.Add(b2);
+                //db.SaveChanges();
             }
          }
         private static string Encrypt(string text)

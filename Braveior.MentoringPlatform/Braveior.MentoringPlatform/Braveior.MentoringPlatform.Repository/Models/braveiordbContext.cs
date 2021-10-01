@@ -35,15 +35,15 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public virtual DbSet<UserTask> UserTasks { get; set; }
         public virtual DbSet<VideoBook> VideoBooks { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                //optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=DB_7090_braveior;Trusted_Connection=True;");
-//                optionsBuilder.UseSqlServer("Data Source=tcp:s10.everleap.com;Initial Catalog=DB_7090_braveior;User ID=DB_7090_braveior_user;Password=Sreelami1981$$;Integrated Security=False;", providerOptions => providerOptions.EnableRetryOnFailure());
-//            }
-//        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                //optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=DB_7090_braveior;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Data Source=tcp:s10.everleap.com;Initial Catalog=DB_7090_braveior;User ID=DB_7090_braveior_user;Password=Sreelami1981$$;Integrated Security=False;", providerOptions => providerOptions.EnableRetryOnFailure());
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
