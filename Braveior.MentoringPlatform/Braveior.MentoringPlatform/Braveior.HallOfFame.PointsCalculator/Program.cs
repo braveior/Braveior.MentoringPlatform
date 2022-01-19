@@ -15,8 +15,8 @@ namespace Braveior.HallOfFame.PointsCalculator
             using (var db = new braveiordbContext())
             {
                 //var users = db.Users.Include(a => a.StudentActivities).ToList();
-                var user = db.Users.Where(a => a.UserId == 1).FirstOrDefault();
-                var studentActivities = db.StudentActivities.Where(a=>a.Status ==1 && a.UserId == 1).ToList();
+                var user = db.Users.Where(a => a.UserId == 6).FirstOrDefault();
+                var studentActivities = db.StudentActivities.Where(a=>a.Status ==1 && a.UserId == 6).ToList();
                 var totalpoints = studentActivities.Sum(a => a.Points);
                 user.Points = totalpoints;
                 //user.Password = Encrypt("password");

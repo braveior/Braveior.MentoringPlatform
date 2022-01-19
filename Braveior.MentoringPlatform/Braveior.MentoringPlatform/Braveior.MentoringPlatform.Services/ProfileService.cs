@@ -134,19 +134,19 @@ namespace Braveior.MentoringPlatform.Services
             var student = _dbContext.Users.Where(a => a.UserId == studentId).FirstOrDefault();
             foreach (var studentActivitiy in studentActivities)
             {
-                if (studentActivitiy.ChallengeId == 2 )
+                if (studentActivitiy.ChallengeId == 1 )
                 {
                     studentAchievementDTO.Challenge1Complete = true;
                     studentAchievementDTO.Challenge1Points = studentActivitiy.Points;
                     studentAchievementDTO.Challenge1CompleteDate = studentActivitiy.CreatedDate;
                 }
-                else if (studentActivitiy.ChallengeId == 3 )
+                else if (studentActivitiy.ChallengeId == 2 )
                 {
                     studentAchievementDTO.Challenge2Complete = true;
                     studentAchievementDTO.Challenge2Points = studentActivitiy.Points;
                     studentAchievementDTO.Challenge2CompleteDate = studentActivitiy.CreatedDate;
                 }
-                else if (studentActivitiy.ChallengeId == 4 )
+                else if (studentActivitiy.ChallengeId == 3 )
                 {
                     studentAchievementDTO.Challenge3Complete = true;
                     studentAchievementDTO.Challenge3Points = studentActivitiy.Points;

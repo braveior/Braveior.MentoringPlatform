@@ -46,17 +46,17 @@
                         <MudText Typo="Typo.overline">@studentAchievementDTO.StartDate.ToShortDateString()</MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
-                <MudTimelineItem Color="Color.Dark" Size="Size.Small" Variant="Variant.Outlined">
-                    <ItemContent>
-                        <MudAlert NoIcon="true" ContentAlignment="HorizontalAlignment.Center">Concepts</MudAlert>
-                    </ItemContent>
-                    <ItemOpposite>
-                        <MudText Typo="Typo.overline"></MudText>
-                    </ItemOpposite>
-                </MudTimelineItem>
                 <MudTimelineItem Color=@(studentAchievementDTO.Challenge1Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.Challenge1Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Simple Challege</MudAlert>
+                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.Challenge1Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Challenge -Full Stack Development</MudAlert>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge1Complete ? studentAchievementDTO.Challenge1CompleteDate.ToShortDateString() : "")</MudText>
+                    </ItemOpposite>
+                </MudTimelineItem>
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge1Complete ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined">
+                    <ItemContent>
+                        <MudAlert Icon="fas fa-medal" Severity=@(studentAchievementDTO.Challenge1Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Level 1 Certified</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
                         <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge1Complete ? studentAchievementDTO.Challenge1CompleteDate.ToShortDateString() : "")</MudText>
@@ -64,7 +64,7 @@
                 </MudTimelineItem>
                 <MudTimelineItem Color=@(studentAchievementDTO.Challenge2Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.Challenge2Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Medium Challege</MudAlert>
+                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.Challenge2Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Challenge -Cloud Native Deployment</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
                         <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge2Complete ? studentAchievementDTO.Challenge2CompleteDate.ToShortDateString() : "")</MudText>
@@ -72,7 +72,7 @@
                 </MudTimelineItem>
                 <MudTimelineItem Color=@(studentAchievementDTO.Challenge2Complete ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudAlert Icon="fas fa-medal" Severity=@(studentAchievementDTO.Challenge2Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Level 1 Certified</MudAlert>
+                        <MudAlert Icon="fas fa-medal" Severity=@(studentAchievementDTO.Challenge2Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Level 2 Certified</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
                         <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge2Complete ? studentAchievementDTO.Challenge2CompleteDate.ToShortDateString() : "")</MudText>
@@ -80,22 +80,23 @@
                 </MudTimelineItem>
                 <MudTimelineItem Color=@(studentAchievementDTO.Challenge3Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.Challenge3Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Complex Challenge</MudAlert>
+                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.Challenge3Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Challenge - Machine Learning Recommender System</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
                         <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge3Complete ? studentAchievementDTO.Challenge3CompleteDate.ToShortDateString() : "")</MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
-
-
                 <MudTimelineItem Color=@(studentAchievementDTO.Challenge3Complete ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined">
                     <ItemContent>
-                        <MudAlert Icon="fas fa-medal" Severity=@(studentAchievementDTO.Challenge3Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Level 2 Certified</MudAlert>
+                        <MudAlert Icon="fas fa-medal" Severity=@(studentAchievementDTO.Challenge3Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Level 3 Certified</MudAlert>
                     </ItemContent>
                     <ItemOpposite>
                         <MudText Typo="Typo.overline">@(studentAchievementDTO.Challenge3Complete ? studentAchievementDTO.Challenge3CompleteDate.ToShortDateString() : "")</MudText>
                     </ItemOpposite>
                 </MudTimelineItem>
+
+
+
                 <MudTimelineItem Size="Size.Large" Variant="Variant.Outlined">
                     <ItemContent>
                         <MudAlert Icon="fas fa-trophy" Severity=@(studentAchievementDTO.BraveiorChampion ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Braveior Champion</MudAlert>
