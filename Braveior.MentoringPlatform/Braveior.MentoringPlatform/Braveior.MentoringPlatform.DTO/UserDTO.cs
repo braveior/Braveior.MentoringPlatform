@@ -28,5 +28,7 @@ namespace Braveior.MentoringPlatform.DTO
         public bool Display { get; set; }
 
         public bool IsLeader { get; set; }
+
+        public int BLevel { get; set; }
     }
 }

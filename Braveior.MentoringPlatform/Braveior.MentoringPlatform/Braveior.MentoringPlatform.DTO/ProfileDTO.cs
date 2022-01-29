@@ -14,6 +14,8 @@ namespace Braveior.MentoringPlatform.DTO
         public string Grade { get; set; }
 
         public bool IsLeader { get; set; }
+
+        public int BLevel { get; set; }
         public long Rank { get; set; }
         public string Description  { get; set; }
         public List<UserSkillDTO> UserSkills { get; set; }

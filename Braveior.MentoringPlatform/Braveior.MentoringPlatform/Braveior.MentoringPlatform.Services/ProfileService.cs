@@ -32,6 +32,7 @@ namespace Braveior.MentoringPlatform.Services
                     Points = user.Points,
                     StudentName = $"{user.FirstName} {user.LastName}",
                     LinkedInLink = user.LinkedInUrl,
+                    BLevel = user.BLevel,
                     Description = user.Description,
                     Grade = user.Grade,
                     InsitutionName = user.Institution.Name,
@@ -61,6 +62,7 @@ namespace Braveior.MentoringPlatform.Services
                         Description = student.Description,
                         InsitutionName = student.Institution.Name,
                         IsLeader = student.IsLeader,
+                        BLevel = student.BLevel,
                         Grade = student.Grade,
                         //TODO
                         Points = student.Points,
@@ -86,6 +88,7 @@ namespace Braveior.MentoringPlatform.Services
                     Description = student.Description,
                     InsitutionName = student.Institution.Name,
                     IsLeader = student.IsLeader,
+                    BLevel = student.BLevel,
                     Grade = student.Grade,
                     //TODO
                     Points = student.Points,

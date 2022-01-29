@@ -29,6 +29,8 @@ namespace Braveior.MentoringPlatform.Repository.Models
         public string LastName { get; set; }
         public bool? Display { get; set; }
         public long Points { get; set; }
+
+        public int BLevel { get; set; }
         public int Role { get; set; }
         public bool IsLeader { get; set; }
 

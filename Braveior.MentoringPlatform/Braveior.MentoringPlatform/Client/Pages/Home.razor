@@ -29,13 +29,17 @@
                             <MudItem xs="2">
                                 <MudAvatar Image=@($"/images/{profile.UserId}.jpg") Size="Size.Large" Class="ma-2" />
                             </MudItem>
-                            <MudItem xs="9">
+                            <MudItem xs="8">
                                 <MudText Align="Align.Left" Typo="Typo.body1" Class="ml-4">@profile.StudentName</MudText>
                                 <MudText Align="Align.Left" Typo="Typo.body2" Class="ml-4">@profile.InsitutionName</MudText>
                                 <MudLink Href=@($"/profile/{profile.UserId}") Typo="Typo.overline" Class="ml-4">View Details</MudLink>
                                 <MudChip Color="Color.Primary" Icon="@Icons.Material.Filled.Stars" IconColor="Color.Warning" Size="Size.Small">@profile.Points Points</MudChip>
                             </MudItem>
-                            <MudItem xs="1">
+                            <MudItem xs="2">
+                                @if (profile.BLevel > 0)
+                                {
+                                    <MudIcon Icon="fas fa-medal" Size="Size.Small" Color="Color.Info"  />
+                                }
                             </MudItem>
                         </MudGrid>
                     </MudPaper>
