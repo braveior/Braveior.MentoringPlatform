@@ -1,0 +1,46 @@
+﻿@namespace Braveior.MentoringPlatform.WA.Client.Pages
+@inject ISnackbar Snackbar
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IVideoBookService VideoBookService
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                Add Video Book
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+            <MudTextField T="string" Variant="Variant.Outlined" Label="Name" @bind-Value="@videoBook.Name" />
+            <MudTextField T="string" Variant="Variant.Outlined" Label="Description" @bind-Value="@videoBook.Description" />
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => CreateVideoBook())">Add Video Book</MudButton>
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Default" OnClick="Cancel">Close</MudButton>
+        </DialogActions>
+    </MudDialog>
+
+
+    @code {
+        private VideoBookDTO videoBook = new VideoBookDTO();
+
+        [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+        private void Cancel()
+        {
+            MudDialog.Cancel();
+        }
+        private async Task CreateVideoBook()
+        {
+            try
+            {
+                await VideoBookService.AddVideoBook(videoBook);
+                MudDialog.Close();
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
+        }
+
+
+    }

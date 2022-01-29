@@ -1,0 +1,99 @@
+﻿@page "/approvals"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IProfileService ProfileService
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Large">
+
+    <MudTable Dense="true" Items="@ApprovalList" Hover="true" Breakpoint="Breakpoint.Md">
+        <HeaderContent>
+            <MudTh>Student</MudTh>
+            <MudTh>Institution</MudTh>
+            <MudTh>Activity</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Asset URL</MudTh>
+            <MudTh>Asset Name</MudTh>
+            <MudTh>Points</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Student">@(context.User.FirstName + context.User.FirstName)</MudTd>
+            <MudTd DataLabel="Institution">@context.User.Institution.Name</MudTd>
+            <MudTd DataLabel="Activity">@GetActivityName(context.Type)</MudTd>
+            <MudTd DataLabel="Name">@(context.Challenge !=null ? context.Challenge.Name : "")</MudTd>
+            <MudTd DataLabel="Asset URL">@context.AssetUrl</MudTd>
+            <MudTd DataLabel="Asset Name">@context.AssetName</MudTd>
+            <MudTd DataLabel="Points"> <MudTextField @bind-Value="context.Points" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField></MudTd>
+            <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Success" OnClick="@(() => ApproveStudentActivity(@context))">Approve</MudButton></MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudContainer>
+
+
+
+
+@code {
+    private List<StudentActivityDTO> ApprovalList = new List<StudentActivityDTO>();
+    bool isShow;
+    bool success;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    ClaimsPrincipal claimsPrincipal;
+    MudForm frmLogin;
+
+
+    //Global Authentication State to get the Login Status and data
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    [Inject]
+    private IState<CommonState> CommonState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadStudentActivitiesForApproval();
+    }
+    private async Task LoadStudentActivitiesForApproval()
+    {
+        ApprovalList = await ProfileService.GetPendingStudentActivities();
+        StateHasChanged();
+    }
+    private async Task ApproveStudentActivity(StudentActivityDTO studentActivityDTO)
+    {
+        try
+        {
+            studentActivityDTO.Status = 1;
+            await ProfileService.ApproveStudentActivity(studentActivityDTO);
+            await LoadStudentActivitiesForApproval();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Clear();
+            Snackbar.Add("Error", Severity.Error);
+        }
+
+    }
+    private string GetActivityName(int id)
+    {
+        switch (id)
+        {
+            case 1:
+                return "Group Discussion";
+            case 2:
+                return "Hackathon";
+            case 3:
+                return "R & D Solutioning";
+            case 4:
+                return "Challenge";
+            case 5:
+                return "Blog";
+            case 6:
+                return "Vlog";
+            default:
+                return "General";
+        }
+    }
+
+}

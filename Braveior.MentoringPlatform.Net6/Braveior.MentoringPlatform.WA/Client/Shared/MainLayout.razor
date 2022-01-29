@@ -1,0 +1,105 @@
+﻿@inherits LayoutComponentBase
+<MudThemeProvider Theme="MyCustomTheme"/>
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudLayout>
+    <MudAppBar Style="@($"background:#192b32;")" Elevation="1">
+        <MudMenu Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit">
+            <MudMenuItem Link="/home">Hall of Fame</MudMenuItem>
+            <AuthorizeView Roles="2">
+                <Authorized>
+                    <MudMenuItem Link="/manageprofile" Disabled="true">Admin</MudMenuItem>
+                    <MudDivider />
+                    <MudMenuItem Link="/manageprofile">Search Profile</MudMenuItem>
+                    <MudMenuItem Link="/userregistration">New User</MudMenuItem>
+                    <MudMenuItem Link="/approvals">Approval</MudMenuItem>
+                    <MudMenuItem Link="/managevideobooks">Manage Video Book</MudMenuItem>
+                    <MudMenuItem Link="/managebootcampactivities">Manage Boot Camps</MudMenuItem>
+                    <MudMenuItem Link="/resetpassword">Reset Password</MudMenuItem>
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView Roles="1,2">
+                <Authorized>
+                    <MudMenuItem Link="/studenthome" Disabled="true">Profile</MudMenuItem>
+                    <MudDivider />
+                    <MudMenuItem Link="/studenthome">Student Dashboard</MudMenuItem>
+                    <MudMenuItem Link="/manageprofile">View Profile</MudMenuItem>
+                    <MudMenuItem Link="/studenthome" Disabled="true">Help</MudMenuItem>
+                    <MudDivider />
+                    <MudMenuItem Link="/resetpassword">Reset Password</MudMenuItem>
+                </Authorized>
+            </AuthorizeView>
+        </MudMenu>
+        <img align="left" src="images/braveior_logo.png" />
+        <MudHidden Breakpoint="Breakpoint.Xs" Invert="false">
+            <MudChip Link="/home" Icon="fas fa-crown" Size="Size.Large" Color="Color.Primary" Label="true">Hall of Fame</MudChip>
+        </MudHidden>
+            <MudSpacer />
+            <MudHidden Breakpoint="Breakpoint.Xs" Invert="false">
+                <AuthorizeView Roles="2">
+                    <Authorized>
+                        <MudMenu Dense="true" Direction="Direction.Bottom">
+                            <ActivatorContent><MudChip Icon="@Icons.Material.Filled.AdminPanelSettings" Color="Color.Primary">Admin</MudChip></ActivatorContent>
+                            <ChildContent>
+                                <MudMenuItem Link="/manageprofile">Search Profile</MudMenuItem>
+                                <MudMenuItem Link="/userregistration">New User</MudMenuItem>
+                                <MudMenuItem Link="/approvals">Approval</MudMenuItem>
+                                <MudMenuItem Link="/managevideobooks">Manage Video Book</MudMenuItem>
+                                <MudMenuItem Link="/managebootcampactivities">Manage Boot Camps</MudMenuItem>
+                                <MudMenuItem Link="/resetpassword">Reset Password</MudMenuItem>
+                            </ChildContent>
+                        </MudMenu>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Roles="1,2">
+                    <Authorized>
+
+                        <MudChip Link=@($"/profile/{CommonState.Value.LoggedInUser.UserId}") Icon="@Icons.Material.Filled.Home" Color="Color.Primary">Home</MudChip>
+
+                        <MudMenu Dense="true" Direction="Direction.Bottom">
+                            <ActivatorContent><MudChip Icon="@Icons.Material.Filled.Person" Color="Color.Primary">Profile</MudChip></ActivatorContent>
+                            <ChildContent>
+                                <MudMenuItem Link="/studenthome">Student Dashboard</MudMenuItem>
+                                <MudMenuItem Link="/manageprofile">Edit Profile</MudMenuItem>
+                            </ChildContent>
+                        </MudMenu>
+                        <MudMenu Dense="true" Direction="Direction.Bottom">
+                            <ActivatorContent><MudChip Icon="@Icons.Material.Filled.Help" Color="Color.Primary">Help</MudChip></ActivatorContent>
+                            <ChildContent>
+                                <MudMenuItem Link="/resetpassword">Reset Password</MudMenuItem>
+                            </ChildContent>
+                        </MudMenu>
+                    </Authorized>
+                </AuthorizeView>
+            </MudHidden>
+            <MudSpacer />
+            <LoginInfo></LoginInfo>
+    </MudAppBar>
+    <MudMainContent >
+        <MudContainer >
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code{
+    [Inject]
+    private IState<CommonState> CommonState { get; set; }
+
+    MudTheme MyCustomTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Primary = "#007991",
+            Warning = "#fbcb00"
+        }
+    };
+    string headerColor = $"color:{Colors.Cyan.Darken4};";
+    bool open = false;
+
+    void ToggleDrawer()
+    {
+        open = !open;
+    }
+
+}

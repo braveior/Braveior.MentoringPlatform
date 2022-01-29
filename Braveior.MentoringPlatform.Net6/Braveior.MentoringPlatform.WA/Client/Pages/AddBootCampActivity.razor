@@ -1,0 +1,89 @@
+﻿@namespace Braveior.MentoringPlatform.WA.Client.Pages
+@inject ISnackbar Snackbar
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IWebinarService WebinarService
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">
+                Add Bootcamp Activity
+            </MudText>
+        </TitleContent>
+        <DialogContent>
+
+            <MudSelect Dense="true" @bind-Value="@bootcampActivity.BootCampId" Variant="Variant.Outlined">
+                @foreach (var bootCamp in BootCamps)
+                {
+                    <MudSelectItem T="long" Value="bootCamp.BootCampId">@bootCamp.Name</MudSelectItem>
+                }
+            </MudSelect>
+            <MudSelect Dense="true" @bind-Value="@bootcampActivity.Status" Variant="Variant.Outlined">
+                <MudSelectItem T="int" Value=0>Not-Scheduled</MudSelectItem>
+                <MudSelectItem T="int" Value=1>Scheduled</MudSelectItem>
+            </MudSelect>
+            <MudDateRangePicker @ref="_picker" Label="Select Date Range" @bind-DateRange="_dateRange">
+                <PickerActions>
+                    <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Clear</MudButton>
+                    <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+                    <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+                </PickerActions>
+            </MudDateRangePicker>
+            <MudTextField T="string" Label="Meeting URL" Variant="Variant.Text" Text="@bootcampActivity.MeetingUrl" Lines="5" />
+        </DialogContent>
+        <DialogActions>
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => CreateBootCampActivity())">Add Boot Camp </MudButton>
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Default" OnClick="Cancel">Close</MudButton>
+        </DialogActions>
+    </MudDialog>
+
+
+    @code {
+        private BootCampActivityDTO bootcampActivity = new BootCampActivityDTO() { BootCampId = 1, Status = 0  };
+        private List<BootCampDTO> BootCamps = new List<BootCampDTO>();
+        MudDateRangePicker _picker;
+        DateRange _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(5).Date);
+        long BootCampId = 1;
+
+        [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+        private void Cancel()
+        {
+            MudDialog.Cancel();
+        }
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadBootCampActivities();
+
+        }
+        private async Task LoadBootCampActivities()
+        {
+            //ToggleOverlay(true);
+            BootCamps = await WebinarService.GetBootCamps();
+            //ToggleOverlay(false);
+            StateHasChanged();
+        }
+        private async Task CreateBootCampActivity()
+        {
+            try
+            {
+                if (_dateRange.Start != null && _dateRange.Start != null && bootcampActivity.BootCampId > 0)
+                {
+                    bootcampActivity.StartDate = _dateRange.Start.Value;
+                    bootcampActivity.EndDate = _dateRange.End.Value;
+                    await WebinarService.AddBootCampActivity(bootcampActivity);
+                    MudDialog.Close();
+                }
+                else
+                {
+                    Snackbar.Clear();
+                    Snackbar.Add("Invalid Data", Severity.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Error", Severity.Error);
+            }
+        }
+
+
+    }

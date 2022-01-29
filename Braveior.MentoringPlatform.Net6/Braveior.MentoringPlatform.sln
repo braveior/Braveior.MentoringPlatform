@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Braveior.MentoringPlatform.Repository", "Braveior.MentoringPlatform.Repository\Braveior.MentoringPlatform.Repository.csproj", "{2D4D5FC5-34FF-4649-942E-DABB3054F68F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Braveior.MentoringPlatform.DTO", "Braveior.MentoringPlatform.DTO\Braveior.MentoringPlatform.DTO.csproj", "{F406B30F-3EDE-4B3A-BB19-F70EC393BB4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Braveior.MentoringPlatform.Services", "Braveior.MentoringPlatform.Services\Braveior.MentoringPlatform.Services.csproj", "{032DDF1E-47A4-47B5-ADE6-A7AFC30696B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Braveior.MentoringPlatform.WA.Server", "Braveior.MentoringPlatform.WA\Server\Braveior.MentoringPlatform.WA.Server.csproj", "{60A7BD92-4B9F-477B-B7A5-BB053E8B5C69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Braveior.MentoringPlatform.WA.Client", "Braveior.MentoringPlatform.WA\Client\Braveior.MentoringPlatform.WA.Client.csproj", "{B8AAAFF9-8768-4222-A438-3C3BECE8A127}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D4D5FC5-34FF-4649-942E-DABB3054F68F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D4D5FC5-34FF-4649-942E-DABB3054F68F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D4D5FC5-34FF-4649-942E-DABB3054F68F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D4D5FC5-34FF-4649-942E-DABB3054F68F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F406B30F-3EDE-4B3A-BB19-F70EC393BB4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F406B30F-3EDE-4B3A-BB19-F70EC393BB4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F406B30F-3EDE-4B3A-BB19-F70EC393BB4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F406B30F-3EDE-4B3A-BB19-F70EC393BB4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{032DDF1E-47A4-47B5-ADE6-A7AFC30696B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{032DDF1E-47A4-47B5-ADE6-A7AFC30696B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{032DDF1E-47A4-47B5-ADE6-A7AFC30696B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{032DDF1E-47A4-47B5-ADE6-A7AFC30696B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60A7BD92-4B9F-477B-B7A5-BB053E8B5C69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60A7BD92-4B9F-477B-B7A5-BB053E8B5C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60A7BD92-4B9F-477B-B7A5-BB053E8B5C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60A7BD92-4B9F-477B-B7A5-BB053E8B5C69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8AAAFF9-8768-4222-A438-3C3BECE8A127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8AAAFF9-8768-4222-A438-3C3BECE8A127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8AAAFF9-8768-4222-A438-3C3BECE8A127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8AAAFF9-8768-4222-A438-3C3BECE8A127}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B5FD3D2-EF0F-4AE9-BAE3-6238CF78D450}
+	EndGlobalSection
+EndGlobal

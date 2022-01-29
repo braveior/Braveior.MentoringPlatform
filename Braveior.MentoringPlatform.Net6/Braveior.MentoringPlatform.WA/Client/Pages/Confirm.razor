@@ -1,0 +1,58 @@
+﻿@namespace Braveior.MentoringPlatform.WA.Client.Pages
+@inject ISnackbar Snackbar
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IProfileService ProfileService
+@inject IVideoBookService VideoBookService
+<MudDialog>
+    <DialogContent>
+        <MudIcon Icon="@Icons.Material.Filled.Warning" Color="Color.Warning" Size="Size.Medium" /><MudText Typo="Typo.h6"> Are you sure you want to Delete ?</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Error" OnClick="@(() => Delete())">Delete</MudButton>
+        <MudButton OnClick="Cancel">Close</MudButton>
+    </DialogActions>
+</MudDialog>
+
+
+@code {
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public DeleteDTO DeleteData { get; set; }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private async Task Delete()
+    {
+        try
+        {
+            switch (DeleteData.Type)
+            {
+                case 1:
+                    await ProfileService.DeleteUserSkill(DeleteData.ItemId);
+                    break;
+                case 2:
+                    await ProfileService.DeleteStudentActivity(DeleteData.ItemId);
+                    break;
+                case 3:
+                    await VideoBookService.DeleteVideoBook(DeleteData.ItemId);
+                    break;
+                case 4:
+                    await VideoBookService.DeleteVideoBookLesson(DeleteData.ItemId);
+                    break;
+            }
+
+            MudDialog.Close();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Clear();
+            Snackbar.Add("Error", Severity.Error);
+        }
+    }
+
+
+}

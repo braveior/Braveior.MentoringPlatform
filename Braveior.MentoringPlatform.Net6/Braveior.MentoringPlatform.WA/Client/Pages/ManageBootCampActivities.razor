@@ -1,0 +1,111 @@
+﻿@page "/managebootcampactivities"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IWebinarService WebinarService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudText Typo="Typo.h5" Align="Align.Center" Class="pa-4">Manage Boot Camps</MudText>
+    <MudDivider />
+    <MudGrid>
+        <MudItem xs="4">
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddBootCampActivity())">Add</MudButton>
+        </MudItem>
+        <MudItem xs="8">
+        </MudItem>
+        <MudItem xs="12">
+            <MudTable FixedHeader="true" Dense="true" Items="@BootCampActivities" Hover="true" Breakpoint="Breakpoint.Md">
+                <HeaderContent>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Start Date</MudTh>
+                    <MudTh>End Date</MudTh>
+                    <MudTh></MudTh>
+                    <MudTh></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Name">@context.BootCamp.Name</MudTd>
+                    <MudTd DataLabel="Start Date">@context.StartDate.ToShortDateString()</MudTd>
+                    <MudTd DataLabel="End Date">@context.EndDate.ToShortDateString()</MudTd>
+                    <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Success" OnClick="@(() => EditBootCampActivity(@context))">Edit</MudButton></MudTd>
+                    <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Success" OnClick="@(() => DeleteBootCampActivity(@context))">Delete</MudButton></MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudItem>
+    </MudGrid>
+    <MudOverlay @bind-Visible="isVisible" DarkBackground="true" />
+</MudContainer>
+
+
+
+
+    @code {
+        private List<BootCampActivityDTO> BootCampActivities = new List<BootCampActivityDTO>();
+        bool isVisible = false;
+        bool isShow;
+        bool success;
+        InputType PasswordInput = InputType.Password;
+        string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+        ClaimsPrincipal claimsPrincipal;
+        MudForm frmLogin;
+
+
+        //Global Authentication State to get the Login Status and data
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+        [Inject]
+        private IState<CommonState> CommonState { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadBootCampActivities();
+        }
+        private async Task LoadBootCampActivities()
+        {
+            ToggleOverlay(true);
+            BootCampActivities = await WebinarService.GetBootCampActivities();
+            ToggleOverlay(false);
+            StateHasChanged();
+        }
+
+        public void ToggleOverlay(bool value)
+        {
+            isVisible = value;
+            StateHasChanged();
+        }
+
+        private async Task AddBootCampActivity()
+        {
+
+            DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+            var dialog = DialogService.Show<AddBootCampActivity>("Add Boot Camp Activity", dialogOptions);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                await LoadBootCampActivities();
+            }
+        }
+        private async Task EditBootCampActivity(BootCampActivityDTO bootCampActivityDTO)
+        {
+            var parameters = new DialogParameters { ["BootCampActivity"] = bootCampActivityDTO };
+            DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+            var dialog = DialogService.Show<EditBootCampActivity>("Edit Boot Camp Activity",parameters, dialogOptions);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                await LoadBootCampActivities();
+            }
+        }
+        private async Task DeleteBootCampActivity(BootCampActivityDTO bootCampActivityDTO)
+        {
+            var parameters = new DialogParameters { ["DeleteData"] = new DeleteDTO() { ItemId = bootCampActivityDTO.BootCampActivityId, Type = 3 } };
+            DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
+            var dialog = DialogService.Show<Confirm>("Confirm Delete", parameters, dialogOptions);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                await LoadBootCampActivities();
+            }
+        }
+    }

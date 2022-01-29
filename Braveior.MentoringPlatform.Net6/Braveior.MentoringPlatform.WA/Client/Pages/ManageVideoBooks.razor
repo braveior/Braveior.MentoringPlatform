@@ -1,0 +1,124 @@
+﻿@page "/managevideobooks"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IVideoBookService VideoBookService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudText Typo="Typo.h5" Align="Align.Center" Class="pa-4">Manage Video Book</MudText>
+    <MudDivider />
+    <MudGrid>
+        <MudItem xs="4">
+            <MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Primary" OnClick="@(() => AddVideoBook())">Add</MudButton>
+        </MudItem>
+        <MudItem xs="8">
+        </MudItem>
+        <MudItem xs="12">
+            <MudTable FixedHeader="true" Dense="true" Items="@VideoBooks" Hover="true" Breakpoint="Breakpoint.Md">
+                <HeaderContent>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Description</MudTh>
+                    <MudTh></MudTh>
+                    <MudTh></MudTh>
+                    <MudTh></MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Description">@context.Description</MudTd>
+                    <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Success" OnClick="@(() => OpenLessons(@context))">Lessons</MudButton></MudTd>
+                    <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Success" OnClick="@(() => EditVideoBook(@context))">Edit</MudButton></MudTd>
+                    <MudTd><MudButton Variant="Variant.Filled" Size="MudBlazor.Size.Small" Color="Color.Success" OnClick="@(() => DeleteVideoBook(@context))">Delete</MudButton></MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudItem>
+    </MudGrid>
+    <MudOverlay @bind-Visible="isVisible" DarkBackground="true" />
+</MudContainer>
+
+
+
+
+    @code {
+        private List<VideoBookDTO> VideoBooks = new List<VideoBookDTO>();
+        bool isVisible = false;
+        bool isShow;
+        bool success;
+        InputType PasswordInput = InputType.Password;
+        string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+        ClaimsPrincipal claimsPrincipal;
+        MudForm frmLogin;
+
+
+        //Global Authentication State to get the Login Status and data
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+        [Inject]
+        private IState<CommonState> CommonState { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadVideoBooks();
+        }
+        private async Task LoadVideoBooks()
+        {
+            ToggleOverlay(true);
+            VideoBooks = await VideoBookService.GetVideoBooks(); ;
+            ToggleOverlay(false);
+            StateHasChanged();
+        }
+
+        public void ToggleOverlay(bool value)
+        {
+            isVisible = value;
+            StateHasChanged();
+        }
+
+        private async Task OpenLessons(VideoBookDTO videoBookDTO)
+        {
+            try
+            {
+                NavigationManager.NavigateTo($"/managevideobooklessons/{videoBookDTO.VideoBookId}");
+            }
+            catch (Exception ex)
+            {
+                Snackbar.Clear();
+                Snackbar.Add("Navigation Error", Severity.Error);
+            }
+        }
+
+        private async Task AddVideoBook()
+        {
+
+            DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+            var dialog = DialogService.Show<AddVideoBook>("Add Video Book", dialogOptions);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                await LoadVideoBooks();
+            }
+        }
+        private async Task EditVideoBook(VideoBookDTO videoBookDTO)
+        {
+            var parameters = new DialogParameters { ["VideoBook"] = videoBookDTO };
+            DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Large, FullWidth = true };
+            var dialog = DialogService.Show<EditVideoBook>("Edit Video Book",parameters, dialogOptions);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                await LoadVideoBooks();
+            }
+        }
+        private async Task DeleteVideoBook(VideoBookDTO videoBookDTO)
+        {
+            var parameters = new DialogParameters { ["DeleteData"] = new DeleteDTO() { ItemId = videoBookDTO.VideoBookId, Type = 3 } };
+            DialogOptions dialogOptions = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true };
+            var dialog = DialogService.Show<Confirm>("Confirm Delete", parameters, dialogOptions);
+            var result = await dialog.Result;
+            if (!result.Cancelled)
+            {
+                await LoadVideoBooks();
+            }
+        }
+    }

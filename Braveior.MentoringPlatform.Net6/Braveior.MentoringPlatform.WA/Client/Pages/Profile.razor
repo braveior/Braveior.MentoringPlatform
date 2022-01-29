@@ -1,0 +1,219 @@
+﻿@page "/profile/{StudentId:long}"
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IProfileService ProfileService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@using Braveior.MentoringPlatform.WA.Client.Pages
+
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h5" Align="Align.Left" Class="pa-4">Profile</MudText>
+        <MudDivider />
+    </MudItem>
+        <MudItem xs="12" md="6" xl="6">
+
+            <MudAvatar Image=@($"/images/{profile.UserId}.jpg") Style="height:100px; width:100px;" />
+            <MudText Align="Align.Left" Typo="Typo.h5" Class="m-2">@profile.StudentName
+                <MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" Color="Color.Primary" IconColor="Color.Warning" Size="Size.Large">@profile.Points Points</MudChip>
+            @if (profile.BLevel > 0)
+            {
+                <MudIcon Icon="fas fa-medal" Size="Size.Large" Color="Color.Info" />
+            }    
+            </MudText>
+            <MudText Align="Align.Left" Typo="Typo.body1" Class="m-2">@profile.InsitutionName</MudText>
+             <MudDivider />
+            <MudText Align="Align.Left" Typo="Typo.h6" Class="m-2">About myself <a href="@profile.LinkedInLink" target="_blank"><MudIcon Icon="fab fa-linkedin" Size="Size.Medium" Color="Color.Primary" /></a></MudText>
+            <MudText Align="Align.Left" Typo="Typo.body2" Class="m-2">@profile.Description</MudText>
+             <MudDivider />
+            <MudText Align="Align.Left" Typo="Typo.h6" Class="m-2">Technology Confidence Meter</MudText>
+            <MudTable FixedHeader="true" Breakpoint="Breakpoint.None" Items="@profile.UserSkills" Dense="true" Hover="true" Bordered="true" Striped="true" Height="300px">
+                <HeaderContent>
+                    <MudTh>Technology</MudTh>
+                    <MudTh>Rating</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Technology">@context.Skill.Name</MudTd>
+                    <MudTd DataLabel="Rating"><MudRating SelectedValue="@context.Stars" ReadOnly="true" /></MudTd>
+                </RowTemplate>
+            </MudTable>
+
+        </MudItem>
+        <MudItem xs="12" md="6" xl="6">
+            <MudText Typo="Typo.h6" Align="Align.Center" Class="pt-16">Braveior Achievements</MudText>
+            <MudDivider />
+
+            <MudTimeline Class="mt-5" DisableModifiers="false" TimelineAlign="TimelineAlign.Default" TimelineOrientation="TimelineOrientation.Vertical" TimelinePosition="TimelinePosition.Alternate">
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge1Complete ? Color.Success : Color.Dark) Size="Size.Small" Variant="Variant.Outlined" TimelineAlign="TimelineAlign.Start"> 
+                    <ItemContent>
+                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.Challenge1Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Challenge -Full Stack (or) Mobile Development</MudAlert>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudAlert Icon="fas fa-medal" Severity=@(studentAchievementDTO.Challenge1Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Level 1 Certified</MudAlert>
+                    </ItemOpposite>
+                </MudTimelineItem>
+                <MudTimelineItem Color=@(studentAchievementDTO.Challenge2Complete ? Color.Success : Color.Dark) Size="Size.Medium" Variant="Variant.Outlined" TimelineAlign="TimelineAlign.Start">
+                    <ItemContent>
+                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.Challenge2Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Challenge - Cloud Native Kubernetes Deployment</MudAlert>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudAlert Icon="fas fa-medal" Severity=@(studentAchievementDTO.Challenge2Complete ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Level 2 Certified</MudAlert>
+                    </ItemOpposite>
+                </MudTimelineItem>
+                <MudTimelineItem Color=@(studentAchievementDTO.BraveiorChampion ? Color.Success : Color.Dark) Size="Size.Large" Variant="Variant.Outlined" TimelineAlign="TimelineAlign.Start">
+                    <ItemContent>
+                        <MudAlert Icon="fas fa-puzzle-piece" Severity=@(studentAchievementDTO.BraveiorChampion ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Advanced Challenge - Product Feature Development</MudAlert>
+                    </ItemContent>
+                    <ItemOpposite>
+                        <MudAlert Icon="fas fa-trophy" Severity=@(studentAchievementDTO.BraveiorChampion ? Severity.Success : Severity.Normal) ContentAlignment="HorizontalAlignment.Center">Braveior Champion</MudAlert>
+                    </ItemOpposite>
+                </MudTimelineItem>
+                
+            </MudTimeline>
+
+        </MudItem>
+        <MudItem xs="12">
+            <MudText Align="Align.Left" Typo="Typo.h6" Class="m-2">Student Events</MudText>
+
+            <MudExpansionPanels>
+                <MudExpansionPanel Text="Challenges" MaxHeight="250" Style="overflow: scroll;">
+                    <TitleContent>
+                        Challenges - @profile.StudentWorkItems.Where(a => a.Type == 4).Count()
+                    </TitleContent>
+                    <ChildContent>
+                        <MudList Clickable="true">
+                            @foreach (var val in profile.StudentWorkItems.Where(a => a.Type == 4))
+                            {
+                                <MudListItem Avatar="@Icons.Material.Filled.FeaturedVideo">
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2"><a href="@val.AssetUrl" target="_blank">@val.Challenge.Name</a> <MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" Color="Color.Primary" IconColor="Color.Warning" Size="Size.Small">@val.Points Points</MudChip></MudText>
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Color="Color.Dark" Class="m-2">@val.Challenge.Description</MudText>
+                                </MudListItem>
+                            }
+                        </MudList>
+                    </ChildContent>
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Group Discussions" MaxHeight="250" Style="overflow: scroll;">
+                    <TitleContent>
+                        Group Discusisons - @profile.StudentWorkItems.Where(a => a.Type == 1).Count()
+                    </TitleContent>
+                    <ChildContent>
+                        <MudList Clickable="true">
+                            @foreach (var val in profile.StudentWorkItems.Where(a => a.Type == 1))
+                            {
+                                <MudListItem Avatar="@Icons.Material.Filled.Forum">
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2">@val.Event.Name <MudChip Icon="@Icons.Material.Filled.Stars" Class="m-2" Color="Color.Primary" IconColor="Color.Warning" Size="Size.Small">@val.Points Points</MudChip></MudText>
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Color="Color.Dark" Class="m-2">@val.Event.Description</MudText>
+                                </MudListItem>
+                            }
+                        </MudList>
+                    </ChildContent>
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Blogs" MaxHeight="250" Style="overflow: scroll;">
+                    <TitleContent>
+                        Blogs - @profile.StudentWorkItems.Where(a => a.Type == 5).Count()
+                    </TitleContent>
+                    <ChildContent>
+                        <MudList Clickable="true">
+                            @foreach (var val in profile.StudentWorkItems.Where(a => a.Type == 5))
+                            {
+                                <MudListItem Avatar="@Icons.Material.Filled.MenuBook">
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2"><a href="@val.AssetUrl" target="_blank">@val.AssetName</a> <MudChip Icon="@Icons.Material.Filled.Stars" Color="Color.Primary" IconColor="Color.Warning" Class="m-2" Size="Size.Small">@val.Points Points</MudChip></MudText>
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Color="Color.Dark" Class="m-2">@val.AssetDescription</MudText>
+                                </MudListItem>
+                            }
+                        </MudList>
+                    </ChildContent>
+                </MudExpansionPanel>
+                <MudExpansionPanel Text="Vlogs" MaxHeight="250" Style="overflow: scroll;">
+                    <TitleContent>
+                        Vlogs - @profile.StudentWorkItems.Where(a => a.Type == 6).Count()
+                    </TitleContent>
+                    <ChildContent>
+                        <MudList Clickable="true">
+                            @foreach (var val in profile.StudentWorkItems.Where(a => a.Type == 6))
+                            {
+                                <MudListItem Avatar="@Icons.Material.Filled.FeaturedVideo">
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Class="m-2"><a href="@val.AssetUrl" target="_blank">@val.AssetName</a> <MudChip Icon="@Icons.Material.Filled.Stars" Color="Color.Primary" IconColor="Color.Warning" Class="m-2" Size="Size.Small">@val.Points Points</MudChip></MudText>
+                                    <MudText Align="Align.Left" Typo="Typo.subtitle2" Color="Color.Dark" Class="m-2">@val.AssetDescription</MudText>
+                                </MudListItem>
+                            }
+                        </MudList>
+                    </ChildContent>
+                </MudExpansionPanel>
+            </MudExpansionPanels>
+        </MudItem>
+</MudGrid>
+    <MudOverlay @bind-Visible="isVisible" DarkBackground="true" />
+
+@code {
+    private List<BreadcrumbItem> _items = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Home", href: "/", icon: Icons.Material.Filled.Home),
+    };
+
+    private BarConfig configPointsSplitup;
+
+    bool isVisible = false;
+
+    [Inject]
+    private IState<CommonState> CommonState { get; set; }
+
+    private LineConfig configPointsTimeline;
+
+    private List<VideoBookDTO> VideoBooks = new List<VideoBookDTO>();
+
+    private List<BootCampActivityDTO> BootCampActivities = new List<BootCampActivityDTO>();
+
+    private StudentAchievementDTO studentAchievementDTO = new StudentAchievementDTO();
+
+    private UserDTO student = new UserDTO();
+
+    private List<UserSkillDTO> UserSkills = new List<UserSkillDTO>();
+
+    private List<StudentActivityDTO> Events = new List<StudentActivityDTO>();
+    private List<StudentActivityDTO> Challenges = new List<StudentActivityDTO>();
+    private List<StudentActivityDTO> Blogs = new List<StudentActivityDTO>();
+
+    private List<InstitutionDTO> AssetsList { get; set; } = new List<InstitutionDTO>();
+
+    private ProfileDTO profile = new ProfileDTO() { StudentWorkItems=new List<StudentActivityDTO>() };
+
+    [Parameter]
+    public long StudentId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await LoadHome();
+    }
+    private async Task LoadHome()
+    {
+        ToggleOverlay(true);
+        await LoadStudentProfile();
+        await LoadStudentActivities();
+        ToggleOverlay(false);
+        StateHasChanged();
+
+    }
+    private async Task LoadStudentProfile()
+    {
+
+        profile = await ProfileService.GetProfile(StudentId);
+
+
+    }
+    private async Task LoadStudentActivities()
+    {
+        studentAchievementDTO = await ProfileService.GetStudentAchievements(StudentId);
+    }
+    public void ToggleOverlay(bool value)
+    {
+        isVisible = value;
+        StateHasChanged();
+    }
+
+
+
+}

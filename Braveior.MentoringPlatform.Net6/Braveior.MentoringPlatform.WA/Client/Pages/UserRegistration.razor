@@ -1,0 +1,106 @@
+﻿@page "/userregistration"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorageService
+@inject IProfileService ProfileService
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudText Typo="Typo.h5" Align="Align.Center" Class="pa-4">New User</MudText>
+    <MudDivider />
+    <MudCard Class="mt-16">
+        <MudCardContent>
+            <MudForm @bind-IsValid="@success" @ref="frmLogin">
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="member.FirstName" Label="First Name" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true" AutoFocus="false" RequiredError="Firstname is required!"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="member.LastName" Label="Last Name" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true" AutoFocus="false" RequiredError="Lastname is required!"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField @bind-Value="member.Email" Label="Email" Variant="Variant.Outlined" Margin="Margin.Dense" Required="true" AutoFocus="false" RequiredError="Email is required!" Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})"></MudTextField>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudSelect Dense="true" @bind-Value="@member.Role" Variant="Variant.Outlined">
+                            <MudSelectItem T="int" Value=1>Student</MudSelectItem>
+                            <MudSelectItem T="int" Value=2>Admin</MudSelectItem>
+                            <MudSelectItem T="int" Value=3>Recruiter</MudSelectItem>
+                        </MudSelect>
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudSelect Dense="true" @bind-Value="@member.InstitutionId" Variant="Variant.Outlined">
+                            @foreach (var college in colleges)
+                            {
+                                <MudSelectItem T="long" Value=@college.InstitutionId>@college.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+            </MudForm>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton FullWidth="true" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary" Disabled="@(!success)" OnClick="RegisterUser">Register</MudButton>
+        </MudCardActions>
+    </MudCard>
+</MudContainer>
+
+
+
+
+@code {
+    public string TextValue { get; set; }
+    private UserDTO member = new UserDTO() {  Role = 1, InstitutionId = 1};
+    bool isShow;
+    bool success;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    ClaimsPrincipal claimsPrincipal;
+    MudForm frmLogin;
+    List<InstitutionDTO> colleges = new List<InstitutionDTO>();
+
+    //Global Authentication State to get the Login Status and data
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected async override System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        colleges = await ProfileService.GetColleges();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task RegisterUser()
+    {
+        try
+        {
+            await ProfileService.Register(member);
+            Snackbar.Clear();
+            Snackbar.Add("New User Added", Severity.Success);
+        }
+        catch (Exception)
+        {
+            Snackbar.Clear();
+            Snackbar.Add("Registration Error", Severity.Error);
+        }
+
+    }
+    /// <summary>
+    /// Method to toggle visibility of the Password field
+    /// </summary>
+    void ToggleTextVisibility()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+}
